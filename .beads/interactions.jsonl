@@ -3,3 +3,4 @@
 {"id":"int-0aba195a","kind":"field_change","created_at":"2026-06-09T17:46:46.832407Z","actor":"rosejas13","issue_id":"NMP-5hw","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Moved to azimuth-ui project"}}
 {"id":"int-9574496c","kind":"field_change","created_at":"2026-06-09T17:46:47.434976Z","actor":"rosejas13","issue_id":"NMP-7fj","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Moved to azimuth-ui project"}}
 {"id":"int-823050f3","kind":"field_change","created_at":"2026-06-09T17:46:48.032385Z","actor":"rosejas13","issue_id":"NMP-e9d","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Moved to azimuth-ui project"}}
+{"id":"int-7681425c","kind":"field_change","created_at":"2026-06-09T19:31:22.673968Z","actor":"rosejas13","issue_id":"NMP-2nx","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}
