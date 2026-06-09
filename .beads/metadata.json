@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "Nova_Mir_Product",
+  "project_id": "3517e8c8-2d62-4f3f-8e82-544c9b3da831"
+}
