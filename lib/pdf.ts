@@ -2,8 +2,8 @@
 // TODO: Install pdf-lib, puppeteer, or @react-pdf/renderer
 
 export async function generatePdf(
-  html: string,
-  options: { format?: string; landscape?: boolean } = {},
+  _html: string,
+  _options: { format?: string; landscape?: boolean } = {},
 ): Promise<Buffer> {
   // TODO: Implement PDF generation
   // Option 1: Use puppeteer/playwright for HTML-to-PDF

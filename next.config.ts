@@ -7,9 +7,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb',
     },
   },
-  devIndicators: {
-    appIsrStatus: true,
-  },
+
   async headers() {
     return [
       {

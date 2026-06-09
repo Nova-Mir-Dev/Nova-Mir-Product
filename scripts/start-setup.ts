@@ -37,7 +37,7 @@ process.on("SIGINT", () => {
 });
 
 // Simple health check endpoint that the user can hit to verify
-const server = createServer((req, res) => {
+void createServer((req, res) => {
   if (req.url === "/health") {
     res.writeHead(200);
     res.end("ok");

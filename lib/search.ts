@@ -15,7 +15,7 @@ export interface SearchOptions {
   filters?: Record<string, string>;
 }
 
-export async function search(options: SearchOptions): Promise<SearchResult[]> {
+export async function search(_options: SearchOptions): Promise<SearchResult[]> {
   // TODO: Implement with your search provider
   // For PostgreSQL: use tsvector + tsquery
   // For external: use Algolia, Meilisearch, or Typesense

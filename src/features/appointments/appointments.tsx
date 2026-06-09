@@ -73,7 +73,7 @@ export function Appointments() {
 
         {appointments.length > 0 && (
           <Stack spacing="sm">
-            <Text element={{ as: "h3", size: "h6" }} weight="medium">
+            <Text element={{ as: "h3", size: "h5" }} weight="medium">
               Scheduled
             </Text>
             {appointments.map((a) => (

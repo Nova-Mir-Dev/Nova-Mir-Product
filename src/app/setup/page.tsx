@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Container, Text, Button, Card, Stack, Alert, Input, ProgressBar, Tag } from "azimuth-ui";
+import { Container, Text, Button, Card, Stack, Input, ProgressBar } from "azimuth-ui";
 
 type ServiceConfig = {
   name: string;
