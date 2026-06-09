@@ -1,0 +1,41 @@
+{
+  "name": "nova-mir-product",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port 3000",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "setup": "npx tsx scripts/start-setup.ts",
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sentry/nextjs": "*",
+    "@slack/bolt": "*",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "*",
+    "@upstash/redis": "*",
+    "azimuth-ui": "*",
+    "next": "*",
+    "react": "*",
+    "react-dom": "*",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "*",
+    "@testing-library/react": "*",
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "eslint": "*",
+    "eslint-config-next": "*",
+    "jsdom": "*",
+    "prettier": "*",
+    "typescript": "*",
+    "typescript-eslint": "*",
+    "vitest": "*"
+  }
+}

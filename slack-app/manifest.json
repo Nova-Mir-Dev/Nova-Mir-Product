@@ -1,0 +1,49 @@
+{
+  "display_information": {
+    "name": "Nova Mir",
+    "description": "Lead notifications and alerts for Nova Mir web studio",
+    "background_color": "#0a0a0b",
+    "long_description": "Receive instant notifications when leads submit the contact form on novamir.dev. View lead details, respond, and manage your pipeline directly from Slack."
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Nova Mir",
+      "always_online": true
+    },
+    "slash_commands": [
+      {
+        "command": "/leads",
+        "description": "List recent leads from novamir.dev",
+        "usage_hint": "[count]",
+        "should_escape": false,
+        "url": "https://novamir.dev/api/slack/commands/leads"
+      }
+    ]
+  },
+  "oauth_config": {
+    "redirect_urls": ["https://novamir.dev/api/slack/oauth"],
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "chat:write.public",
+        "channels:history",
+        "channels:read",
+        "commands",
+        "reactions:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://novamir.dev/api/slack/events",
+      "bot_events": ["app_home_opened", "message.channels"]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://novamir.dev/api/slack/interactive"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}

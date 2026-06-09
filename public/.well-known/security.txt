@@ -1,0 +1,14 @@
+# Security Contact
+Contact: mailto:security@nova-mir-product.com
+Encryption: https://nova-mir-product.com/.well-known/pgp-key.txt
+
+# Disclosure Policy
+Policy: https://nova-mir-product.com/security.txt
+
+# Timeline
+Preferred-Languages: en
+Canonical: https://nova-mir-product.com/.well-known/security.txt
+Expires: 2027-06-09
+
+# Acknowledgments
+# We thank the security researchers who responsibly disclose vulnerabilities.
