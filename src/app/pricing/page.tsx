@@ -104,6 +104,51 @@ export default function PricingPage() {
           ))}
         </div>
 
+        <Card
+          style={{
+            border: '2px dashed var(--azimuth-color-primary)',
+            background: 'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
+          }}
+        >
+          <Stack spacing="md">
+            <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
+              Launch Client Program
+            </Text>
+            <Text element={{ size: 'base' }}>
+              We&rsquo;re offering 2-3 launch client slots at a flat $1,000 rate.
+            </Text>
+            <div>
+              <Text element={{ size: 'sm' }} weight="semibold">
+                In exchange, you provide:
+              </Text>
+              <ul style={{ margin: '0.25rem 0 0 1.25rem', padding: 0 }}>
+                <li>
+                  <Text element={{ size: 'sm' }}>
+                    A detailed testimonial about your experience
+                  </Text>
+                </li>
+                <li>
+                  <Text element={{ size: 'sm' }}>
+                    Permission to feature your project as a case study
+                  </Text>
+                </li>
+                <li>
+                  <Text element={{ size: 'sm' }}>
+                    Referrals to 3+ other businesses who could benefit
+                  </Text>
+                </li>
+              </ul>
+            </div>
+            <Text element={{ size: 'sm' }} color="secondary">
+              <strong>Timeboxed:</strong> first 3 clients or first 60 days — whichever comes
+              first. After slots are filled, pricing returns to standard rates.
+            </Text>
+            <Button variant="primary" onClick={() => (window.location.href = '/contact')}>
+              Claim a Launch Slot
+            </Button>
+          </Stack>
+        </Card>
+
         <div
           style={{
             padding: '1.5rem',

@@ -65,10 +65,22 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
         <script
           defer
           data-domain="novamir.dev"
           src="https://plausible.io/js/script.js"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
         />
       </head>
       <body className={`${sora.variable} ${onest.variable}`}>

@@ -135,6 +135,32 @@ export default function ServicesPage() {
             .
           </Text>
         </div>
+
+        <Card
+          style={{
+            border: '2px dashed var(--azimuth-color-primary)',
+            background: 'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
+          }}
+        >
+          <Stack spacing="sm">
+            <Text element={{ as: 'h3', size: 'h4' }} weight="bold">
+              Looking for a launch deal?
+            </Text>
+            <Text element={{ size: 'sm' }}>
+              We&rsquo;re offering a limited number of flat-rate launch slots.{' '}
+              <a
+                href="/pricing"
+                style={{
+                  color: 'var(--azimuth-color-primary)',
+                  textDecoration: 'underline',
+                }}
+              >
+                See details on our pricing page
+              </a>
+              .
+            </Text>
+          </Stack>
+        </Card>
       </Stack>
     </Container>
   )
