@@ -43,7 +43,7 @@ export default function ServicesPage() {
                 </Button>
               }
             >
-              <Stack spacing="md" style={{ height: '100%' }}>
+              <Stack spacing="md" style={{ flex: 1 }}>
                 {i === 1 && (
                   <Text
                     element={{ size: 'xs' }}
