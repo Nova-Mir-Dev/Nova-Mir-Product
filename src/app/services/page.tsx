@@ -43,7 +43,7 @@ export default function ServicesPage() {
                 </Button>
               }
             >
-              <Stack spacing="md">
+              <Stack spacing="md" style={{ height: '100%' }}>
                 {i === 1 && (
                   <Text
                     element={{ size: 'xs' }}
@@ -86,6 +86,7 @@ export default function ServicesPage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.5rem',
+                    marginTop: 'auto',
                   }}
                 >
                   <Text

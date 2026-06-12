@@ -48,7 +48,7 @@ export default function PricingPage() {
                 </Button>
               }
             >
-              <Stack spacing="md">
+              <Stack spacing="md" style={{ height: '100%' }}>
                 {i === 1 && (
                   <Text
                     element={{ size: 'xs' }}
@@ -87,6 +87,7 @@ export default function PricingPage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.5rem',
+                    marginTop: 'auto',
                   }}
                 >
                   {tier.features.map((feature) => (

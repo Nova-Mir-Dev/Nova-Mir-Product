@@ -51,7 +51,7 @@ export default function TermsPage() {
     >
       <Stack spacing="2xl">
         <div>
-          <Text element={{ as: 'h1', size: 'h1' }} weight="bold">
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" style={{ textAlign: 'center' }}>
             Terms of Service
           </Text>
           <Text

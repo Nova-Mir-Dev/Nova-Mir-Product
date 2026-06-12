@@ -9,7 +9,7 @@ export default function AboutPage() {
     >
       <Stack spacing="lg">
         <div style={{ paddingTop: '2rem' }}>
-          <Text element={{ as: 'h1', size: 'h1' }} weight="bold">
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" style={{ textAlign: 'center' }}>
             Hi, I&rsquo;m the founder
           </Text>
         </div>

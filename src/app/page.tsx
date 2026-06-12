@@ -293,48 +293,61 @@ export default function Home() {
               gap: '1.5rem',
             }}
           >
-            {PROJECTS.map((project, i) => (
-              <Card
-                key={i}
-                style={{
-                  padding: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <div
+            {PROJECTS.map((project, i) => {
+              const card = (
+                <Card
+                  key={i}
                   style={{
-                    aspectRatio: '16 / 9',
-                    borderRadius: 'var(--azimuth-radius)',
-                    background: 'var(--azimuth-color-surface)',
-                    marginBottom: '1rem',
+                    padding: '1.5rem',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--azimuth-color-text-secondary)',
-                    fontSize: '0.875rem',
-                    border: '1px solid var(--azimuth-color-border)',
+                    flexDirection: 'column',
                   }}
                 >
-                  Project Screenshot
-                </div>
-                <Text weight="semibold" style={{ marginBottom: '0.25rem' }}>
-                  {project.title}
-                </Text>
-                {project.description && (
-                  <Text
-                    element={{ size: 'sm' }}
+                  <div
                     style={{
-                      color: 'var(--azimuth-color-text-secondary)',
+                      aspectRatio: '16 / 9',
+                      borderRadius: 'var(--azimuth-radius)',
+                      background: 'var(--azimuth-color-surface)',
                       marginBottom: '1rem',
-                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--azimuth-color-text-secondary)',
+                      fontSize: '0.875rem',
+                      border: '1px solid var(--azimuth-color-border)',
                     }}
                   >
-                    {project.description}
+                    Project Screenshot
+                  </div>
+                  <Text weight="semibold" style={{ marginBottom: '0.25rem' }}>
+                    {project.title}
                   </Text>
-                )}
-              </Card>
-            ))}
+                  {project.description && (
+                    <Text
+                      element={{ size: 'sm' }}
+                      style={{
+                        color: 'var(--azimuth-color-text-secondary)',
+                        marginBottom: '1rem',
+                        flex: 1,
+                      }}
+                    >
+                      {project.description}
+                    </Text>
+                  )}
+                </Card>
+              )
+              return project.href ? (
+                <a
+                  key={i}
+                  href={project.href}
+                  style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+                >
+                  {card}
+                </a>
+              ) : (
+                card
+              )
+            })}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
             <Button

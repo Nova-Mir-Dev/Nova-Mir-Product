@@ -6,7 +6,8 @@ const projects = [
   {
     title: 'Nova Mir Website',
     description: 'Custom web development studio site',
-    status: 'In progress' as const,
+    status: 'Live' as const,
+    href: '/' as const,
   },
   {
     title: 'jcrose.dev',
