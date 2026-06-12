@@ -21,7 +21,10 @@ describe('createLeadSchema', () => {
   })
 
   it('fails when email is invalid', () => {
-    const result = createLeadSchema.safeParse({ ...validLead, email: 'not-an-email' })
+    const result = createLeadSchema.safeParse({
+      ...validLead,
+      email: 'not-an-email',
+    })
     expect(result.success).toBe(false)
   })
 

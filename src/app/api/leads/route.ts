@@ -70,7 +70,16 @@ export async function POST(request: Request) {
       )
     }
 
-    const { name, email, businessName, phone, serviceInterest, budgetRange, message, consent } = parsed.data
+    const {
+      name,
+      email,
+      businessName,
+      phone,
+      serviceInterest,
+      budgetRange,
+      message,
+      consent,
+    } = parsed.data
 
     const supabase = createServiceClient()
     const { data, error } = await supabase

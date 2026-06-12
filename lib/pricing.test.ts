@@ -16,8 +16,8 @@ describe('PRICING_TIERS', () => {
   })
 
   it('tiers are in ascending price order', () => {
-    const prices = PRICING_TIERS.map(t => 
-      parseInt(t.startingPrice.replace(/[$,]/g, ''))
+    const prices = PRICING_TIERS.map((t) =>
+      parseInt(t.startingPrice.replace(/[$,]/g, '')),
     )
     for (let i = 1; i < prices.length; i++) {
       expect(prices[i]!).toBeGreaterThan(prices[i - 1]!)

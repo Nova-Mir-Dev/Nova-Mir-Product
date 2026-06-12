@@ -1,7 +1,10 @@
 import { z } from 'zod'
 
 export const appointmentStatusSchema = z.enum([
-  'scheduled', 'confirmed', 'cancelled', 'completed',
+  'scheduled',
+  'confirmed',
+  'cancelled',
+  'completed',
 ])
 
 export const createAppointmentSchema = z.object({

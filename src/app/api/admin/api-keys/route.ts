@@ -24,7 +24,9 @@ export async function GET() {
   const admin = createServiceClient()
   const { data: keys } = await admin
     .from('api_keys')
-    .select('id, name, prefix, scopes, created_at, last_used_at, expires_at, revoked_at')
+    .select(
+      'id, name, prefix, scopes, created_at, last_used_at, expires_at, revoked_at',
+    )
     .is('revoked_at', null)
     .order('created_at', { ascending: false })
 

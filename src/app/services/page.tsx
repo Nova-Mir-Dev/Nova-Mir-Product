@@ -28,9 +28,10 @@ export default function ServicesPage() {
               key={tier.name}
               style={{
                 flex: '1 1 280px',
-                border: i === 1
-                  ? '2px solid var(--azimuth-color-primary)'
-                  : '1px solid var(--azimuth-color-border)',
+                border:
+                  i === 1
+                    ? '2px solid var(--azimuth-color-primary)'
+                    : '1px solid var(--azimuth-color-border)',
                 position: 'relative',
               }}
               footer={

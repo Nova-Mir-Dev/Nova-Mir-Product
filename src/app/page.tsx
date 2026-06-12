@@ -3,7 +3,11 @@
 import { Button, Card, Container, Stack, Text, Badge } from 'azimuth-ui'
 import { PRICING_TIERS } from '@/lib/pricing'
 
-const PRICE_RANGES = ['$1,000–$2,500', '$1,500–$4,500', '$3,000–$10,000+'] as const
+const PRICE_RANGES = [
+  '$1,000–$2,500',
+  '$1,500–$4,500',
+  '$3,000–$10,000+',
+] as const
 const SHORT_FEATURES: string[][] = [
   [
     'Custom-designed, mobile-friendly site',
@@ -81,8 +85,7 @@ export default function Home() {
               lineHeight: 1.15,
             }}
           >
-            Your website should be bringing in customers — not collecting
-            dust.
+            Your website should be bringing in customers — not collecting dust.
           </Text>
           <Text
             element={{ size: 'lg' }}
@@ -94,9 +97,8 @@ export default function Home() {
               lineHeight: 1.6,
             }}
           >
-            Whether you run a law firm, a gym, or a plumbing business — we
-            build websites and systems that bring in customers and save you
-            time.
+            Whether you run a law firm, a gym, or a plumbing business — we build
+            websites and systems that bring in customers and save you time.
           </Text>
           <Stack direction="horizontal" spacing="sm" justify="center" wrap>
             <Button
