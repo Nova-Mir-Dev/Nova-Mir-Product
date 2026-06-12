@@ -11,6 +11,7 @@ import {
 } from 'azimuth-ui'
 
 type ServiceConfig = {
+  key: string
   name: string
   url: string
   description: string
@@ -19,6 +20,7 @@ type ServiceConfig = {
 
 const REQUIRED_SERVICES: ServiceConfig[] = [
   {
+    key: 'supabase',
     name: 'Supabase',
     url: 'https://supabase.com/dashboard',
     description:
@@ -36,6 +38,7 @@ const REQUIRED_SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    key: 'sentry',
     name: 'Sentry',
     url: 'https://sentry.io/settings/account/api/',
     description:
@@ -61,6 +64,7 @@ const REQUIRED_SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    key: 'slack',
     name: 'Slack',
     url: 'https://api.slack.com/apps',
     description:
@@ -78,6 +82,7 @@ const REQUIRED_SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    key: 'vercel',
     name: 'Vercel',
     url: 'https://vercel.com/dashboard',
     description:
@@ -150,229 +155,49 @@ export default function SetupPage() {
           </Text>
         </div>
 
-        <Card key={'Supabase'}>
-          <Stack spacing="sm">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text element={{ as: 'h3', size: 'h4' }} weight="semibold">
-                "Supabase"
-              </Text>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  window.open('https://supabase.com/dashboard', '_blank')
-                }
+        {REQUIRED_SERVICES.map((service) => (
+          <Card key={service.key}>
+            <Stack spacing="sm">
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
               >
-                Open ↗
-              </Button>
-            </div>
-            <Text element={{ size: 'sm' }} color="secondary">
-              "Database, auth, and file storage backend. Create a project and
-              copy your API keys."
-            </Text>
+                <Text element={{ as: 'h3', size: 'h4' }} weight="semibold">
+                  {service.name}
+                </Text>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => window.open(service.url, '_blank')}
+                >
+                  Open ↗
+                </Button>
+              </div>
+              <Text element={{ size: 'sm' }} color="secondary">
+                {service.description}
+              </Text>
 
-            <div key={'NEXT_PUBLIC_SUPABASE_URL'}>
-              <Input
-                label={{ text: 'Project URL' }}
-                value={{
-                  value: envVars['NEXT_PUBLIC_SUPABASE_URL'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['NEXT_PUBLIC_SUPABASE_URL']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-            <div key={'NEXT_PUBLIC_SUPABASE_ANON_KEY'}>
-              <Input
-                label={{ text: 'Anon Public Key' }}
-                value={{
-                  value: envVars['NEXT_PUBLIC_SUPABASE_ANON_KEY'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['NEXT_PUBLIC_SUPABASE_ANON_KEY']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-          </Stack>
-        </Card>
-        <Card key={'Sentry'}>
-          <Stack spacing="sm">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text element={{ as: 'h3', size: 'h4' }} weight="semibold">
-                "Sentry"
-              </Text>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  window.open(
-                    'https://sentry.io/settings/account/api/',
-                    '_blank',
-                  )
-                }
-              >
-                Open ↗
-              </Button>
-            </div>
-            <Text element={{ size: 'sm' }} color="secondary">
-              "Error tracking and performance monitoring. Create a project and
-              get your DSN."
-            </Text>
-
-            <div key={'NEXT_PUBLIC_SENTRY_DSN'}>
-              <Input
-                label={{ text: 'DSN' }}
-                value={{
-                  value: envVars['NEXT_PUBLIC_SENTRY_DSN'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['NEXT_PUBLIC_SENTRY_DSN']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-            <div key={'SENTRY_AUTH_TOKEN'}>
-              <Input
-                label={{ text: 'Auth Token' }}
-                value={{
-                  value: envVars['SENTRY_AUTH_TOKEN'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['SENTRY_AUTH_TOKEN']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-            <div key={'SENTRY_ORG'}>
-              <Input
-                label={{ text: 'Organization Slug' }}
-                value={{
-                  value: envVars['SENTRY_ORG'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['SENTRY_ORG']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-            <div key={'SENTRY_PROJECT'}>
-              <Input
-                label={{ text: 'Project Slug' }}
-                value={{
-                  value: envVars['SENTRY_PROJECT'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['SENTRY_PROJECT']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-          </Stack>
-        </Card>
-        <Card key={'Slack'}>
-          <Stack spacing="sm">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text element={{ as: 'h3', size: 'h4' }} weight="semibold">
-                "Slack"
-              </Text>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  window.open('https://api.slack.com/apps', '_blank')
-                }
-              >
-                Open ↗
-              </Button>
-            </div>
-            <Text element={{ size: 'sm' }} color="secondary">
-              "Messaging and notifications. Create a Slack app, install it to
-              your workspace, and get your tokens."
-            </Text>
-
-            <div key={'SLACK_BOT_TOKEN'}>
-              <Input
-                label={{ text: 'Bot Token' }}
-                value={{
-                  value: envVars['SLACK_BOT_TOKEN'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['SLACK_BOT_TOKEN']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-            <div key={'SLACK_SIGNING_SECRET'}>
-              <Input
-                label={{ text: 'Signing Secret' }}
-                value={{
-                  value: envVars['SLACK_SIGNING_SECRET'] || '',
-                  onChange: (e) =>
-                    setEnvVars((prev) => ({
-                      ...prev,
-                      ['SLACK_SIGNING_SECRET']: e.target.value,
-                    })),
-                }}
-              />
-            </div>
-          </Stack>
-        </Card>
-        <Card key={'Vercel'}>
-          <Stack spacing="sm">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Text element={{ as: 'h3', size: 'h4' }} weight="semibold">
-                "Vercel"
-              </Text>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  window.open('https://vercel.com/dashboard', '_blank')
-                }
-              >
-                Open ↗
-              </Button>
-            </div>
-            <Text element={{ size: 'sm' }} color="secondary">
-              "Deployment platform. Connect your GitHub repository and deploy.
-              Environment variables should be configured in the Vercel
-              dashboard."
-            </Text>
-          </Stack>
-        </Card>
+              {service.fields.map((field) => (
+                <div key={field.key}>
+                  <Input
+                    label={{ text: field.label }}
+                    value={{
+                      value: envVars[field.key] || '',
+                      onChange: (e) =>
+                        setEnvVars((prev) => ({
+                          ...prev,
+                          [field.key]: e.target.value,
+                        })),
+                    }}
+                  />
+                </div>
+              ))}
+            </Stack>
+          </Card>
+        ))}
 
         {completed ? (
           <Button variant="primary" onClick={completeSetup}>

@@ -267,6 +267,13 @@ export default function LeadTrackerPage() {
                         onMouseLeave={(e) =>
                           (e.currentTarget.style.background = 'transparent')
                         }
+                        onFocus={(e) =>
+                          (e.currentTarget.style.background =
+                            'color-mix(in srgb, var(--azimuth-color-muted) 50%, transparent)')
+                        }
+                        onBlur={(e) =>
+                          (e.currentTarget.style.background = 'transparent')
+                        }
                       >
                         <td
                           style={{

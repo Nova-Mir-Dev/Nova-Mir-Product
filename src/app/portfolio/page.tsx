@@ -10,18 +10,6 @@ const projects = [
   },
 ]
 
-const placeholders = [
-  {
-    title: 'Your Project Here',
-    description: "Every business has a story. Let's tell yours online.",
-  },
-  {
-    title: 'Another Success Story',
-    description: 'Our next project could be yours.',
-  },
-  { title: 'Coming Soon', description: "We're just getting started." },
-]
-
 export default function PortfolioPage() {
   return (
     <Container
@@ -43,8 +31,7 @@ export default function PortfolioPage() {
           color="secondary"
           style={{ textAlign: 'center' }}
         >
-          Work we&rsquo;re proud of — and work we&rsquo;re looking forward to
-          building with you.
+          Work we&rsquo;re proud of.
         </Text>
 
         <div
@@ -80,32 +67,6 @@ export default function PortfolioPage() {
                 >
                   {project.status}
                 </span>
-              </Stack>
-            </Card>
-          ))}
-
-          {placeholders.map((item) => (
-            <Card
-              key={item.title}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                border: '2px dashed var(--azimuth-color-border)',
-                background: 'transparent',
-                opacity: 0.6,
-              }}
-            >
-              <Stack spacing="md">
-                <Text
-                  element={{ as: 'h2', size: 'h4' }}
-                  weight="bold"
-                  color="secondary"
-                >
-                  {item.title}
-                </Text>
-                <Text element={{ size: 'sm' }} color="muted">
-                  {item.description}
-                </Text>
               </Stack>
             </Card>
           ))}

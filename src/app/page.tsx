@@ -418,73 +418,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. Testimonials Placeholder */}
-        <section style={{ padding: '4rem 0' }}>
-          <Text
-            element={{ as: 'h2', size: 'h2' }}
-            weight="semibold"
-            style={{ textAlign: 'center', marginBottom: '0.5rem' }}
-          >
-            Trusted by businesses like yours
-          </Text>
-          <Text
-            element={{ size: 'sm' }}
-            style={{
-              color: 'var(--azimuth-color-text-secondary)',
-              textAlign: 'center',
-              marginBottom: '3rem',
-            }}
-          >
-            Real feedback from real clients — coming soon.
-          </Text>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5rem',
-            }}
-          >
-            {[1, 2, 3].map((n) => (
-              <Card key={n} style={{ padding: '1.5rem', opacity: 0.5 }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: '0.5rem',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span
-                      key={s}
-                      style={{ color: 'var(--azimuth-color-text-secondary)' }}
-                    >
-                      &#9734;
-                    </span>
-                  ))}
-                </div>
-                <Text
-                  element={{ size: 'sm' }}
-                  style={{
-                    color: 'var(--azimuth-color-text-secondary)',
-                    fontStyle: 'italic',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  &ldquo;Coming soon&rdquo;
-                </Text>
-                <Text
-                  element={{ size: 'xs' }}
-                  weight="semibold"
-                  style={{ color: 'var(--azimuth-color-text-secondary)' }}
-                >
-                  — Client
-                </Text>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* 7. Bottom CTA */}
+        {/* 6. Bottom CTA */}
         <section
           style={{
             textAlign: 'center',
