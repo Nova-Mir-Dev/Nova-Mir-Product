@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
 import { notifyNewLead } from '@/lib/slack'
+import { createLeadSchema } from '@/features/leads/schemas'
 
 export async function GET(request: Request) {
   const supabase = await createClient()
@@ -59,56 +60,30 @@ export async function POST(request: Request) {
       )
     }
 
-    const body = (await request.json()) as {
-      name: string
-      email: string
-      businessName: string
-      phone?: string
-      serviceInterest?: string
-      budgetRange?: string
-      message: string
-      consent?: boolean
-    }
+    const body = await request.json()
 
-    if (
-      !body.name?.trim() ||
-      !body.email?.trim() ||
-      !body.businessName?.trim() ||
-      !body.message?.trim()
-    ) {
+    const parsed = createLeadSchema.safeParse(body)
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Name, email, business name, and message are required.' },
+        { error: parsed.error.issues[0]?.message || 'Validation failed.' },
         { status: 400 },
       )
     }
 
-    if (!body.consent) {
-      return NextResponse.json(
-        { error: 'You must consent to data storage before submitting.' },
-        { status: 400 },
-      )
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(body.email)) {
-      return NextResponse.json(
-        { error: 'Please provide a valid email address.' },
-        { status: 400 },
-      )
-    }
+    const { name, email, businessName, phone, serviceInterest, budgetRange, message, consent } = parsed.data
 
     const supabase = createServiceClient()
     const { data, error } = await supabase
       .from('leads')
       .insert({
-        name: body.name.trim(),
-        email: body.email.trim(),
-        business_name: body.businessName.trim(),
-        phone: body.phone?.trim() || null,
-        service_interest: body.serviceInterest || null,
-        budget_range: body.budgetRange || null,
-        message: body.message.trim(),
-        consent: body.consent,
+        name,
+        email,
+        business_name: businessName,
+        phone: phone || null,
+        service_interest: serviceInterest || null,
+        budget_range: budgetRange || null,
+        message,
+        consent,
       })
       .select()
       .single()
@@ -122,13 +97,13 @@ export async function POST(request: Request) {
     }
 
     notifyNewLead({
-      name: body.name.trim(),
-      email: body.email.trim(),
-      businessName: body.businessName.trim(),
-      phone: body.phone?.trim(),
-      serviceInterest: body.serviceInterest,
-      budgetRange: body.budgetRange,
-      message: body.message.trim(),
+      name,
+      email,
+      businessName,
+      phone: phone || undefined,
+      serviceInterest: serviceInterest || undefined,
+      budgetRange: budgetRange || undefined,
+      message,
     }).catch((err) => console.error('Slack notification failed:', err))
 
     return NextResponse.json({ id: data.id }, { status: 201 })

@@ -1,45 +1,36 @@
 'use client'
 
 import { Button, Card, Container, Stack, Text, Badge } from 'azimuth-ui'
+import { PRICING_TIERS } from '@/lib/pricing'
 
-const TIERS = [
-  {
-    title: 'Managed Website',
-    price: '$1,000\u2013$2,500',
-    popular: false,
-    features: [
-      'Custom-designed, mobile-friendly site',
-      'Contact forms & map integration',
-      'Basic SEO & analytics setup',
-      'Hosting & security included',
-    ],
-    href: '/services',
-  },
-  {
-    title: 'Website + Lead System',
-    price: '$1,500\u2013$4,500',
-    popular: true,
-    features: [
-      'Everything in Managed Website',
-      'Automated lead capture & CRM',
-      'Email follow-up sequences',
-      'Monthly performance reports',
-    ],
-    href: '/services',
-  },
-  {
-    title: 'Website + Operations',
-    price: '$3,000\u2013$10,000+',
-    popular: false,
-    features: [
-      'Everything in Website + Lead System',
-      'Online bookings & payments',
-      'Customer dashboard & automations',
-      'Priority support & maintenance',
-    ],
-    href: '/services',
-  },
+const PRICE_RANGES = ['$1,000\u2013$2,500', '$1,500\u2013$4,500', '$3,000\u2013$10,000+'] as const
+const SHORT_FEATURES: string[][] = [
+  [
+    'Custom-designed, mobile-friendly site',
+    'Contact forms & map integration',
+    'Basic SEO & analytics setup',
+    'Hosting & security included',
+  ],
+  [
+    'Everything in Managed Website',
+    'Automated lead capture & CRM',
+    'Email follow-up sequences',
+    'Monthly performance reports',
+  ],
+  [
+    'Everything in Website + Lead System',
+    'Online bookings & payments',
+    'Customer dashboard & automations',
+    'Priority support & maintenance',
+  ],
 ]
+const TIERS = PRICING_TIERS.map((tier, i) => ({
+  title: tier.name,
+  price: PRICE_RANGES[i]!,
+  popular: i === 1,
+  features: SHORT_FEATURES[i]!,
+  href: '/services',
+}))
 
 const STEPS = [
   {
@@ -517,7 +508,7 @@ export default function Home() {
               fontSize: '1.1rem',
             }}
           >
-            Tell me about your project and I&apos;ll follow up within 1\u20132
+            Tell me about your project and I&apos;ll follow up within 1–2
             business days.
           </Text>
           <Button

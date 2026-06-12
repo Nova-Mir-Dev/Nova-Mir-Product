@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 
 export async function GET() {
   const supabase = await createServerClient()
@@ -9,7 +10,14 @@ export async function GET() {
   } = await supabase.auth.getUser()
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json([])
+
+  const { data } = await supabase
+    .from('appointments')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('start_time', { ascending: true })
+
+  return NextResponse.json(data ?? [])
 }
 
 export async function POST(request: Request) {
@@ -20,19 +28,35 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const body = (await request.json()) as {
     title: string
     description?: string
     startTime: string
     endTime: string
   }
-  return NextResponse.json(
-    {
-      id: crypto.randomUUID(),
-      ...body,
-      userId: user.id,
+
+  const admin = createServiceClient()
+  const { data, error: insertError } = await admin
+    .from('appointments')
+    .insert({
+      user_id: user.id,
+      title: body.title,
+      description: body.description ?? null,
+      start_time: body.startTime,
+      end_time: body.endTime,
       status: 'scheduled',
-    },
-    { status: 201 },
-  )
+    })
+    .select()
+    .single()
+
+  if (insertError) {
+    console.error('Failed to create appointment:', insertError)
+    return NextResponse.json(
+      { error: 'Failed to create appointment.' },
+      { status: 500 },
+    )
+  }
+
+  return NextResponse.json(data, { status: 201 })
 }

@@ -1,3 +1,5 @@
+import { PRICING_TIERS } from '@/lib/pricing'
+
 export function JsonLd() {
   const organization = {
     '@context': 'https://schema.org',
@@ -37,29 +39,12 @@ export function JsonLd() {
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Web Development Packages',
-      itemListElement: [
-        {
-          '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Managed Website' },
-          price: '1500',
-          priceCurrency: 'CAD',
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Website + Lead System' },
-          price: '3000',
-          priceCurrency: 'CAD',
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: 'Website + Operations System',
-          },
-          price: '5000',
-          priceCurrency: 'CAD',
-        },
-      ],
+      itemListElement: PRICING_TIERS.map((tier) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: tier.name },
+        price: tier.startingPrice.replace(/[$,]/g, ''),
+        priceCurrency: 'CAD',
+      })),
     },
   }
 

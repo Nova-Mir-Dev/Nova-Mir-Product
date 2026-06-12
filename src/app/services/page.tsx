@@ -1,50 +1,6 @@
 'use client'
 import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
-
-const PACKAGES = [
-  {
-    name: 'Managed Website',
-    price: 'Starting at $1,500',
-    description: 'Small businesses that need a credible online presence',
-    features: [
-      'Custom-designed site',
-      'Mobile responsive',
-      'Contact form',
-      'SEO basics',
-      'Analytics',
-      'Hosting setup',
-    ],
-    recommended: false,
-  },
-  {
-    name: 'Website + Lead System',
-    price: 'Starting at $3,000',
-    description: 'Businesses ready to capture and track leads',
-    features: [
-      'Everything in Managed Website',
-      'Lead capture form',
-      'Email notifications',
-      'CRM / spreadsheet log',
-      'Confirmation messages',
-      'Simple reporting',
-    ],
-    recommended: true,
-  },
-  {
-    name: 'Website + Operations System',
-    price: 'Starting at $5,000',
-    description: 'Businesses needing booking, payments, and dashboards',
-    features: [
-      'Everything in Website + Lead System',
-      'Booking / intake workflows',
-      'Payment & deposit flow',
-      'Dashboard',
-      'Automated follow-up',
-      'System documentation',
-    ],
-    recommended: false,
-  },
-]
+import { PRICING_TIERS } from '@/lib/pricing'
 
 export default function ServicesPage() {
   return (
@@ -67,19 +23,19 @@ export default function ServicesPage() {
             gap: '1.5rem',
           }}
         >
-          {PACKAGES.map((pkg) => (
+          {PRICING_TIERS.map((tier, i) => (
             <Card
-              key={pkg.name}
+              key={tier.name}
               style={{
                 flex: '1 1 280px',
-                border: pkg.recommended
+                border: i === 1
                   ? '2px solid var(--azimuth-color-primary)'
                   : '1px solid var(--azimuth-color-border)',
                 position: 'relative',
               }}
               footer={
                 <Button
-                  variant={pkg.recommended ? 'primary' : 'secondary'}
+                  variant={i === 1 ? 'primary' : 'secondary'}
                   onClick={() => (window.location.href = '/contact')}
                 >
                   Get Started
@@ -87,7 +43,7 @@ export default function ServicesPage() {
               }
             >
               <Stack spacing="md">
-                {pkg.recommended && (
+                {i === 1 && (
                   <Text
                     element={{ size: 'xs' }}
                     weight="semibold"
@@ -102,7 +58,7 @@ export default function ServicesPage() {
                 )}
 
                 <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
-                  {pkg.name}
+                  {tier.name}
                 </Text>
 
                 <Text
@@ -110,11 +66,11 @@ export default function ServicesPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  {pkg.price}
+                  Starting at {tier.startingPrice}
                 </Text>
 
                 <Text element={{ size: 'sm' }} color="secondary">
-                  For: {pkg.description}
+                  For: {tier.description}
                 </Text>
 
                 <div
@@ -138,7 +94,7 @@ export default function ServicesPage() {
                   >
                     Includes:
                   </Text>
-                  {pkg.features.map((feature) => (
+                  {tier.features.map((feature) => (
                     <Text
                       key={feature}
                       element={{ size: 'sm' }}

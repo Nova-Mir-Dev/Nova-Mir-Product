@@ -1,45 +1,6 @@
 'use client'
 import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
-
-const TIERS = [
-  {
-    name: 'Managed Website',
-    price: '$1,500+',
-    popular: false,
-    features: [
-      'Custom design',
-      'Mobile responsive',
-      'Contact form',
-      'SEO',
-      'Analytics',
-      'Hosting',
-    ],
-  },
-  {
-    name: 'Website + Lead System',
-    price: '$3,000+',
-    popular: true,
-    features: [
-      'Everything in Managed Website',
-      'Lead capture',
-      'Email notifications',
-      'CRM log',
-      'Reporting',
-    ],
-  },
-  {
-    name: 'Website + Operations System',
-    price: '$5,000+',
-    popular: false,
-    features: [
-      'Everything in Website + Lead System',
-      'Booking',
-      'Payments',
-      'Dashboard',
-      'Automated follow-up',
-    ],
-  },
-]
+import { PRICING_TIERS } from '@/lib/pricing'
 
 export default function PricingPage() {
   return (
@@ -67,19 +28,19 @@ export default function PricingPage() {
             gap: '1.5rem',
           }}
         >
-          {TIERS.map((tier) => (
+          {PRICING_TIERS.map((tier, i) => (
             <Card
               key={tier.name}
               style={{
                 flex: '1 1 260px',
-                border: tier.popular
+                border: i === 1
                   ? '2px solid var(--azimuth-color-primary)'
                   : '1px solid var(--azimuth-color-border)',
                 position: 'relative',
               }}
               footer={
                 <Button
-                  variant={tier.popular ? 'primary' : 'secondary'}
+                  variant={i === 1 ? 'primary' : 'secondary'}
                   onClick={() => (window.location.href = '/contact')}
                 >
                   Get a Quote
@@ -87,7 +48,7 @@ export default function PricingPage() {
               }
             >
               <Stack spacing="md">
-                {tier.popular && (
+                {i === 1 && (
                   <Text
                     element={{ size: 'xs' }}
                     weight="semibold"
@@ -110,7 +71,7 @@ export default function PricingPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  {tier.price}
+                  {tier.startingPrice}+
                 </Text>
 
                 <div

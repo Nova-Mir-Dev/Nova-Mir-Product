@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { rateLimit } from '@/lib/rate-limit'
+import { updateLeadStatusSchema } from '@/features/leads/schemas'
 
 export async function PATCH(
   request: Request,
@@ -48,18 +49,19 @@ export async function PATCH(
       )
     }
 
-    const body = (await request.json()) as { status?: string }
+    const body = await request.json()
 
-    if (!body.status?.trim()) {
+    const parsed = updateLeadStatusSchema.safeParse(body)
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Status is required.' },
+        { error: parsed.error.issues[0]?.message || 'Validation failed.' },
         { status: 400 },
       )
     }
 
     const { data, error } = await supabase
       .from('leads')
-      .update({ status: body.status.trim() })
+      .update({ status: parsed.data.status })
       .eq('id', id)
       .select()
       .single()
