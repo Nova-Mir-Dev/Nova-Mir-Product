@@ -9,14 +9,16 @@ export async function generatePdf(
   // Option 1: Use puppeteer/playwright for HTML-to-PDF
   // Option 2: Use @react-pdf/renderer for React-to-PDF
   // Option 3: Use pdf-lib for programmatic PDF creation
-  throw new Error("PDF generation not configured. Install pdf library and implement generatePdf().");
+  throw new Error(
+    'PDF generation not configured. Install pdf library and implement generatePdf().',
+  )
 }
 
 export function generateInvoicePdf(data: {
-  invoiceNumber: string;
-  clientName: string;
-  amount: number;
-  date: string;
+  invoiceNumber: string
+  clientName: string
+  amount: number
+  date: string
 }): Promise<Buffer> {
   const html = `
     <html><body>
@@ -25,6 +27,6 @@ export function generateInvoicePdf(data: {
       <p>Amount: $${data.amount}</p>
       <p>Date: ${data.date}</p>
     </body></html>
-  `;
-  return generatePdf(html);
+  `
+  return generatePdf(html)
 }

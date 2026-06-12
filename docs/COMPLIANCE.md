@@ -14,6 +14,7 @@ This document summarizes applicable regulations and compliance requirements for 
 ## Key Requirements
 
 ### GDPR
+
 - Obtain explicit consent before collecting personal data
 - Provide a mechanism for data subject access requests (DSARs)
 - Maintain a record of processing activities
@@ -22,19 +23,21 @@ This document summarizes applicable regulations and compliance requirements for 
 - Data retention period: 90 days
 
 ### CCPA/CPRA
+
 - Disclose categories of personal information collected
 - Provide opt-out mechanism for sale/sharing of personal data
 - Honor consumer deletion and correction requests
 - Limit use of sensitive personal information
 
 ### PIPEDA
+
 - Obtain meaningful consent for collection, use, and disclosure
 - Limit collection to purposes identified
 - Implement data accuracy and safeguard measures
 - Provide individuals access to their personal information
 
-
 ### UK GDPR
+
 - Substantively identical to EU GDPR, enforced by the ICO under the Data Protection Act 2018
 - Appoint a UK representative if based outside the UK
 - Maintain records of processing activities
@@ -42,22 +45,20 @@ This document summarizes applicable regulations and compliance requirements for 
 - Conduct Data Protection Impact Assessments (DPIAs) for high-risk processing
 
 ### APP / Privacy Act 1988 (Australia)
+
 - 13 Australian Privacy Principles governing collection, use, and disclosure
 - Notify individuals of collection and purpose
 - Maintain data quality and security safeguards
 - Provide access and correction rights
 - Notify OAIC and affected individuals of eligible data breaches
 
-
-
 ### LFPDPPP (Mexico)
+
 - Comprehensive GDPR-like law with ARCO rights (Access, Rectification, Cancellation, Opposition)
 - Obtain consent for processing personal data
 - Publish a privacy notice describing data practices
 - Implement physical, technical, and administrative security measures
 - Notify the INAI and data subjects of security breaches
-
-
 
 ## Current Configuration
 

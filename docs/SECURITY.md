@@ -16,11 +16,12 @@ This document outlines the security baseline for nova-mir-product.
 - [x] Rate limiting on public API endpoints
 - [ ] Webhook signature verification
 - [ ] File upload validation
-- [ ] PCI-DSS scope minimized 
+- [ ] PCI-DSS scope minimized
 
 ## Content Security Policy
 
 The generated CSP includes `'unsafe-inline'` and `'unsafe-eval'` which are required by Next.js during development (Turbopack injects inline scripts for hot module reloading). For production, harden the CSP by:
+
 1. Generating nonces for inline scripts using Next.js `experimental.serverActions.allowedForwardedHosts` or a custom middleware
 2. Removing `'unsafe-inline'` and `'unsafe-eval'` after verifying all scripts use nonces
 3. Move theme-detection inline script to an external file loaded via Next.js `<Script>` component with nonce

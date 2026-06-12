@@ -12,6 +12,7 @@ Completed items can be checked off as you go.
 ## 1. Environment Variables
 
 Copy `.env.example` to `.env.local` and fill in every variable:
+
 ```bash
 cp .env.example .env.local
 ```
@@ -43,10 +44,12 @@ cp .env.example .env.local
 ## 2. Database
 
 - [ ] Run migrations in Supabase SQL Editor or via CLI:
+
 ```bash
 npx supabase db push
 ```
-- [ ] Verify tables created: `users`, `audit_logs`, `api_keys`, `appointments`, 
+
+- [ ] Verify tables created: `users`, `audit_logs`, `api_keys`, `appointments`,
 
 ## 3. Hosting
 

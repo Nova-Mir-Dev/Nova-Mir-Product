@@ -51,3 +51,22 @@ CREATE TABLE IF NOT EXISTS appointments (
 
 CREATE INDEX idx_appointments_user ON appointments(user_id);
 CREATE INDEX idx_appointments_time ON appointments(start_time);
+
+-- Lead intake
+CREATE TABLE IF NOT EXISTS leads (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  business_name TEXT NOT NULL,
+  phone TEXT,
+  service_interest TEXT,
+  budget_range TEXT,
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new',
+  source TEXT DEFAULT 'website',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_leads_created ON leads(created_at DESC);
+CREATE INDEX idx_leads_status ON leads(status);

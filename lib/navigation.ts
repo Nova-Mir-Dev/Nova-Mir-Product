@@ -1,38 +1,48 @@
 export interface NavPage {
-  label: string;
-  path: string;
-  icon?: string;
+  label: string
+  path: string
+  icon?: string
 }
 
 export const APP_CONFIG = {
-  title: "Nova Mir",
-  logo: "",
-  navStyle: "top-bar",
-};
+  title: 'Nova Mir',
+  subtitle: 'Web development for small businesses',
+  logo: '',
+  navStyle: 'top-bar',
+  email: 'hello@novamir.dev',
+}
 
 export const NAV_PAGES: NavPage[] = [
   {
-    "label": "Home",
-    "path": "/"
+    label: 'Home',
+    path: '/',
   },
   {
-    "label": "Services",
-    "path": "/services"
+    label: 'Services',
+    path: '/services',
   },
   {
-    "label": "Process",
-    "path": "/process"
+    label: 'Process',
+    path: '/process',
   },
   {
-    "label": "Portfolio",
-    "path": "/portfolio"
+    label: 'Portfolio',
+    path: '/portfolio',
   },
   {
-    "label": "Pricing",
-    "path": "/pricing"
+    label: 'Pricing',
+    path: '/pricing',
   },
   {
-    "label": "Contact",
-    "path": "/contact"
-  }
-] as const;
+    label: 'About',
+    path: '/about',
+  },
+  {
+    label: 'Contact',
+    path: '/contact',
+  },
+  {
+    label: 'Terms',
+    path: '/terms',
+  },
+] as const

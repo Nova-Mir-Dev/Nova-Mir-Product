@@ -5,6 +5,7 @@ _Last updated: 2026-06-09_
 ## Information We Collect
 
 We collect the following information:
+
 - **Account data**: email address, name (when provided)
 - **Usage data**: anonymous page views
 - **Analytics**: via plausible (privacy-first)
@@ -42,7 +43,6 @@ We retain your personal data for **90 days** after your last interaction, or as 
 - ARCO rights: Access, Rectification, Cancellation, Opposition
 - Withdraw consent
 - Limit use and disclosure
-
 
 ## GDPR Compliance
 

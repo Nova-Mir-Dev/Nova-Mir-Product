@@ -18,6 +18,7 @@ npx tsx scripts/validate-config.ts --config .tmp/config.json --json
 ## When to Invoke the Agent
 
 Only invoke agent reasoning when:
+
 - A constraint violation needs contextual explanation
 - Multiple constraints interact and a tradeoff decision is needed
 - The user needs a recommendation, not just a violation list

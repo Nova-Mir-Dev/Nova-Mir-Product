@@ -5,19 +5,23 @@
 Daily snapshots are configured with point-in-time recovery (PITR).
 
 ### Supabase Backups
+
 - [ ] Enable Point-in-Time Recovery in Supabase Dashboard > Database > Backups
 - [ ] Backups retained for 7 days on free tier, extended on paid plans
 - [ ] To restore: Supabase Dashboard > Database > Backups > Restore
 
 ### File Storage Backups
+
 - [ ] No file storage configured — skip
 
 ### Backup Verification
+
 - [ ] Schedule monthly backup restoration tests
 - [ ] Document restoration procedures in runbook
 - [ ] Set up alerts for backup failures
 
 ### Recovery Objectives
+
 - **RPO (Recovery Point Objective):** 24 hours (daily backups)
 - **RTO (Recovery Time Objective):** 4 hours
 

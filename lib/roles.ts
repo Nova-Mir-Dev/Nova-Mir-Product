@@ -1,12 +1,12 @@
-export type Role = "viewer" | "editor" | "admin";
+export type Role = 'viewer' | 'editor' | 'admin'
 
 export interface RolePermissions {
-  canRead: boolean;
-  canWrite: boolean;
-  canDelete: boolean;
-  canManageUsers: boolean;
-  canManageBilling: boolean;
-  canViewAuditLogs: boolean;
+  canRead: boolean
+  canWrite: boolean
+  canDelete: boolean
+  canManageUsers: boolean
+  canManageBilling: boolean
+  canViewAuditLogs: boolean
 }
 
 export const ROLE_PERMISSIONS: Record<Role, RolePermissions> = {
@@ -34,15 +34,15 @@ export const ROLE_PERMISSIONS: Record<Role, RolePermissions> = {
     canManageBilling: true,
     canViewAuditLogs: true,
   },
-};
+}
 
 export function hasPermission(
   role: Role,
   permission: keyof RolePermissions,
 ): boolean {
-  return ROLE_PERMISSIONS[role]?.[permission] ?? false;
+  return ROLE_PERMISSIONS[role]?.[permission] ?? false
 }
 
 export function requiresMfa(role: Role): boolean {
-  return role === "admin";
+  return role === 'admin'
 }

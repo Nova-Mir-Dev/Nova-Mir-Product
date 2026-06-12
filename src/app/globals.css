@@ -2,28 +2,21 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
 
 img,
-picture,
 video,
-canvas,
-svg {
+canvas {
   display: block;
-  max-width: 100%;
 }
 
 input,
@@ -35,7 +28,6 @@ select {
 
 a {
   color: inherit;
-  text-decoration: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {

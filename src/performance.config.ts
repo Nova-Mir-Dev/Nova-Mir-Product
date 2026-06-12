@@ -5,9 +5,9 @@ export const PERFORMANCE_CONFIG = {
   maxConnections: 10,
   maxStorageGb: 5,
   maxBandwidthGb: 10,
-  computeTier: "free",
-  scalingStrategy: "vertical",
-  profile: "speed",
-};
+  computeTier: 'free',
+  scalingStrategy: 'vertical',
+  profile: 'speed',
+}
 
 // To use: import { PERFORMANCE_CONFIG } from "@/performance.config";

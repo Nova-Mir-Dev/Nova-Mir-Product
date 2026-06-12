@@ -3,6 +3,7 @@
 This project follows the co-location pattern described in AGENTS.md.
 
 ## Tech Stack
+
 - **Framework**: Next.js 15 (App Router)
 - **Hosting**: vercel
 - **Database**: postgresql (supabase)
@@ -35,12 +36,14 @@ src/
 ```
 
 ## API Routes
+
 - No API routes configured
 
 ## Authentication Flow
+
 No authentication configured. All routes are public.
 
 ## Data Model
+
 - **Database**: postgresql on supabase
 - **Search**: pgvector
-
