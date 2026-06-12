@@ -3,34 +3,30 @@
 import { Button, Card, Container, Stack, Text, Badge } from 'azimuth-ui'
 import { PRICING_TIERS } from '@/lib/pricing'
 
-const PRICE_RANGES = [
-  '$1,000–$2,500',
-  '$1,500–$4,500',
-  '$3,000–$10,000+',
-] as const
 const SHORT_FEATURES: string[][] = [
+  [
+    'Booking / intake workflows',
+    'Payment & deposit flow',
+    'Customer dashboard & automations',
+    'Priority support & maintenance',
+  ],
+  [
+    'Everything in Website + Operations System',
+    'Automated lead capture & CRM',
+    'Email follow-up sequences',
+    'Monthly performance reports',
+  ],
   [
     'Custom-designed, mobile-friendly site',
     'Contact forms & map integration',
     'Basic SEO & analytics setup',
     'Hosting & security included',
   ],
-  [
-    'Everything in Managed Website',
-    'Automated lead capture & CRM',
-    'Email follow-up sequences',
-    'Monthly performance reports',
-  ],
-  [
-    'Everything in Website + Lead System',
-    'Online bookings & payments',
-    'Customer dashboard & automations',
-    'Priority support & maintenance',
-  ],
 ]
-const TIERS = PRICING_TIERS.map((tier, i) => ({
+const reversed = [...PRICING_TIERS].reverse()
+const TIERS = reversed.map((tier, i) => ({
   title: tier.name,
-  price: PRICE_RANGES[i]!,
+  price: `${tier.startingPrice}+`,
   popular: i === 1,
   features: SHORT_FEATURES[i]!,
   href: '/services',
