@@ -86,6 +86,13 @@ function Navbar() {
                   (e.currentTarget.style.color =
                     'var(--azimuth-color-text-secondary)')
                 }
+                onFocus={(e) =>
+                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+                }
+                onBlur={(e) =>
+                  (e.currentTarget.style.color =
+                    'var(--azimuth-color-text-secondary)')
+                }
               >
                 {page.label}
               </a>
