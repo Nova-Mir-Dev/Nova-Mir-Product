@@ -59,8 +59,6 @@ const PROJECTS = [
     description: 'Studio site for a web development business',
     href: '/portfolio',
   },
-  { title: 'More coming soon', description: '', href: '' },
-  { title: 'More coming soon', description: '', href: '' },
 ]
 
 export default function Home() {
@@ -318,7 +316,7 @@ export default function Home() {
                     border: '1px solid var(--azimuth-color-border)',
                   }}
                 >
-                  {project.description ? 'Project Screenshot' : 'Coming Soon'}
+                  Project Screenshot
                 </div>
                 <Text weight="semibold" style={{ marginBottom: '0.25rem' }}>
                   {project.title}
