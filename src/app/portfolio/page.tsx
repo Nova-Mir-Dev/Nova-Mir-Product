@@ -8,6 +8,13 @@ const projects = [
     description: 'Custom web development studio site',
     status: 'In progress' as const,
   },
+  {
+    title: 'jcrose.dev',
+    description:
+      'Founder personal project — Next.js, dark mode, blog, project showcase',
+    status: 'Live' as const,
+    href: 'https://jcrose.dev' as const,
+  },
 ]
 
 export default function PortfolioPage() {
@@ -41,35 +48,50 @@ export default function PortfolioPage() {
             gap: '1.5rem',
           }}
         >
-          {projects.map((project) => (
-            <Card
-              key={project.title}
-              style={{ display: 'flex', flexDirection: 'column' }}
-            >
-              <Stack spacing="md">
-                <Text element={{ as: 'h2', size: 'h4' }} weight="bold">
-                  {project.title}
-                </Text>
-                <Text element={{ size: 'sm' }} color="secondary">
-                  {project.description}
-                </Text>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    padding: '0.25rem 0.75rem',
-                    borderRadius: '999px',
-                    background: 'var(--azimuth-color-primary)',
-                    color: '#fff',
-                    alignSelf: 'flex-start',
-                  }}
-                >
-                  {project.status}
-                </span>
-              </Stack>
-            </Card>
-          ))}
+          {projects.map((project) => {
+            const card = (
+              <Card
+                key={project.title}
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
+                <Stack spacing="md">
+                  <Text element={{ as: 'h2', size: 'h4' }} weight="bold">
+                    {project.title}
+                  </Text>
+                  <Text element={{ size: 'sm' }} color="secondary">
+                    {project.description}
+                  </Text>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '0.25rem 0.75rem',
+                      borderRadius: '999px',
+                      background: 'var(--azimuth-color-primary)',
+                      color: '#fff',
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    {project.status}
+                  </span>
+                </Stack>
+              </Card>
+            )
+            return 'href' in project ? (
+              <a
+                key={project.title}
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {card}
+              </a>
+            ) : (
+              card
+            )
+          })}
         </div>
 
         <div style={{ textAlign: 'center', paddingTop: '1.5rem' }}>
