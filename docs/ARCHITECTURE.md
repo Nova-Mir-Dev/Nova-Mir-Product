@@ -70,21 +70,25 @@
 
 ## API Routes
 
-| Route                 | Methods   | Auth                  | Rate Limited | Validation |
-| --------------------- | --------- | --------------------- | ------------ | ---------- |
-| `/api/leads`          | GET, POST | GET: admin, POST: public | POST only | Zod        |
-| `/api/leads/[id]`     | PATCH     | Admin                 | Yes          | Zod        |
-| `/api/appointments`   | GET, POST | Required              | POST only    | Zod        |
-| `/api/admin/api-keys` | GET, POST | Required + role check | POST only    | Zod        |
-| `/api/health`         | GET       | None                  | Yes          | N/A        |
-| `/api/compliance/*`   | Various   | Required              | Yes          | Zod        |
-| `/api/auth/me`        | GET       | None (self-service)   | Yes          | N/A        |
-| `/api/admin/bootstrap`| POST      | Required + role check | Yes          | Zod        |
-| `/api/admin/mfa/*`    | Various   | Required + role check | Yes          | Zod        |
-| `/api/admin/crud/*`   | Various   | Required + role check | Yes          | Zod        |
-| `/api/notifications/*`| Various   | Required + role check | Yes          | Zod        |
-| `/api/leads/count`    | GET       | Admin                 | Yes          | N/A        |
-| `/api/documents/*`    | Various   | Required + role check | Yes          | Zod        |
+| Route                        | Methods   | Auth                  | Rate Limited | Validation |
+| ---------------------------- | --------- | --------------------- | ------------ | ---------- |
+| `/api/leads`                 | GET, POST | GET: admin, POST: public | POST only | Zod        |
+| `/api/leads/[id]`            | PATCH     | Admin                 | Yes          | Zod        |
+| `/api/appointments`          | GET, POST | Required              | POST only    | Zod        |
+| `/api/admin/api-keys`        | GET, POST | Required + role check | POST only    | Zod        |
+| `/api/admin/audit`           | GET       | Required + admin role | Yes          | N/A        |
+| `/api/admin/billing`         | GET, POST | Required + admin role | Yes          | N/A        |
+| `/api/admin/clients`         | GET, POST | Required + admin role | Yes          | N/A        |
+| `/api/admin/leads`           | GET       | Required + admin role | Yes          | N/A        |
+| `/api/auth/mfa/*`            | POST      | Required              | Yes          | Zod        |
+| `/api/auth/me`               | GET       | None (self-service)   | Yes          | N/A        |
+| `/api/bootstrap`             | POST      | Required + admin role | Yes          | Zod        |
+| `/api/compliance/*`          | Various   | Required              | Yes          | Zod        |
+| `/api/crud/[entity]`         | Various   | Required + admin role | Yes          | Zod        |
+| `/api/documents`             | Various   | Required + role check | Yes          | Zod        |
+| `/api/export`                | GET       | Required + admin role | Yes          | N/A        |
+| `/api/health`                | GET       | None                  | Yes          | N/A        |
+| `/api/notifications`         | Various   | Required + admin role | Yes          | Zod        |
 
 ## Authentication Flow
 

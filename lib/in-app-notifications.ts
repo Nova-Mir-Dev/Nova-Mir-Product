@@ -1,51 +1,30 @@
-export interface InAppNotification {
-  id: string;
-  userId: string;
-  title: string;
-  body: string;
-  type: "info" | "success" | "warning" | "error";
-  read: boolean;
-  link?: string;
-  createdAt: Date;
+import { createClient } from '@/lib/supabase-server'
+
+export async function getNotifications(userId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(50)
+  return data ?? []
 }
 
-const notifications: Map<string, InAppNotification[]> = new Map();
-
-export function createNotification(
-  userId: string,
-  title: string,
-  body: string,
-  type: InAppNotification["type"] = "info",
-  link?: string,
-): InAppNotification {
-  const notif: InAppNotification = {
-    id: crypto.randomUUID(),
-    userId,
-    title,
-    body,
-    type,
-    read: false,
-    link,
-    createdAt: new Date(),
-  };
-  const userNotifs = notifications.get(userId) || [];
-  userNotifs.push(notif);
-  notifications.set(userId, userNotifs);
-  return notif;
+export async function markAsRead(userId: string, notificationId: string) {
+  const supabase = await createClient()
+  await supabase
+    .from('notifications')
+    .update({ read_at: new Date().toISOString() })
+    .eq('id', notificationId)
+    .eq('user_id', userId)
 }
 
-export function getNotifications(userId: string, unreadOnly = false): InAppNotification[] {
-  const userNotifs = notifications.get(userId) || [];
-  return unreadOnly ? userNotifs.filter((n) => !n.read) : [...userNotifs].reverse();
-}
-
-export function markAsRead(userId: string, notificationId: string): void {
-  const userNotifs = notifications.get(userId) || [];
-  const notif = userNotifs.find((n) => n.id === notificationId);
-  if (notif) notif.read = true;
-}
-
-export function markAllAsRead(userId: string): void {
-  const userNotifs = notifications.get(userId) || [];
-  userNotifs.forEach((n) => (n.read = true));
+export async function markAllAsRead(userId: string) {
+  const supabase = await createClient()
+  await supabase
+    .from('notifications')
+    .update({ read_at: new Date().toISOString() })
+    .eq('user_id', userId)
+    .is('read_at', null)
 }
