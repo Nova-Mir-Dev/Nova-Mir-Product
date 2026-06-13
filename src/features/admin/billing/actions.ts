@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
+import { generateInvoiceNumber, computeLineItems } from './billing-utils'
 
 export async function createInvoice(formData: FormData) {
   const supabase = await createClient()
@@ -19,10 +20,6 @@ export async function createInvoice(formData: FormData) {
   if (profile?.role !== 'admin') throw new Error('Forbidden')
 
   const clientName = formData.get('clientName') as string
-  const description = formData.get('description') as string | null
-  const quantity = Number(formData.get('quantity') || '1')
-  const unitPrice = Number(formData.get('unitPrice') || '0')
-  const amount = Number(formData.get('amount') || '0')
 
   if (!clientName?.trim()) {
     throw new Error('Client name is required')
@@ -37,28 +34,10 @@ export async function createInvoice(formData: FormData) {
     .gte('created_at', `${year}-01-01T00:00:00Z`)
     .lt('created_at', `${year + 1}-01-01T00:00:00Z`)
 
-  const nextNum = (count ?? 0) + 1
-  const invoiceNumber = `INV-${year}-${String(nextNum).padStart(5, '0')}`
-
-  let totalAmount = 0
-  let lineItem:
-    | { description: string; quantity: number; unit_price: number; amount: number }
-    | undefined
-
-  if (description?.trim() && unitPrice > 0) {
-    const unitPriceCents = Math.round(unitPrice * 100)
-    totalAmount = quantity * unitPriceCents
-    lineItem = {
-      description: description.trim(),
-      quantity,
-      unit_price: unitPriceCents,
-      amount: totalAmount,
-    }
-  } else if (amount > 0) {
-    totalAmount = Math.round(amount * 100)
-  } else {
-    throw new Error('Description + unit price or amount is required')
-  }
+  const invoiceNumber = generateInvoiceNumber((count ?? 0) + 1)
+  const items = computeLineItems(formData)
+  const totalAmount = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) ||
+    Math.round(Number(formData.get('amount') || '0') * 100)
 
   const { data: invoice, error: createError } = await admin
     .from('portfolio_invoices')
@@ -74,9 +53,13 @@ export async function createInvoice(formData: FormData) {
 
   if (createError) throw new Error('Failed to create invoice')
 
-  if (lineItem) {
+  const firstItem = items[0]
+  if (firstItem) {
     const { error: liError } = await admin.from('line_items').insert({
-      ...lineItem,
+      description: firstItem.description,
+      quantity: firstItem.quantity,
+      unit_price: firstItem.unitPrice,
+      amount: firstItem.unitPrice * firstItem.quantity,
       invoice_id: invoice.id,
     })
     if (liError) throw new Error('Failed to create line items')

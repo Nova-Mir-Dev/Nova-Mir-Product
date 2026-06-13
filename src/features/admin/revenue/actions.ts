@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
+import { validateRevenueEntry, validateExpenseEntry } from './revenue-utils'
 
 export async function createRevenueEntry(_prevState: { error: string } | null, formData: FormData) {
   const supabase = await createClient()
@@ -18,30 +19,19 @@ export async function createRevenueEntry(_prevState: { error: string } | null, f
     .single()
   if (profile?.role !== 'admin') return { error: 'Forbidden' }
 
-  const clientName = formData.get('clientName') as string
-  const description = formData.get('description') as string
-  const amount = formData.get('amount') as string
-  const category = formData.get('category') as string
-  const recordedAt = formData.get('recordedAt') as string
+  const data = Object.fromEntries(formData) as Record<string, FormDataEntryValue | null>
+  const validation = validateRevenueEntry(data)
+  if (validation) return validation
 
-  if (!clientName?.trim()) return { error: 'Client name is required' }
-  if (!description?.trim()) return { error: 'Description is required' }
-  if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) return { error: 'Valid amount is required' }
-  if (!category?.trim()) return { error: 'Category is required' }
-  if (!recordedAt?.trim()) return { error: 'Date is required' }
-
-  const allowedCategories = ['service', 'product', 'consulting', 'retainer', 'other']
-  if (!allowedCategories.includes(category)) return { error: 'Invalid category' }
-
-  const amountCents = Math.round(Number(amount) * 100)
+  const amountCents = Math.round(Number(data.amount) * 100)
 
   const admin = createServiceClient()
   const { error: insertError } = await admin.from('revenue_entries').insert({
-    client_name: clientName.trim(),
-    description: description.trim(),
+    client_name: (data.clientName as string).trim(),
+    description: (data.description as string).trim(),
     amount: amountCents,
-    category,
-    recorded_at: new Date(recordedAt).toISOString(),
+    category: data.category as string,
+    recorded_at: new Date(data.recordedAt as string).toISOString(),
   })
 
   if (insertError) return { error: 'Failed to create revenue entry' }
@@ -65,32 +55,20 @@ export async function createExpenseEntry(_prevState: { error: string } | null, f
     .single()
   if (profile?.role !== 'admin') return { error: 'Forbidden' }
 
-  const vendor = formData.get('vendor') as string
-  const description = formData.get('description') as string
-  const amount = formData.get('amount') as string
-  const category = formData.get('category') as string
-  const recordedAt = formData.get('recordedAt') as string
-  const receiptUrl = formData.get('receiptUrl') as string | null
+  const data = Object.fromEntries(formData) as Record<string, FormDataEntryValue | null>
+  const validation = validateExpenseEntry(data)
+  if (validation) return validation
 
-  if (!vendor?.trim()) return { error: 'Vendor is required' }
-  if (!description?.trim()) return { error: 'Description is required' }
-  if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) return { error: 'Valid amount is required' }
-  if (!category?.trim()) return { error: 'Category is required' }
-  if (!recordedAt?.trim()) return { error: 'Date is required' }
-
-  const allowedCategories = ['software', 'hosting', 'contractor', 'travel', 'office', 'marketing', 'other']
-  if (!allowedCategories.includes(category)) return { error: 'Invalid category' }
-
-  const amountCents = Math.round(Number(amount) * 100)
+  const amountCents = Math.round(Number(data.amount) * 100)
 
   const admin = createServiceClient()
   const { error: insertError } = await admin.from('expense_entries').insert({
-    vendor: vendor.trim(),
-    description: description.trim(),
+    vendor: (data.vendor as string).trim(),
+    description: (data.description as string).trim(),
     amount: amountCents,
-    category,
-    recorded_at: new Date(recordedAt).toISOString(),
-    receipt_url: receiptUrl?.trim() || null,
+    category: data.category as string,
+    recorded_at: new Date(data.recordedAt as string).toISOString(),
+    receipt_url: (data.receiptUrl as string)?.trim() || null,
   })
 
   if (insertError) return { error: 'Failed to create expense entry' }

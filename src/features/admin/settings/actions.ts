@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
+import { generateApiKey } from './settings-utils'
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient()
@@ -21,14 +22,6 @@ export async function updateProfile(formData: FormData) {
   if (error) throw new Error('Failed to update profile')
 
   revalidatePath('/admin/settings')
-}
-
-async function hashKey(key: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(key)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 export interface CreateApiKeyResult {
@@ -54,9 +47,7 @@ export async function createApiKey(
     .single()
   if (profile?.role !== 'admin') return { success: false, error: 'Forbidden' }
 
-  const rawKey = crypto.randomUUID() + crypto.randomUUID()
-  const prefix = rawKey.slice(0, 8)
-  const hash = await hashKey(rawKey)
+  const { key: rawKey, hashedKey: hash, prefix } = await generateApiKey()
   const name = `API Key - ${new Date().toISOString().split('T')[0]}`
 
   const admin = createServiceClient()
