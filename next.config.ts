@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'strict-dynamic'",
+              "script-src 'self' 'unsafe-inline' 'strict-dynamic' https://plausible.io",
               "style-src 'self' 'unsafe-inline'",
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://plausible.io",
               "img-src 'self' data: blob: https://*.supabase.co",
@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Permissions-Policy',
             value:
-              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+              'camera=(), microphone=(), geolocation=()',
           },
           {
             key: 'X-XSS-Protection',
