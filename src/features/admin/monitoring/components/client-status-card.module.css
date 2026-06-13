@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-sm);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dot[data-status='healthy'] {
+  background-color: var(--azimuth-color-success);
+}
+
+.dot[data-status='warning'] {
+  background-color: var(--azimuth-color-warning);
+}
+
+.dot[data-status='down'] {
+  background-color: var(--azimuth-color-danger);
+}

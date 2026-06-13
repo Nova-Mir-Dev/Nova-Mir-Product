@@ -1,0 +1,13 @@
+.kpiRow {
+  display: flex;
+  gap: var(--azimuth-spacing-md);
+}
+
+.statCard {
+  flex: 1;
+}
+
+.formActions {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+}

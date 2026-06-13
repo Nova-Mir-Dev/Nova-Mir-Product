@@ -1,0 +1,27 @@
+.list {
+  margin: var(--azimuth-spacing-xs) 0 0 0;
+}
+
+.configGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--azimuth-spacing-xs);
+}
+
+.configRow {
+  display: flex;
+  gap: 8px;
+}
+
+.configLabel {
+  min-width: 120px;
+  font-size: 0.875rem;
+}
+
+.configValue {
+  font-size: 0.875rem;
+}
+
+.footnote {
+  opacity: 0.6;
+}

@@ -1,0 +1,5 @@
+.actions {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+  align-items: center;
+}

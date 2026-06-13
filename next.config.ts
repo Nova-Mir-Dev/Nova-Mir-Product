@@ -14,20 +14,20 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [
           {
-            key: 'Access-Control-Allow-Origin',
-            value: process.env.CORS_ORIGIN || 'https://novamir.dev',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PATCH, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
-          },
-          {
             key: 'Content-Security-Policy',
-            value: `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://plausible.io; img-src 'self' data: blob:; font-src 'self'`,
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'strict-dynamic'",
+              "style-src 'self' 'unsafe-inline'",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://plausible.io",
+              "img-src 'self' data: blob: https://*.supabase.co",
+              "font-src 'self'",
+              "frame-src 'none'",
+              "frame-ancestors 'none'",
+              "form-action 'self'",
+              "base-uri 'self'",
+              "upgrade-insecure-requests",
+            ].join('; '),
           },
           {
             key: 'Strict-Transport-Security',

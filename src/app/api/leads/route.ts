@@ -14,6 +14,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (profile?.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const { searchParams } = new URL(request.url)
   const status = searchParams.get('status')
   const limit = Math.min(
@@ -53,7 +62,8 @@ export async function POST(request: Request) {
       request.headers.get('x-real-ip') ||
       'unknown'
 
-    if (!rateLimit(`leads:${ip}`, 10, 60000)) {
+    const { allowed } = await rateLimit(`leads:${ip}`, 10, 60000)
+    if (!allowed) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 },

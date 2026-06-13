@@ -27,3 +27,23 @@ export async function createClient() {
     },
   )
 }
+
+export async function createAdminClient() {
+  const cookieStore = await cookies()
+  return createServerClient(
+    getEnv('NEXT_PUBLIC_SUPABASE_URL'),
+    getEnv('SUPABASE_SERVICE_ROLE_KEY'),
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value, options } of cookiesToSet) {
+            cookieStore.set(name, value, options)
+          }
+        },
+      },
+    },
+  )
+}

@@ -1,0 +1,4 @@
+.toolbar {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+}

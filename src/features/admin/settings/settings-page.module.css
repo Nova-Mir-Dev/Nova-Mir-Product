@@ -1,0 +1,15 @@
+.section {
+  padding: var(--azimuth-spacing-md) 0;
+}
+
+.apiKeyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--azimuth-spacing-sm) 0;
+}
+
+.apiKeyPrefix {
+  font-family: var(--azimuth-font-mono, monospace);
+  font-size: var(--azimuth-font-size-sm, 0.875rem);
+}

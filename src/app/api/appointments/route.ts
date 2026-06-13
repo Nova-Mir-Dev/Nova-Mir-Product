@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function GET() {
   const supabase = await createServerClient()
@@ -28,6 +29,14 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { allowed } = await rateLimit(`appointments:${user.id}`, 30, 60000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 },
+    )
+  }
 
   const body = (await request.json()) as {
     title: string

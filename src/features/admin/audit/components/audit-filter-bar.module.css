@@ -1,0 +1,12 @@
+.filterForm {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filterActions {
+  display: flex;
+  gap: var(--azimuth-spacing-xs);
+  align-items: flex-end;
+}

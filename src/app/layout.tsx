@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Sora, Onest } from 'next/font/google'
-import { ClientShell } from './_components/client-shell'
-import { ThemeScript } from './_components/theme-script'
-import { JsonLd } from './json-ld'
+import { ThemeScript } from './(public)/_components/theme-script'
+import { JsonLd } from './(public)/json-ld'
 import './globals.css'
 import 'azimuth-ui/styles.css'
 
@@ -88,7 +87,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeScript />
-        <ClientShell>{children}</ClientShell>
+        {children}
         <JsonLd />
       </body>
     </html>

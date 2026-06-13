@@ -1,0 +1,15 @@
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.title {
+  margin-bottom: var(--azimuth-spacing-sm);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--azimuth-spacing-sm);
+}

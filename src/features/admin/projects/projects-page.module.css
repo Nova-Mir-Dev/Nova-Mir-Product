@@ -1,0 +1,10 @@
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-xs);
+}
+
+.progressValue {
+  min-width: 3ch;
+  text-align: right;
+}

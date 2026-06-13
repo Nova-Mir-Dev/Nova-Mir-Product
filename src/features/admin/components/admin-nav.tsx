@@ -1,0 +1,47 @@
+import Link from 'next/link'
+import { Stack, Text } from 'azimuth-ui'
+import styles from './admin-nav.module.css'
+
+interface NavItem {
+  label: string
+  path: string
+}
+
+const navItems: NavItem[] = [
+  { label: 'Clients', path: '/admin/clients' },
+  { label: 'Leads', path: '/admin/leads' },
+  { label: 'Projects', path: '/admin/projects' },
+  { label: 'Billing', path: '/admin/billing' },
+  { label: 'Revenue', path: '/admin/revenue' },
+  { label: 'Monitoring', path: '/admin/monitoring' },
+  { label: 'Bootstrap', path: '/admin/bootstrap' },
+  { label: 'Audit Log', path: '/admin/audit' },
+  { label: 'Settings', path: '/admin/settings' },
+]
+
+export default function AdminNav() {
+  return (
+    <nav className={styles.nav}>
+      <div className={styles.navInner}>
+        <Stack spacing="sm">
+          <Text
+            element={{ as: 'h2', size: 'h5' }}
+            weight="semibold"
+            className={styles.title}
+          >
+            Admin
+          </Text>
+          <ul className={styles.navList}>
+            {navItems.map((item) => (
+              <li key={item.path} className={styles.navItem}>
+                <Link href={item.path} className={styles.link}>
+                  <Text>{item.label}</Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Stack>
+      </div>
+    </nav>
+  )
+}

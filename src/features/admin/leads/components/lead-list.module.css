@@ -1,0 +1,30 @@
+.toolbar {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.detailCard {
+  border-left: 3px solid var(--azimuth-color-accent);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--azimuth-spacing-md);
+}
+
+.detailLabel {
+  font-size: var(--azimuth-font-size-sm);
+  color: var(--azimuth-color-text-muted);
+}
+
+.detailValue {
+  margin: 0;
+}
+
+.formActions {
+  display: flex;
+  gap: var(--azimuth-spacing-sm);
+}

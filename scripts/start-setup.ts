@@ -10,7 +10,7 @@ const PORT = parseInt(process.env.PORT || '3000', 10)
 const SETUP_URL = `http://localhost:${PORT}/setup`
 
 console.log('\n╔════════════════════════════════════════╗')
-console.log('║     nova-mir-product — Setup     ║')
+console.log('║     nova-mir-admin — Setup     ║')
 console.log('╚════════════════════════════════════════╝\n')
 console.log('Starting development server...')
 

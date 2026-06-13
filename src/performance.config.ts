@@ -1,13 +1,13 @@
-// Performance profile: speed
-// Optimized for speed — may use more memory/connections.
+// Performance profile: security
+// Conservative defaults — prioritize safety over raw speed.
 
 export const PERFORMANCE_CONFIG = {
-  maxConnections: 10,
-  maxStorageGb: 5,
-  maxBandwidthGb: 10,
-  computeTier: 'free',
-  scalingStrategy: 'vertical',
-  profile: 'speed',
-}
+  maxConnections: 25,
+  maxStorageGb: 50,
+  maxBandwidthGb: 50,
+  computeTier: "starter",
+  scalingStrategy: "vertical",
+  profile: "security",
+};
 
 // To use: import { PERFORMANCE_CONFIG } from "@/performance.config";

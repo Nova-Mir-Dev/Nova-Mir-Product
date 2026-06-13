@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase-server'
+import AdminNav from '@/features/admin/components/admin-nav'
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -13,23 +13,26 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll() {},
-      },
-    },
-  )
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/login')
 
-  return <>{children}</>
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') redirect('/login')
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <AdminNav />
+      <main style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>
+        {children}
+      </main>
+    </div>
+  )
 }

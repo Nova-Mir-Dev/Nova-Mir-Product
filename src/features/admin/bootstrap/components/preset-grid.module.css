@@ -1,0 +1,20 @@
+.card {
+  cursor: pointer;
+  padding: var(--azimuth-spacing-sm);
+  position: relative;
+}
+
+.selected {
+  border-color: var(--azimuth-color-primary);
+  background: var(--azimuth-color-surface-active);
+}
+
+.icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--azimuth-spacing-xs);
+}
+
+.description {
+  margin-top: 4px;
+  opacity: 0.7;
+}
