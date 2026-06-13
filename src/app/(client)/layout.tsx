@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button, Stack, Text } from 'azimuth-ui'
 
 interface ClientUser {
@@ -45,8 +46,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <nav style={{ width: 240, borderRight: '1px solid var(--azimuth-color-border)' }}>
-        <Stack spacing="sm" style={{ padding: 'var(--azimuth-spacing-md)' }}>
+      <nav style={{ width: 240, borderRight: '1px solid var(--azimuth-color-border)', display: 'flex', flexDirection: 'column' }}>
+        <Stack spacing="sm" style={{ padding: 'var(--azimuth-spacing-md)', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
             Dashboard
           </Text>
@@ -59,8 +60,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               {item.label}
             </Button>
           ))}
-        </Stack>
-      </nav>
+          </Stack>
+          <div style={{
+            marginTop: 'auto',
+            paddingTop: 'var(--azimuth-spacing-md)',
+            borderTop:'1px solid var(--azimuth-color-border)',
+          }}>
+            <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Text>← Back to Site</Text>
+            </Link>
+          </div>
+        </nav>
       <main id="main-content" style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>
         {children}
       </main>

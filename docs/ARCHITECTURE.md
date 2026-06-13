@@ -6,11 +6,16 @@
 - **Hosting**: Vercel
 - **Database**: PostgreSQL (Supabase)
 - **Auth**: Supabase SSR — session-based, middleware + inline checks on every protected route
+- **CORS**: Middleware-level allowlist via `CORS_ORIGINS` env var (comma-separated). Preflight returns 204.
+- **CSP**: `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`, `upgrade-insecure-requests` via security headers in next.config.ts
+- **Rate Limiting**: Upstash Redis with in-memory fallback (`lib/rate-limit.ts`). Wired on every mutation endpoint.
+- **CSRF**: Origin header validation via middleware on all POST/PUT/PATCH/DELETE requests.
+- **Validation**: Zod schemas on all mutation endpoints (leads, appointments, bootstrap, admin routes, MFA, CRUD).
 - **Payments**: none
 - **Monitoring**: Sentry
 - **Email**: none
 - **File Storage**: none
-- **Cache**: Upstash Redis (configured in env, not yet wired for rate limiting)
+- **Cache**: Upstash Redis (rate limiting via sliding window)
 - **Analytics**: Plausible
 
 ## Directory Structure
@@ -67,18 +72,26 @@
 
 | Route                 | Methods   | Auth                  | Rate Limited | Validation |
 | --------------------- | --------- | --------------------- | ------------ | ---------- |
-| `/api/leads`          | GET, POST | GET only, POST public | POST only    | Zod        |
-| `/api/leads/[id]`     | PATCH     | Required              | Yes          | Zod        |
+| `/api/leads`          | GET, POST | GET: admin, POST: public | POST only | Zod        |
+| `/api/leads/[id]`     | PATCH     | Admin                 | Yes          | Zod        |
 | `/api/appointments`   | GET, POST | Required              | POST only    | Zod        |
-| `/api/admin/api-keys` | GET, POST | Required + role check | POST only    | Manual     |
-| `/api/health`         | GET       | None                  | No           | N/A        |
-| `/api/compliance/*`   | Various   | Required              | No           | Manual     |
+| `/api/admin/api-keys` | GET, POST | Required + role check | POST only    | Zod        |
+| `/api/health`         | GET       | None                  | Yes          | N/A        |
+| `/api/compliance/*`   | Various   | Required              | Yes          | Zod        |
+| `/api/auth/me`        | GET       | None (self-service)   | Yes          | N/A        |
+| `/api/admin/bootstrap`| POST      | Required + role check | Yes          | Zod        |
+| `/api/admin/mfa/*`    | Various   | Required + role check | Yes          | Zod        |
+| `/api/admin/crud/*`   | Various   | Required + role check | Yes          | Zod        |
+| `/api/notifications/*`| Various   | Required + role check | Yes          | Zod        |
+| `/api/leads/count`    | GET       | Admin                 | Yes          | N/A        |
+| `/api/documents/*`    | Various   | Required + role check | Yes          | Zod        |
 
 ## Authentication Flow
 
-- **Middleware** (`middleware.ts`): Edge-level session check via Supabase SSR — redirects unauthenticated `/admin/*` traffic to `/`, returns 401 on protected API routes
-- **Inline checks**: Every protected API route and the admin layout verify auth a second time (defense in depth)
-- **Service role**: Only used where needed (public lead submission, admin read operations). All user-bound operations use the ANON key via `createClient()`
+- **Middleware** (`middleware.ts`): Edge-level session check via Supabase SSR — CORS preflight handler, CSRF origin validation on state-changing methods, redirects unauthenticated `/admin/*` traffic to `/`, returns 401 on protected API routes
+- **Inline checks**: Every protected API route and the admin layout verify auth a second time (defense in depth). Admin routes also verify role === 'admin'.
+- **Service role**: Used only where RLS bypass is required (public lead submission, admin bulk operations). All user-bound operations use the ANON key via `createClient()`. Never used in user-facing SSR.
+- **Rate limiting**: All mutation endpoints use Upstash Redis sliding window (10 req/min per IP by default). Falls back to in-memory counter when Redis unavailable.
 
 ## Data Model
 

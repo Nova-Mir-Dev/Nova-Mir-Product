@@ -40,7 +40,7 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                               |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key (safe for client)           |
 | `SUPABASE_SERVICE_ROLE_KEY`     | Supabase service role key (server-only)            |
-| `CORS_ORIGIN`                   | Allowed CORS origin (default: https://novamir.dev) |
+| `CORS_ORIGINS`                  | Comma-separated allowed CORS origins (default: https://novamir.dev) |
 | `UPSTASH_REDIS_URL`             | Upstash Redis URL for rate limiting                |
 | `UPSTASH_REDIS_TOKEN`           | Upstash Redis token                                |
 | `NEXT_PUBLIC_SENTRY_DSN`        | Sentry DSN for client-side error tracking          |
