@@ -7,8 +7,6 @@
     "dev": "next dev --port 3000",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "setup": "npx tsx scripts/setup.ts",
-    "setup:web": "npx tsx scripts/start-setup.ts",
     "start": "next start",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

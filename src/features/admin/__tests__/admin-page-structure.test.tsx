@@ -19,7 +19,10 @@ import type {
 } from '../../admin/types'
 
 vi.mock('../../admin/clients/actions', () => ({ createClientAction: vi.fn() }))
-vi.mock('../../admin/billing/actions', () => ({ createInvoice: vi.fn() }))
+vi.mock('../../admin/billing/actions', () => ({
+  createInvoice: vi.fn(),
+  markInvoiceAsPaid: vi.fn(),
+}))
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
