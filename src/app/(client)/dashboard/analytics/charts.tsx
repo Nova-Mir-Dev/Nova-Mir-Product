@@ -1,5 +1,6 @@
 "use client";
 
+import type { PieLabelRenderProps } from "recharts";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
@@ -60,7 +61,7 @@ export function PieChartCard({ title, data }: PieChartCardProps) {
               cx="50%"
               cy="50%"
               outerRadius={80}
-              label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+              label={({ name, percent }: PieLabelRenderProps) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
             >
               {data.map((_, index) => (
                 <Cell key={index} fill={COLORS[index % COLORS.length]} />
