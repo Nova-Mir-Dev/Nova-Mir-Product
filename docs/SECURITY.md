@@ -4,8 +4,8 @@ This document outlines the security baseline for nova-mir-product.
 
 ## Checklist
 
-- [x] Authentication configured (none)
-- [ ] MFA recommended but not enforced
+- [x] Authentication configured (Supabase SSR)
+- [ ] MFA recommended but not enforced (MFA routes exist at `/api/auth/mfa/*`)
 - [x] HTTPS enforced in production
 - [x] CSP headers configured (recommended for security profile)
 - [x] Environment variables never committed to repository
@@ -20,11 +20,12 @@ This document outlines the security baseline for nova-mir-product.
 
 ## Content Security Policy
 
-The generated CSP includes `'unsafe-inline'` and `'unsafe-eval'` which are required by Next.js during development (Turbopack injects inline scripts for hot module reloading). For production, harden the CSP by:
+The CSP in `next.config.ts` includes `'unsafe-inline'` and `'strict-dynamic'`, which Next.js requires for hydration. The CSP also covers `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`, `frame-src 'none'`, and `upgrade-insecure-requests`.
 
-1. Generating nonces for inline scripts using Next.js `experimental.serverActions.allowedForwardedHosts` or a custom middleware
-2. Removing `'unsafe-inline'` and `'unsafe-eval'` after verifying all scripts use nonces
-3. Move theme-detection inline script to an external file loaded via Next.js `<Script>` component with nonce
+For production hardening, consider:
+1. Generating nonces for inline scripts via middleware
+2. Removing `'unsafe-inline'` after verifying nonce-based loading works
+3. Moving theme-detection inline script to an external file loaded via Next.js `<Script>` component with nonce
 
 ## Environment Variables
 

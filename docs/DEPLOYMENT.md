@@ -81,7 +81,7 @@ npx supabase db push
 - [ ] Test authentication flow (sign up, sign in, sign out)
 - [ ] Test slack integration
 - [ ] Check sentry logs for errors
-- [ ] Verify compliance docs are accessible (`/docs/COMPLIANCE`, etc.)
+- [ ] Verify compliance docs are accessible (`docs/COMPLIANCE.md`, etc.)
 - [ ] Check `/.well-known/security.txt` is accessible
 
 ## 7. Compliance & Legal
@@ -107,7 +107,7 @@ npx supabase db push
 - [ ] API keys and secrets are not in version control
 - [ ] HTTPS is enforced for all traffic
 - [ ] CSP headers are not in report-only mode
-- [ ] IP allowlist is configured with your team's IPs in `ALLOWED_IPS`
+- [ ] IP allowlist is configured with your team's IPs in `ALLOWED_IPS` (optional — set in env if using ip-allowlist.ts)
 - [ ] Test all API endpoints with authentication required
 - [ ] Set up automated dependency updates (Dependabot/Snyk)
 - [ ] Review `docs/SECURITY.md` for complete checklist

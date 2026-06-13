@@ -12,3 +12,9 @@ coverage/
 .dolt/
 *.db
 .beads-credential-key
+
+# Vercel
+.vercel/
+
+# Generated files
+public/slack-manifest.json
