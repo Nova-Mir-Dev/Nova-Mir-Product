@@ -24,7 +24,7 @@ function hasSupabaseEnv(): boolean {
 }
 
 async function getAuth(request: NextRequest) {
-  if (!hasSupabaseEnv()) return { user: null, role: null }
+  if (!hasSupabaseEnv()) return { user: null, role: null, supabaseResponse: NextResponse.next({ request }) }
 
   let supabaseResponse = NextResponse.next({ request })
 
