@@ -99,66 +99,31 @@ function Navbar() {
                 </a>
               ))}
             </div>
-            <div
+            <a
+              href="/dashboard"
               style={{
-                display: 'flex',
-                gap: '0.75rem',
-                alignItems: 'center',
-                paddingLeft: '0.75rem',
-                borderLeft: '1px solid var(--azimuth-color-border)',
+                textDecoration: 'none',
+                color: 'var(--azimuth-color-text-secondary)',
+                fontSize: '0.875rem',
+                transition: 'color 150ms ease',
               }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.color =
+                  'var(--azimuth-color-text-secondary)')
+              }
+              onFocus={(e) =>
+                (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.color =
+                  'var(--azimuth-color-text-secondary)')
+              }
             >
-              <a
-                href="/dashboard"
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--azimuth-color-text-secondary)',
-                  fontSize: '0.875rem',
-                  transition: 'color 150ms ease',
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.color =
-                    'var(--azimuth-color-text-secondary)')
-                }
-                onFocus={(e) =>
-                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                }
-                onBlur={(e) =>
-                  (e.currentTarget.style.color =
-                    'var(--azimuth-color-text-secondary)')
-                }
-              >
-                Client Portal
-              </a>
-              <a
-                href="/admin"
-                style={{
-                  textDecoration: 'none',
-                  color: 'var(--azimuth-color-text-secondary)',
-                  fontSize: '0.875rem',
-                  transition: 'color 150ms ease',
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.color =
-                    'var(--azimuth-color-text-secondary)')
-                }
-                onFocus={(e) =>
-                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                }
-                onBlur={(e) =>
-                  (e.currentTarget.style.color =
-                    'var(--azimuth-color-text-secondary)')
-                }
-              >
-                Admin
-              </a>
-            </div>
+              Clients
+            </a>
           </div>
         </nav>
       </Container>
@@ -240,6 +205,16 @@ function Footer() {
               }}
             >
               Terms of Service
+            </a>
+            <a
+              href="/admin"
+              style={{
+                fontSize: '0.875rem',
+                color: 'var(--azimuth-color-text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              Admin
             </a>
           </div>
         </div>
