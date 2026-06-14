@@ -69,10 +69,47 @@ function Navbar() {
             }}
             className="nav-links"
           >
-            {NAV_PAGES.filter((p) => p.path !== '/').map((page) => (
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+              {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
+                <a
+                  key={page.path}
+                  href={page.path}
+                  style={{
+                    textDecoration: 'none',
+                    color: 'var(--azimuth-color-text-secondary)',
+                    fontSize: '0.875rem',
+                    transition: 'color 150ms ease',
+                  }}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.color =
+                      'var(--azimuth-color-text-secondary)')
+                  }
+                  onFocus={(e) =>
+                    (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+                  }
+                  onBlur={(e) =>
+                    (e.currentTarget.style.color =
+                      'var(--azimuth-color-text-secondary)')
+                  }
+                >
+                  {page.label}
+                </a>
+              ))}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.75rem',
+                alignItems: 'center',
+                paddingLeft: '0.75rem',
+                borderLeft: '1px solid var(--azimuth-color-border)',
+              }}
+            >
               <a
-                key={page.path}
-                href={page.path}
+                href="/dashboard"
                 style={{
                   textDecoration: 'none',
                   color: 'var(--azimuth-color-text-secondary)',
@@ -94,9 +131,34 @@ function Navbar() {
                     'var(--azimuth-color-text-secondary)')
                 }
               >
-                {page.label}
+                Client Portal
               </a>
-            ))}
+              <a
+                href="/admin"
+                style={{
+                  textDecoration: 'none',
+                  color: 'var(--azimuth-color-text-secondary)',
+                  fontSize: '0.875rem',
+                  transition: 'color 150ms ease',
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.color =
+                    'var(--azimuth-color-text-secondary)')
+                }
+                onFocus={(e) =>
+                  (e.currentTarget.style.color = 'var(--azimuth-color-text)')
+                }
+                onBlur={(e) =>
+                  (e.currentTarget.style.color =
+                    'var(--azimuth-color-text-secondary)')
+                }
+              >
+                Admin
+              </a>
+            </div>
           </div>
         </nav>
       </Container>
