@@ -58,8 +58,8 @@ const nextConfig: NextConfig = {
 import { withSentryConfig } from '@sentry/nextjs'
 
 export default withSentryConfig(nextConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+  org: 'nova-mir',
+  project: 'nova-mir-product',
   silent: !process.env.CI,
   widenClientFileUpload: true,
   tunnelRoute: '/monitoring',
