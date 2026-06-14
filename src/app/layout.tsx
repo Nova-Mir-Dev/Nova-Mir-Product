@@ -70,6 +70,11 @@ export default function RootLayout({
           data-domain="novamir.dev"
           src="https://plausible.io/js/script.js"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "navigator.serviceWorker.getRegistrations().then(r=>r.forEach(r=>r.unregister()))",
+          }}
+        />
       </head>
       <body className={`${sora.variable} ${onest.variable}`}>
         <a href="#main-content" className="sr-only">
