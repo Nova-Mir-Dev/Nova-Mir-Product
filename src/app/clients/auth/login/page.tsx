@@ -1,14 +1,10 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { Card, Text } from 'azimuth-ui'
+import { Card } from 'azimuth-ui'
 import { ClientLoginForm } from '@/features/auth/components/client-login-form'
 import styles from './client-login.module.css'
 
-function ClientLoginContent() {
-  useSearchParams()
-
+export default function ClientLoginPage() {
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
@@ -22,21 +18,5 @@ function ClientLoginContent() {
         </p>
       </Card>
     </div>
-  )
-}
-
-export default function ClientLoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className={styles.container}>
-          <Card className={styles.card}>
-            <Text>Loading...</Text>
-          </Card>
-        </div>
-      }
-    >
-      <ClientLoginContent />
-    </Suspense>
   )
 }

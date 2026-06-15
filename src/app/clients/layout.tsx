@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Stack, Text } from 'azimuth-ui'
+import { ThemeToggle } from '@/components/theme-toggle'
 import styles from './clients-layout.module.css'
 
 interface ClientUser {
@@ -80,6 +81,7 @@ export default function ClientsLayout({
           })}
         </Stack>
         <div className={styles.sidebarFooter}>
+          <ThemeToggle />
           <Link href="/" className={styles.backLink}>
             <Text>Back to Site</Text>
           </Link>

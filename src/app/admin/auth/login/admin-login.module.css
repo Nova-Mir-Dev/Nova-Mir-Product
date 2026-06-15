@@ -10,6 +10,8 @@
   width: 100%;
   max-width: 400px;
   padding: 2.5rem;
+  background: #1a1a2e;
+  border: 1px solid #2a2a3e;
 }
 
 .brand {
@@ -20,13 +22,13 @@
 .brandName {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--azimuth-color-text);
+  color: #e8e8e8;
   letter-spacing: -0.02em;
 }
 
 .brandSubtitle {
   font-size: 0.8rem;
-  color: var(--azimuth-color-text-secondary);
+  color: #999;
   margin-top: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;

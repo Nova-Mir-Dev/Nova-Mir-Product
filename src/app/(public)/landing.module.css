@@ -31,6 +31,10 @@
   flex-wrap: wrap;
 }
 
+.heroActions > * {
+  min-width: fit-content;
+}
+
 .section {
   padding: 5rem 0;
 }
