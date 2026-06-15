@@ -1,33 +1,57 @@
-import { NextResponse } from "next/server";
-import { createClient as createServerClient } from "@/lib/supabase-server";
-import { getNotifications, markAllAsRead, markAsRead } from "@/lib/in-app-notifications";
-import { rateLimit } from "@/lib/rate-limit";
+import { NextResponse } from 'next/server'
+import { createClient as createServerClient } from '@/lib/supabase-server'
+import {
+  getNotifications,
+  markAllAsRead,
+  markAsRead,
+} from '@/lib/in-app-notifications'
+import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const markReadBodySchema = z.object({
+  notificationIds: z.array(z.string().trim().min(1)).optional(),
+})
 
 export async function GET() {
-  const supabase = await createServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json(getNotifications(user.id));
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+  if (error || !user)
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  return NextResponse.json(getNotifications(user.id))
 }
 
 export async function POST(request: Request) {
-  const supabase = await createServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+  if (error || !user)
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { allowed } = await rateLimit(`notifications:${user.id}`, 60, 60000);
+  const { allowed } = await rateLimit(`notifications:${user.id}`, 60, 60000)
   if (!allowed) {
     return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
+      { error: 'Too many requests. Please try again later.' },
       { status: 429 },
-    );
+    )
   }
 
-  const { notificationIds } = (await request.json()) as { notificationIds?: string[] };
-  if (notificationIds && notificationIds.length > 0) {
-    notificationIds.forEach((id) => markAsRead(user.id, id));
-  } else {
-    markAllAsRead(user.id);
+  const parsed = markReadBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { status: 400 },
+    )
   }
-  return NextResponse.json({ success: true });
+  const { notificationIds } = parsed.data
+  if (notificationIds && notificationIds.length > 0) {
+    notificationIds.forEach((id) => void markAsRead(user.id, id))
+  } else {
+    void markAllAsRead(user.id)
+  }
+  return NextResponse.json({ success: true })
 }

@@ -2,18 +2,17 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
-  },
 
-  async headers() {
+  headers() {
     return [
       {
-        source: '/:path((?!_next/static|favicon|icon|manifest|sitemap|robots).*)',
+        source:
+          '/:path((?!_next/static|favicon|icon|manifest|sitemap|robots).*)',
         headers: [
           {
+            // TODO: Replace 'unsafe-inline' with strict CSP using nonces once
+            // Next.js App Router nonce support is fully stable (tracking:
+            // https://github.com/vercel/next.js/issues/55692).
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
@@ -26,7 +25,7 @@ const nextConfig: NextConfig = {
               "frame-ancestors 'none'",
               "form-action 'self'",
               "base-uri 'self'",
-              "upgrade-insecure-requests",
+              'upgrade-insecure-requests',
             ].join('; '),
           },
           {
@@ -35,8 +34,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value:
-              'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
           {
             key: 'X-XSS-Protection',
@@ -49,7 +47,10 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Cache-Control', value: 'private, no-cache, no-store, max-age=0, must-revalidate' },
+          {
+            key: 'Cache-Control',
+            value: 'private, no-cache, no-store, max-age=0, must-revalidate',
+          },
         ],
       },
     ]
