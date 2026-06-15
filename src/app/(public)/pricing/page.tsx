@@ -1,6 +1,6 @@
 'use client'
 import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
-import { PRICING_TIERS } from '@/lib/pricing'
+import { PRICING_TIERS, getFoundingOfferLabel, getMaintenanceRetainer } from '@/lib/pricing'
 
 export default function PricingPage() {
   return (
@@ -72,7 +72,7 @@ export default function PricingPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  {tier.startingPrice}+
+                  ${tier.startingPrice.toLocaleString()}+
                 </Text>
 
                 <div
@@ -117,7 +117,7 @@ export default function PricingPage() {
               Founding Client Program
             </Text>
             <Text element={{ size: 'base' }}>
-              First 3 clients at a flat $2,500 rate &mdash; a limited-time
+              {getFoundingOfferLabel()} &mdash; a limited-time
               opportunity to get a custom website at a founding price.
             </Text>
             <div>
@@ -148,7 +148,7 @@ export default function PricingPage() {
               standard rates.
             </Text>
             <Text element={{ size: 'sm' }} color="secondary" style={{ marginTop: '1rem' }}>
-              Maintenance retainer available from $100–$200/month after launch &mdash;
+              Maintenance retainer available at {getMaintenanceRetainer()} after launch &mdash;
               hosting checks, content updates, and priority support.
             </Text>
             <Button

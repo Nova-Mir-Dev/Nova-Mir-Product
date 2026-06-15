@@ -1,69 +1,29 @@
 import Link from 'next/link'
 import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
+import { PRICING_TIERS } from '@/lib/pricing'
 import styles from './landing.module.css'
 
-const TIER_DATA = [
-  {
-    name: 'Managed Website',
-    priceRange: '$2,500',
-    popular: false,
-    features: [
-      'Custom-designed site',
-      'Mobile responsive',
-      'Contact form',
-      'SEO basics',
-      'Analytics',
-      'Hosting setup',
-    ],
-  },
-  {
-    name: 'Website + Lead System',
-    priceRange: '$4,000',
-    popular: true,
-    features: [
-      'Everything in Managed Website, plus:',
-      'Lead capture form',
-      'Email notifications',
-      'CRM / spreadsheet log',
-      'Confirmation messages',
-      'Simple reporting',
-    ],
-  },
-  {
-    name: 'Full Growth System',
-    priceRange: '$7,000+',
-    popular: false,
-    features: [
-      'Everything in Lead System, plus:',
-      'Booking / intake workflows',
-      'Payment & deposit flow',
-      'Dashboard',
-      'Automated follow-up',
-      'System documentation',
-    ],
-  },
-]
+function formatPrice(price: number): string {
+  return '$' + price.toLocaleString()
+}
 
-const PRICING_SUMMARY = [
-  {
-    name: 'Managed Website',
-    range: '$2,500',
-    oneLiner: 'Custom site that builds credibility.',
-    popular: false,
-  },
-  {
-    name: 'Website + Lead System',
-    range: '$4,000',
-    oneLiner: 'Site + automated lead capture.',
-    popular: true,
-  },
-  {
-    name: 'Full Growth System',
-    range: '$7,000+',
-    oneLiner: 'Full system with booking and dashboards.',
-    popular: false,
-  },
-]
+const TIER_DATA = PRICING_TIERS.map((tier, i) => ({
+  name: tier.name,
+  priceRange: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : ''}`,
+  popular: i === 1,
+  features: tier.features,
+}))
+
+const PRICING_SUMMARY = PRICING_TIERS.map((tier, i) => ({
+  name: tier.name,
+  range: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : ''}`,
+  oneLiner: [
+    'Custom site that builds credibility.',
+    'Site + automated lead capture.',
+    'Full system with booking and dashboards.',
+  ][i],
+  popular: i === 1,
+}))
 
 const STEPS = [
   {
