@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const dataCorrectionBodySchema = z.object({
+  field: z.string().trim().min(1, 'Field is required'),
+  value: z.string().trim().min(1, 'Value is required').max(500),
+  reason: z.string().trim().min(1, 'Reason is required').max(2000),
+})
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -11,7 +18,11 @@ export async function POST(request: Request) {
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { allowed } = await rateLimit(`compliance:correction:${user.id}`, 10, 60000)
+  const { allowed } = await rateLimit(
+    `compliance:correction:${user.id}`,
+    10,
+    60000,
+  )
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -19,11 +30,14 @@ export async function POST(request: Request) {
     )
   }
 
-  const body = (await request.json()) as {
-    field: string
-    value: string
-    reason: string
+  const parsed = dataCorrectionBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { status: 400 },
+    )
   }
+  const body = parsed.data
   const allowedFields = ['email', 'name', 'phone'] // Whitelist fields that can be self-corrected
 
   if (!allowedFields.includes(body.field)) {

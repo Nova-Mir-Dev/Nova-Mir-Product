@@ -6,7 +6,9 @@ import { revalidatePath } from 'next/cache'
 
 export async function updateLeadAction(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const { data: profile } = await supabase
@@ -23,7 +25,9 @@ export async function updateLeadAction(formData: FormData) {
   if (!id) throw new Error('Lead ID is required')
 
   const admin = createServiceClient()
-  const updates: Record<string, string> = { updated_at: new Date().toISOString() }
+  const updates: Record<string, string> = {
+    updated_at: new Date().toISOString(),
+  }
   if (status) updates.status = status
   if (notes !== null) updates.notes = notes
 
@@ -35,7 +39,9 @@ export async function updateLeadAction(formData: FormData) {
 
 export async function convertToClientAction(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const { data: profile } = await supabase

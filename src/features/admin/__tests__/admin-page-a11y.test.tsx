@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { axe } from 'vitest-axe'
 import { ClientsPage } from '../../admin/clients/clients-page'
 import BillingPage from '../../admin/billing/billing-page'
 import MonitoringPage from '../../admin/monitoring/monitoring-page'
@@ -215,5 +216,13 @@ describe('empty states provide description text', () => {
     render(<AuditPage entries={[]} searchParams={{}} />)
     const matches = screen.getAllByText('No audit entries found')
     expect(matches.length).toBeGreaterThanOrEqual(1)
+  })
+})
+
+describe('admin page automated a11y scan', () => {
+  it('AdminNav has no auto-detected violations', async () => {
+    const { container } = render(<AdminNav />)
+    const results = await axe(container)
+    expect(results.violations).toHaveLength(0)
   })
 })

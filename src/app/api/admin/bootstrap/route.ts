@@ -13,8 +13,12 @@ const BootstrapSchema = z.object({
   projectName: z.string().max(100).optional(),
   framework: z.enum(['nextjs', 'vite-react', 'remix', 'astro']).optional(),
   hosting: z.enum(['vercel', 'aws', 'gcp', 'azure', 'custom']).optional(),
-  database: z.enum(['postgresql', 'mysql', 'sqlite', 'mongodb', 'dynamodb']).optional(),
-  auth: z.enum(['none', 'jwt', 'next-auth', 'supabase-auth', 'clerk', 'auth0']).optional(),
+  database: z
+    .enum(['postgresql', 'mysql', 'sqlite', 'mongodb', 'dynamodb'])
+    .optional(),
+  auth: z
+    .enum(['none', 'jwt', 'next-auth', 'supabase-auth', 'clerk', 'auth0'])
+    .optional(),
   payments: z.enum(['none', 'stripe', 'lemonsqueezy', 'paddle']).optional(),
   mode: z.enum(['validate', 'generate']).optional(),
 })
@@ -78,8 +82,7 @@ const SUPPORTED_OPTIONS = {
 }
 
 async function checkAuth(): Promise<
-  | { user: { id: string } }
-  | NextResponse<{ error: string }>
+  { user: { id: string } } | NextResponse<{ error: string }>
 > {
   const supabase = await createClient()
   const {
@@ -118,7 +121,11 @@ export async function POST(request: Request) {
   const authResult = await checkAuth()
   if (authResult instanceof NextResponse) return authResult
 
-  const { allowed } = await rateLimit(`admin:bootstrap:${authResult.user.id}`, 20, 60000)
+  const { allowed } = await rateLimit(
+    `admin:bootstrap:${authResult.user.id}`,
+    20,
+    60000,
+  )
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },

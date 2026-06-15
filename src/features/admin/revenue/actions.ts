@@ -5,7 +5,10 @@ import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
 import { validateRevenueEntry, validateExpenseEntry } from './revenue-utils'
 
-export async function createRevenueEntry(_prevState: { error: string } | null, formData: FormData) {
+export async function createRevenueEntry(
+  _prevState: { error: string } | null,
+  formData: FormData,
+) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -19,7 +22,10 @@ export async function createRevenueEntry(_prevState: { error: string } | null, f
     .single()
   if (profile?.role !== 'admin') return { error: 'Forbidden' }
 
-  const data = Object.fromEntries(formData) as Record<string, FormDataEntryValue | null>
+  const data = Object.fromEntries(formData) as Record<
+    string,
+    FormDataEntryValue | null
+  >
   const validation = validateRevenueEntry(data)
   if (validation) return validation
 
@@ -41,7 +47,10 @@ export async function createRevenueEntry(_prevState: { error: string } | null, f
   return null
 }
 
-export async function createExpenseEntry(_prevState: { error: string } | null, formData: FormData) {
+export async function createExpenseEntry(
+  _prevState: { error: string } | null,
+  formData: FormData,
+) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -55,7 +64,10 @@ export async function createExpenseEntry(_prevState: { error: string } | null, f
     .single()
   if (profile?.role !== 'admin') return { error: 'Forbidden' }
 
-  const data = Object.fromEntries(formData) as Record<string, FormDataEntryValue | null>
+  const data = Object.fromEntries(formData) as Record<
+    string,
+    FormDataEntryValue | null
+  >
   const validation = validateExpenseEntry(data)
   if (validation) return validation
 

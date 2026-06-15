@@ -94,9 +94,11 @@ describe('validateRevenueEntry', () => {
   })
 
   it('returns error for invalid category', () => {
-    expect(validateRevenueEntry({ ...validData, category: 'invalid' })).toEqual({
-      error: 'Invalid category',
-    })
+    expect(validateRevenueEntry({ ...validData, category: 'invalid' })).toEqual(
+      {
+        error: 'Invalid category',
+      },
+    )
   })
 
   it('returns error for missing recordedAt', () => {
@@ -150,11 +152,11 @@ describe('validateExpenseEntry', () => {
   })
 
   it('returns error for invalid expense category', () => {
-    expect(
-      validateExpenseEntry({ ...validData, category: 'service' }),
-    ).toEqual({
-      error: 'Invalid category',
-    })
+    expect(validateExpenseEntry({ ...validData, category: 'service' })).toEqual(
+      {
+        error: 'Invalid category',
+      },
+    )
   })
 
   it('returns error for missing recordedAt', () => {
@@ -165,9 +167,7 @@ describe('validateExpenseEntry', () => {
 
   it('accepts all valid expense categories', () => {
     for (const cat of EXPENSE_CATEGORIES) {
-      expect(
-        validateExpenseEntry({ ...validData, category: cat }),
-      ).toBeNull()
+      expect(validateExpenseEntry({ ...validData, category: cat })).toBeNull()
     }
   })
 })

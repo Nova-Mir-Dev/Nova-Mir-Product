@@ -81,9 +81,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
       key: 'status',
       title: 'Status',
       sortable: true,
-      render: (value: unknown) => (
-        <LeadStatusBadge status={String(value)} />
-      ),
+      render: (value: unknown) => <LeadStatusBadge status={String(value)} />,
     },
     {
       key: 'source',
@@ -94,8 +92,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
       key: 'created_at',
       title: 'Created',
       sortable: true,
-      render: (value: unknown) =>
-        new Date(String(value)).toLocaleDateString(),
+      render: (value: unknown) => new Date(String(value)).toLocaleDateString(),
     },
     {
       key: 'id',
@@ -107,9 +104,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
             size="sm"
             type="button"
             onClick={() =>
-              setSelectedLeadId(
-                selectedLeadId === row.id ? null : row.id,
-              )
+              setSelectedLeadId(selectedLeadId === row.id ? null : row.id)
             }
           >
             {selectedLeadId === row.id ? 'Close' : 'View'}
@@ -137,7 +132,13 @@ export function LeadsPage({ leads }: LeadsPageProps) {
         <Input
           label={{ text: 'Search' }}
           name="q"
-          value={{ value: search, onChange: (e) => { setSearch(e.target.value); setPage(1) } }}
+          value={{
+            value: search,
+            onChange: (e) => {
+              setSearch(e.target.value)
+              setPage(1)
+            },
+          }}
           placeholder="Search by name, email, or company..."
         />
         <Select

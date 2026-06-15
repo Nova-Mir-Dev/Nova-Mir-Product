@@ -1,4 +1,1 @@
-export type {
-  Lead,
-  LeadStatus,
-} from '@/features/admin/types'
+export type { Lead, LeadStatus } from '@/features/admin/types'

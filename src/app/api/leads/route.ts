@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
     .range(offset, offset + limit - 1)
 
   if (error) {
-    console.error('Failed to fetch leads:', error)
+    Sentry.captureException(error)
     return NextResponse.json(
       { error: 'Failed to fetch leads.' },
       { status: 500 },
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
       .single()
 
     if (error) {
-      console.error('Failed to insert lead:', error)
+      Sentry.captureException(error)
       return NextResponse.json(
         { error: 'Failed to save your message. Please try again later.' },
         { status: 500 },
@@ -127,7 +128,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ id: data.id }, { status: 201 })
   } catch (err) {
-    console.error('Lead submission error:', err)
+    Sentry.captureException(err)
     return NextResponse.json(
       { error: 'Something went wrong. Please try again later.' },
       { status: 500 },

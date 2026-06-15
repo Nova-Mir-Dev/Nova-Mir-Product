@@ -83,7 +83,12 @@ export interface Lead {
   updated_at: string
 }
 
-export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'closed'
+export type LeadStatus =
+  | 'new'
+  | 'contacted'
+  | 'qualified'
+  | 'converted'
+  | 'closed'
 
 export type InvoiceStatus = 'paid' | 'pending' | 'overdue'
 export type ProjectStatus = 'pending' | 'active' | 'completed'
@@ -121,7 +126,14 @@ export interface ExpenseEntry {
   vendor: string
   description: string
   amount: number
-  category: 'software' | 'hosting' | 'contractor' | 'travel' | 'office' | 'marketing' | 'other'
+  category:
+    | 'software'
+    | 'hosting'
+    | 'contractor'
+    | 'travel'
+    | 'office'
+    | 'marketing'
+    | 'other'
   recorded_at: string
   receipt_url?: string
   created_at: string
@@ -140,5 +152,17 @@ export interface BusinessSummary {
   thisMonthExpenses: number
 }
 
-export type RevenueCategory = 'service' | 'product' | 'consulting' | 'retainer' | 'other'
-export type ExpenseCategory = 'software' | 'hosting' | 'contractor' | 'travel' | 'office' | 'marketing' | 'other'
+export type RevenueCategory =
+  | 'service'
+  | 'product'
+  | 'consulting'
+  | 'retainer'
+  | 'other'
+export type ExpenseCategory =
+  | 'software'
+  | 'hosting'
+  | 'contractor'
+  | 'travel'
+  | 'office'
+  | 'marketing'
+  | 'other'

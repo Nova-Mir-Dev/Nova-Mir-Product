@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+/** Valid lead statuses in the pipeline. */
 export const leadStatusSchema = z.enum([
   'new',
   'contacted',
@@ -10,6 +11,7 @@ export const leadStatusSchema = z.enum([
   'lost',
 ])
 
+/** Schema for creating a new lead from the public contact form. Requires consent. */
 export const createLeadSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(200),
   email: z.string().trim().email('Invalid email address').max(254),
@@ -29,6 +31,7 @@ export const createLeadSchema = z.object({
   }),
 })
 
+/** Schema for updating a lead's status. */
 export const updateLeadStatusSchema = z.object({
   status: leadStatusSchema,
 })

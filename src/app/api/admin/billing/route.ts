@@ -1,8 +1,30 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const lineItemSchema = z.object({
+  description: z.string().trim().min(1, 'Description is required').max(500),
+  quantity: z.number().positive('Quantity must be positive'),
+  unitPrice: z.number().positive('Unit price must be positive'),
+})
+
+const createInvoiceBodySchema = z.object({
+  clientName: z.string().trim().min(1, 'Client name is required').max(200),
+  amount: z.number().positive().optional(),
+  clientId: z.string().trim().optional(),
+  lineItems: z.array(lineItemSchema).optional(),
+  dueDate: z.string().trim().optional(),
+})
+
+const updateInvoiceBodySchema = z.object({
+  id: z.string().trim().min(1, 'Invoice ID is required'),
+  status: z.string().trim().min(1, 'Status is required'),
+  paidAt: z.string().trim().optional().nullable(),
+})
 
 async function authCheck() {
   const supabase = await createClient()
@@ -11,7 +33,9 @@ async function authCheck() {
     error,
   } = await supabase.auth.getUser()
   if (error || !user)
-    return { error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+    return {
+      error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+    }
 
   const { data: profile } = await supabase
     .from('users')
@@ -67,7 +91,11 @@ export async function POST(request: Request) {
   const check = await authCheck()
   if ('error' in check) return check.error
 
-  const { allowed } = await rateLimit(`admin:billing:${check.user.id}`, 30, 60000)
+  const { allowed } = await rateLimit(
+    `admin:billing:${check.user.id}`,
+    30,
+    60000,
+  )
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -75,20 +103,14 @@ export async function POST(request: Request) {
     )
   }
 
-  const body = (await request.json()) as {
-    clientName: string
-    amount?: number
-    clientId?: string
-    lineItems?: { description: string; quantity: number; unitPrice: number }[]
-    dueDate?: string
-  }
-
-  if (!body.clientName?.trim()) {
+  const parsed = createInvoiceBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Valid client name is required' },
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
       { status: 400 },
     )
   }
+  const body = parsed.data
 
   const admin = createServiceClient()
 
@@ -103,12 +125,14 @@ export async function POST(request: Request) {
   const invoiceNumber = `INV-${year}-${String(nextNum).padStart(5, '0')}`
 
   let totalAmount = 0
-  let lineItemsData: {
-    description: string
-    quantity: number
-    unit_price: number
-    amount: number
-  }[] | undefined
+  let lineItemsData:
+    | {
+        description: string
+        quantity: number
+        unit_price: number
+        amount: number
+      }[]
+    | undefined
 
   if (body.lineItems && body.lineItems.length > 0) {
     lineItemsData = body.lineItems.map((li) => {
@@ -134,7 +158,7 @@ export async function POST(request: Request) {
   const { data: invoice, error: createError } = await admin
     .from('portfolio_invoices')
     .insert({
-      client_name: body.clientName.trim(),
+      client_name: body.clientName,
       client_id: body.clientId || null,
       amount: totalAmount,
       status: 'pending',
@@ -158,8 +182,7 @@ export async function POST(request: Request) {
         invoice_id: invoice.id,
       })),
     )
-    if (liError)
-      console.error('Failed to create line items:', liError)
+    if (liError) Sentry.captureException(liError)
   }
 
   revalidatePath('/admin/billing')
@@ -185,7 +208,11 @@ export async function PATCH(request: Request) {
   const check = await authCheck()
   if ('error' in check) return check.error
 
-  const { allowed } = await rateLimit(`admin:billing:${check.user.id}`, 30, 60000)
+  const { allowed } = await rateLimit(
+    `admin:billing:${check.user.id}`,
+    30,
+    60000,
+  )
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -193,18 +220,14 @@ export async function PATCH(request: Request) {
     )
   }
 
-  const body = (await request.json()) as {
-    id: string
-    status: string
-    paidAt?: string | null
-  }
-
-  if (!body.id || !body.status) {
+  const parsed = updateInvoiceBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Invoice id and status are required' },
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
       { status: 400 },
     )
   }
+  const body = parsed.data
 
   const admin = createServiceClient()
 

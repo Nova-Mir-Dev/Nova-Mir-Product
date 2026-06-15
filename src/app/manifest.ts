@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Nova Mir — Web Development for Small Businesses',
     short_name: 'Nova Mir',
-    description: 'Custom websites, lead systems, and operational tools for small businesses.',
+    description:
+      'Custom websites, lead systems, and operational tools for small businesses.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

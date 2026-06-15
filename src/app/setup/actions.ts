@@ -13,7 +13,8 @@ export async function saveEnvVars(
     )
     if (entries.length === 0) return { success: true, path: '.env.local' }
 
-    const content = entries.map(([k, v]) => `${k}=${v.trim()}`).join('\n') + '\n'
+    const content =
+      entries.map(([k, v]) => `${k}=${v.trim()}`).join('\n') + '\n'
     await writeFile(join(process.cwd(), '.env.local'), content)
 
     const deployContent =
@@ -53,7 +54,12 @@ export async function generateSlackManifest(config: {
       oauth_config: {
         redirect_urls: [`${baseUrl}/api/slack/oauth_redirect`],
         scopes: {
-          bot: ['chat:write', 'channels:history', 'groups:history', 'users:read'],
+          bot: [
+            'chat:write',
+            'channels:history',
+            'groups:history',
+            'users:read',
+          ],
         },
       },
       settings: {

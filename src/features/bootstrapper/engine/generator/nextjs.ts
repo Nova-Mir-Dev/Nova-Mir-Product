@@ -30,7 +30,7 @@ function generatePackageJson(config: BootConfig): string {
     scripts.test = 'vitest run'
   }
 
-  const versions = PACKAGE_VERSIONS as Record<string, string>
+  const versions = PACKAGE_VERSIONS
   const dependencies: Record<string, string> = {
     'azimuth-ui': versions['azimuth-ui']!,
     next: versions.next!,

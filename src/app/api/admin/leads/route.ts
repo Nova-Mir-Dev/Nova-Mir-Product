@@ -2,10 +2,31 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const createLeadBodySchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(200),
+  email: z.string().trim().email('Invalid email').max(254),
+  phone: z.string().trim().max(50).optional().nullable().default(null),
+  company: z.string().trim().max(200).optional().nullable().default(null),
+  message: z.string().trim().max(10000).optional().nullable().default(null),
+  source: z.string().trim().max(100).optional().nullable().default(null),
+  notes: z.string().trim().max(5000).optional().nullable().default(null),
+})
+
+const updateLeadBodySchema = z.object({
+  id: z.string().trim().min(1, 'Lead ID is required'),
+  status: z.string().trim().optional(),
+  notes: z.string().trim().optional(),
+  source: z.string().trim().optional(),
+})
 
 export async function GET(request: Request) {
   const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
   if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -24,7 +45,10 @@ export async function GET(request: Request) {
   const q = searchParams.get('q')
 
   const admin = createServiceClient()
-  let query = admin.from('leads').select('*').order('created_at', { ascending: false })
+  let query = admin
+    .from('leads')
+    .select('*')
+    .order('created_at', { ascending: false })
 
   if (status) {
     query = query.eq('status', status)
@@ -49,7 +73,10 @@ export async function GET(request: Request) {
 
 export async function PATCH(request: Request) {
   const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
   if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -63,7 +90,11 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { allowed: patchAllowed } = await rateLimit(`admin:leads:${user.id}`, 60, 60000)
+  const { allowed: patchAllowed } = await rateLimit(
+    `admin:leads:${user.id}`,
+    60,
+    60000,
+  )
   if (!patchAllowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -71,19 +102,14 @@ export async function PATCH(request: Request) {
     )
   }
 
-  const body = await request.json() as {
-    id: string
-    status?: string
-    notes?: string
-    source?: string
-  }
-
-  if (!body.id) {
+  const parsed = updateLeadBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Lead ID is required' },
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
       { status: 400 },
     )
   }
+  const body = parsed.data
 
   const updates: Record<string, string> = {
     updated_at: new Date().toISOString(),
@@ -112,7 +138,10 @@ export async function PATCH(request: Request) {
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
   if (error || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -126,7 +155,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { allowed: postAllowed } = await rateLimit(`admin:leads:${user.id}`, 60, 60000)
+  const { allowed: postAllowed } = await rateLimit(
+    `admin:leads:${user.id}`,
+    60,
+    60000,
+  )
   if (!postAllowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
@@ -134,29 +167,21 @@ export async function POST(request: Request) {
     )
   }
 
-  const body = await request.json() as {
-    name: string
-    email: string
-    phone?: string
-    company?: string
-    message?: string
-    source?: string
-    notes?: string
-  }
-
-  if (!body.name?.trim() || !body.email?.trim()) {
+  const parsed = createLeadBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Name and email are required' },
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
       { status: 400 },
     )
   }
+  const body = parsed.data
 
   const admin = createServiceClient()
   const { data: lead, error: createError } = await admin
     .from('leads')
     .insert({
-      name: body.name.trim(),
-      email: body.email.trim(),
+      name: body.name,
+      email: body.email,
       phone: body.phone ?? null,
       company: body.company ?? null,
       message: body.message ?? null,

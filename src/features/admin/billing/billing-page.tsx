@@ -142,10 +142,7 @@ export default function BillingPage({
                 name="clientName"
                 required
               />
-              <Input
-                label={{ text: 'Description' }}
-                name="description"
-              />
+              <Input label={{ text: 'Description' }} name="description" />
               <Input
                 label={{ text: 'Unit Price ($)' }}
                 name="unitPrice"

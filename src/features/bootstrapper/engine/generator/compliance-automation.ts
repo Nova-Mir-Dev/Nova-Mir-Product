@@ -5,8 +5,18 @@ export function generateComplianceAutomation(
   config: BootConfig,
 ): GeneratedFile[] {
   const regulatedMarkets = [
-    'eu', 'uk', 'us', 'ca', 'br', 'ar', 'cl', 'co', 'mx',
-    'no', 'ch', 'is',
+    'eu',
+    'uk',
+    'us',
+    'ca',
+    'br',
+    'ar',
+    'cl',
+    'co',
+    'mx',
+    'no',
+    'ch',
+    'is',
   ]
   const needsAutomation =
     config.targetMarkets.some((m) => regulatedMarkets.includes(m)) &&
@@ -374,5 +384,12 @@ export function ComplianceRequestForm() {
 `,
   }
 
-  return [dataAccess, dataDeletion, dataCorrection, dataExport, dataRetention, complianceForm]
+  return [
+    dataAccess,
+    dataDeletion,
+    dataCorrection,
+    dataExport,
+    dataRetention,
+    complianceForm,
+  ]
 }

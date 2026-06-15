@@ -22,7 +22,11 @@ export async function POST(request: Request) {
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { allowed } = await rateLimit(`compliance:deletion:${user.id}`, 3, 3600000)
+  const { allowed } = await rateLimit(
+    `compliance:deletion:${user.id}`,
+    3,
+    3600000,
+  )
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },

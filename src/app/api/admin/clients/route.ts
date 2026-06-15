@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const createClientBodySchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(200),
+  email: z.string().trim().email('Invalid email').max(254),
+})
 
 export async function GET() {
   const supabase = await createClient()
@@ -68,18 +74,19 @@ export async function POST(request: Request) {
     )
   }
 
-  const body = (await request.json()) as { name: string; email: string }
-  if (!body.name?.trim() || !body.email?.trim()) {
+  const parsed = createClientBodySchema.safeParse(await request.json())
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Name and email are required' },
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
       { status: 400 },
     )
   }
+  const body = parsed.data
 
   const admin = createServiceClient()
   const { data: client, error: createError } = await admin
     .from('portfolio_clients')
-    .insert({ name: body.name.trim(), email: body.email.trim() })
+    .insert({ name: body.name, email: body.email })
     .select()
     .single()
 

@@ -14,8 +14,17 @@ import {
   Text,
 } from 'azimuth-ui'
 import { useClientPagination } from '@/features/admin/hooks/use-client-pagination'
-import type { RevenueEntry, ExpenseEntry, BusinessSummary } from '@/features/admin/types'
-import { createRevenueEntry, createExpenseEntry, deleteRevenueEntry, deleteExpenseEntry } from './actions'
+import type {
+  RevenueEntry,
+  ExpenseEntry,
+  BusinessSummary,
+} from '@/features/admin/types'
+import {
+  createRevenueEntry,
+  createExpenseEntry,
+  deleteRevenueEntry,
+  deleteExpenseEntry,
+} from './actions'
 import styles from './revenue-page.module.css'
 
 interface RevenuePageProps {
@@ -60,11 +69,19 @@ export default function RevenuePage({
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'revenue' | 'expenses'>('revenue')
 
-  const { page: revPage, setPage: setRevPage, totalPages: revTotalPages, pageData: revPageData } =
-    useClientPagination(revenues, 10)
+  const {
+    page: revPage,
+    setPage: setRevPage,
+    totalPages: revTotalPages,
+    pageData: revPageData,
+  } = useClientPagination(revenues, 10)
 
-  const { page: expPage, setPage: setExpPage, totalPages: expTotalPages, pageData: expPageData } =
-    useClientPagination(expenses, 10)
+  const {
+    page: expPage,
+    setPage: setExpPage,
+    totalPages: expTotalPages,
+    pageData: expPageData,
+  } = useClientPagination(expenses, 10)
 
   const columns = (
     _items: RevenueEntry[] | ExpenseEntry[],
@@ -92,8 +109,8 @@ export default function RevenuePage({
         render: (value: unknown) => {
           const cat = String(value)
           const label = isRevenue
-            ? revenueCategoryLabels[cat] ?? cat
-            : expenseCategoryLabels[cat] ?? cat
+            ? (revenueCategoryLabels[cat] ?? cat)
+            : (expenseCategoryLabels[cat] ?? cat)
           return <Badge variant="neutral">{label}</Badge>
         },
       },
@@ -150,16 +167,26 @@ export default function RevenuePage({
         <KPICard
           value={`${summary.profitMargin.toFixed(1)}%`}
           label="Profit Margin"
-          variant={summary.profitMargin >= 20 ? 'success' : summary.profitMargin >= 0 ? 'warning' : 'danger'}
+          variant={
+            summary.profitMargin >= 20
+              ? 'success'
+              : summary.profitMargin >= 0
+                ? 'warning'
+                : 'danger'
+          }
         />
       </div>
 
       <div className={styles.kpiRow}>
         <Card className={styles.statCard}>
-          <Text>This Month Revenue: {formatAmount(summary.thisMonthRevenue)}</Text>
+          <Text>
+            This Month Revenue: {formatAmount(summary.thisMonthRevenue)}
+          </Text>
         </Card>
         <Card className={styles.statCard}>
-          <Text>This Month Expenses: {formatAmount(summary.thisMonthExpenses)}</Text>
+          <Text>
+            This Month Expenses: {formatAmount(summary.thisMonthExpenses)}
+          </Text>
         </Card>
         <Card className={styles.statCard}>
           <Text>Revenue Entries: {summary.revenueCount}</Text>
@@ -178,16 +205,18 @@ export default function RevenuePage({
             <Text color="muted">No revenue data.</Text>
           ) : (
             <div className={styles.categoryGrid}>
-              {Object.entries(summary.revenueByCategory).map(([cat, amount]) => (
-                <Card key={cat} className={styles.statCard}>
-                  <Stack spacing="xs">
-                    <Text element={{ size: 'sm' }} color="secondary">
-                      {revenueCategoryLabels[cat] ?? cat}
-                    </Text>
-                    <Text weight="semibold">{formatAmount(amount)}</Text>
-                  </Stack>
-                </Card>
-              ))}
+              {Object.entries(summary.revenueByCategory).map(
+                ([cat, amount]) => (
+                  <Card key={cat} className={styles.statCard}>
+                    <Stack spacing="xs">
+                      <Text element={{ size: 'sm' }} color="secondary">
+                        {revenueCategoryLabels[cat] ?? cat}
+                      </Text>
+                      <Text weight="semibold">{formatAmount(amount)}</Text>
+                    </Stack>
+                  </Card>
+                ),
+              )}
             </div>
           )}
         </Stack>
@@ -202,16 +231,18 @@ export default function RevenuePage({
             <Text color="muted">No expense data.</Text>
           ) : (
             <div className={styles.categoryGrid}>
-              {Object.entries(summary.expensesByCategory).map(([cat, amount]) => (
-                <Card key={cat} className={styles.statCard}>
-                  <Stack spacing="xs">
-                    <Text element={{ size: 'sm' }} color="secondary">
-                      {expenseCategoryLabels[cat] ?? cat}
-                    </Text>
-                    <Text weight="semibold">{formatAmount(amount)}</Text>
-                  </Stack>
-                </Card>
-              ))}
+              {Object.entries(summary.expensesByCategory).map(
+                ([cat, amount]) => (
+                  <Card key={cat} className={styles.statCard}>
+                    <Stack spacing="xs">
+                      <Text element={{ size: 'sm' }} color="secondary">
+                        {expenseCategoryLabels[cat] ?? cat}
+                      </Text>
+                      <Text weight="semibold">{formatAmount(amount)}</Text>
+                    </Stack>
+                  </Card>
+                ),
+              )}
             </div>
           )}
         </Stack>
@@ -263,14 +294,16 @@ export default function RevenuePage({
 
       {activeTab === 'revenue' && showRevenueForm && (
         <Card>
-          <form action={async (formData) => {
-            const result = await createRevenueEntry(null, formData)
-            if (result?.error) {
-              alert(result.error)
-            } else {
-              router.push('/admin/revenue')
-            }
-          }}>
+          <form
+            action={async (formData) => {
+              const result = await createRevenueEntry(null, formData)
+              if (result?.error) {
+                alert(result.error)
+              } else {
+                router.push('/admin/revenue')
+              }
+            }}
+          >
             <Stack spacing="sm">
               <Input
                 label={{ text: 'Client Name' }}
@@ -302,11 +335,13 @@ export default function RevenuePage({
                   }}
                 >
                   <option value="">Select category...</option>
-                  {Object.entries(revenueCategoryLabels).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
+                  {Object.entries(revenueCategoryLabels).map(
+                    ([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ),
+                  )}
                 </select>
               </label>
               <Input
@@ -333,20 +368,18 @@ export default function RevenuePage({
 
       {activeTab === 'expenses' && showExpenseForm && (
         <Card>
-          <form action={async (formData) => {
-            const result = await createExpenseEntry(null, formData)
-            if (result?.error) {
-              alert(result.error)
-            } else {
-              router.push('/admin/revenue')
-            }
-          }}>
+          <form
+            action={async (formData) => {
+              const result = await createExpenseEntry(null, formData)
+              if (result?.error) {
+                alert(result.error)
+              } else {
+                router.push('/admin/revenue')
+              }
+            }}
+          >
             <Stack spacing="sm">
-              <Input
-                label={{ text: 'Vendor' }}
-                name="vendor"
-                required
-              />
+              <Input label={{ text: 'Vendor' }} name="vendor" required />
               <Input
                 label={{ text: 'Description' }}
                 name="description"
@@ -372,11 +405,13 @@ export default function RevenuePage({
                   }}
                 >
                   <option value="">Select category...</option>
-                  {Object.entries(expenseCategoryLabels).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
+                  {Object.entries(expenseCategoryLabels).map(
+                    ([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ),
+                  )}
                 </select>
               </label>
               <Input
@@ -416,7 +451,10 @@ export default function RevenuePage({
           ) : (
             <>
               <DataTable<RevenueEntry>
-                data={{ columns: columns(revenues, 'revenue'), data: revPageData }}
+                data={{
+                  columns: columns(revenues, 'revenue'),
+                  data: revPageData,
+                }}
                 search={{ enabled: true, placeholder: 'Search revenue...' }}
               />
               {revTotalPages > 1 && (
@@ -448,7 +486,10 @@ export default function RevenuePage({
           ) : (
             <>
               <DataTable<ExpenseEntry>
-                data={{ columns: columns(expenses, 'expenses'), data: expPageData }}
+                data={{
+                  columns: columns(expenses, 'expenses'),
+                  data: expPageData,
+                }}
                 search={{ enabled: true, placeholder: 'Search expenses...' }}
               />
               {expTotalPages > 1 && (

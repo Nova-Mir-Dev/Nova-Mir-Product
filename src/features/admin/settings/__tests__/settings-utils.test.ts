@@ -3,12 +3,16 @@ import { hashKey, generateApiKey } from '../settings-utils'
 
 describe('hashKey', () => {
   beforeEach(() => {
-    const mockDigest = vi.fn().mockImplementation((_algo: string, data: Uint8Array) => {
-      const hash = Array.from(data).map((b) => b + 1).concat(
-        Array.from({ length: 32 - data.length }, (_, i) => i + 1),
-      )
-      return Promise.resolve(new Uint8Array(hash.slice(0, 32)).buffer as ArrayBuffer)
-    })
+    const mockDigest = vi
+      .fn()
+      .mockImplementation((_algo: string, data: Uint8Array) => {
+        const hash = Array.from(data)
+          .map((b) => b + 1)
+          .concat(Array.from({ length: 32 - data.length }, (_, i) => i + 1))
+        return Promise.resolve(
+          new Uint8Array(hash.slice(0, 32)).buffer as ArrayBuffer,
+        )
+      })
     vi.stubGlobal('crypto', {
       ...crypto,
       subtle: { digest: mockDigest },
@@ -47,9 +51,12 @@ describe('generateApiKey', () => {
     vi.stubGlobal('crypto', {
       ...crypto,
       subtle: {
-        digest: vi.fn().mockResolvedValue(
-          new Uint8Array(Array.from({ length: 32 }, (_, i) => i + 1)).buffer as ArrayBuffer,
-        ),
+        digest: vi
+          .fn()
+          .mockResolvedValue(
+            new Uint8Array(Array.from({ length: 32 }, (_, i) => i + 1))
+              .buffer as ArrayBuffer,
+          ),
       },
       randomUUID: vi
         .fn()

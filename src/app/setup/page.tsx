@@ -105,8 +105,7 @@ const SERVICES: ServiceDef[] = [
         label: 'DSN',
         instruction:
           'Found in Sentry → Project Settings → Client Keys (DSN). Looks like: https://xxx@xxx.ingest.us.sentry.io/xxx',
-        docLink:
-          'https://docs.sentry.io/platforms/javascript/guides/nextjs/',
+        docLink: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/',
       },
       {
         key: 'SENTRY_AUTH_TOKEN',
@@ -192,8 +191,7 @@ const SERVICES: ServiceDef[] = [
       {
         key: 'TWILIO_ACCOUNT_SID',
         label: 'Account SID',
-        instruction:
-          'Found in Twilio Console dashboard. Starts with AC...',
+        instruction: 'Found in Twilio Console dashboard. Starts with AC...',
         isSecret: true,
         docLink: 'https://console.twilio.com',
       },
@@ -242,8 +240,8 @@ const SERVICES: ServiceDef[] = [
     url: 'https://vercel.com/dashboard',
     description:
       'Deployment platform. Connect your repo and set environment variables.',
-      instructions:
-        'Push your code to GitHub, import the repo (github.com/rosejas13/Nova-Mir-Admin) into Vercel, then add all env vars from .env.production into Vercel Project Settings → Environment Variables.',
+    instructions:
+      'Push your code to GitHub, import the repo (github.com/rosejas13/Nova-Mir-Admin) into Vercel, then add all env vars from .env.production into Vercel Project Settings → Environment Variables.',
     fields: [],
   },
 ]
@@ -255,7 +253,9 @@ export default function SetupPage() {
     message: string
   } | null>(null)
   const [saving, setSaving] = useState(false)
-  const [deploymentUrl, setDeploymentUrl] = useState('https://nova-mir-admin.vercel.app')
+  const [deploymentUrl, setDeploymentUrl] = useState(
+    'https://nova-mir-admin.vercel.app',
+  )
   const [appName, setAppName] = useState('Nova Mir Admin')
   const [generatedSlack, setGeneratedSlack] = useState(false)
 
@@ -265,7 +265,9 @@ export default function SetupPage() {
 
   const totalFields = SERVICES.reduce((c, s) => c + s.fields.length, 0)
   const filledFields = SERVICES.reduce(
-    (c, s) => c + s.fields.filter((f) => (envVars[f.key] || '').trim().length > 0).length,
+    (c, s) =>
+      c +
+      s.fields.filter((f) => (envVars[f.key] || '').trim().length > 0).length,
     0,
   )
   const allFilled = totalFields === filledFields
@@ -298,21 +300,27 @@ export default function SetupPage() {
         message: `Slack manifest generated at ${res.path}. Go to api.slack.com/apps → Create New App → From manifest and upload this file.`,
       })
     } else {
-      setResult({ type: 'error', message: res.error || 'Failed to generate manifest' })
+      setResult({
+        type: 'error',
+        message: res.error || 'Failed to generate manifest',
+      })
     }
   }
 
   return (
-    <Container style={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}>
+    <Container
+      style={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}
+    >
       <Stack spacing="lg">
         <div>
           <Text element={{ as: 'h1', size: 'h2' }} weight="bold">
             Setup
           </Text>
           <Text color="secondary">
-            Fill in your service credentials below. Secrets are sent directly to the server and
-            written to <code>.env.local</code>. For production deployment, use{' '}
-            <code>.env.production</code> as a reference for Vercel environment variables.
+            Fill in your service credentials below. Secrets are sent directly to
+            the server and written to <code>.env.local</code>. For production
+            deployment, use <code>.env.production</code> as a reference for
+            Vercel environment variables.
           </Text>
         </div>
 
@@ -381,7 +389,11 @@ export default function SetupPage() {
                 </Button>
               </div>
 
-              <Text element={{ size: 'sm' }} color="secondary" style={{ marginBottom: 12 }}>
+              <Text
+                element={{ size: 'sm' }}
+                color="secondary"
+                style={{ marginBottom: 12 }}
+              >
                 {svc.description}
               </Text>
 
@@ -451,8 +463,9 @@ export default function SetupPage() {
               Slack App Manifest
             </Text>
             <Text element={{ size: 'sm' }} color="secondary">
-              Generate a Slack manifest file you can import directly into the Slack API dashboard.
-              This creates a bot with message permissions and event subscriptions.
+              Generate a Slack manifest file you can import directly into the
+              Slack API dashboard. This creates a bot with message permissions
+              and event subscriptions.
             </Text>
             <div
               style={{
@@ -502,14 +515,35 @@ export default function SetupPage() {
                 : 'Fill in all fields above for a complete deployment.'}
             </Text>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.25rem',
+              }}
+            >
               {[
-                { label: 'Supabase project', ok: !!envVars['NEXT_PUBLIC_SUPABASE_URL'] },
-                { label: 'Auth configured', ok: !!envVars['SUPABASE_SERVICE_ROLE_KEY'] },
+                {
+                  label: 'Supabase project',
+                  ok: !!envVars['NEXT_PUBLIC_SUPABASE_URL'],
+                },
+                {
+                  label: 'Auth configured',
+                  ok: !!envVars['SUPABASE_SERVICE_ROLE_KEY'],
+                },
                 { label: 'Email provider', ok: !!envVars['RESEND_API_KEY'] },
-                { label: 'Error monitoring', ok: !!envVars['NEXT_PUBLIC_SENTRY_DSN'] },
-                { label: 'Slack integration', ok: generatedSlack || !!envVars['SLACK_BOT_TOKEN'] },
-                { label: 'Log management', ok: !!envVars['NEXT_PUBLIC_AXIOM_DATASET'] },
+                {
+                  label: 'Error monitoring',
+                  ok: !!envVars['NEXT_PUBLIC_SENTRY_DSN'],
+                },
+                {
+                  label: 'Slack integration',
+                  ok: generatedSlack || !!envVars['SLACK_BOT_TOKEN'],
+                },
+                {
+                  label: 'Log management',
+                  ok: !!envVars['NEXT_PUBLIC_AXIOM_DATASET'],
+                },
                 { label: 'SMS provider', ok: !!envVars['TWILIO_ACCOUNT_SID'] },
                 { label: 'Rate limiting', ok: !!envVars['UPSTASH_REDIS_URL'] },
               ].map((item) => (
@@ -549,12 +583,7 @@ export default function SetupPage() {
           {allFilled && (
             <Button
               variant="secondary"
-              onClick={() =>
-                window.open(
-                  'https://vercel.com/new',
-                  '_blank',
-                )
-              }
+              onClick={() => window.open('https://vercel.com/new', '_blank')}
             >
               Deploy to Vercel ↗
             </Button>

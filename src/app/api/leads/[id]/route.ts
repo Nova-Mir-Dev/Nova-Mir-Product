@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
@@ -80,7 +81,7 @@ export async function PATCH(
       if (error.code === 'PGRST116') {
         return NextResponse.json({ error: 'Lead not found.' }, { status: 404 })
       }
-      console.error('Failed to update lead:', error)
+      Sentry.captureException(error)
       return NextResponse.json(
         { error: 'Failed to update lead.' },
         { status: 500 },
@@ -89,7 +90,7 @@ export async function PATCH(
 
     return NextResponse.json({ data })
   } catch (err) {
-    console.error('Lead update error:', err)
+    Sentry.captureException(err)
     return NextResponse.json(
       { error: 'Something went wrong.' },
       { status: 500 },

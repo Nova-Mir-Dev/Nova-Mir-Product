@@ -1,7 +1,8 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
+import { createAppointmentSchema } from '@/features/appointments/schemas'
 
 export async function GET() {
   const supabase = await createServerClient()
@@ -38,15 +39,16 @@ export async function POST(request: Request) {
     )
   }
 
-  const body = (await request.json()) as {
-    title: string
-    description?: string
-    startTime: string
-    endTime: string
+  const parsed = createAppointmentSchema.safeParse(await request.json())
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { status: 400 },
+    )
   }
+  const body = parsed.data
 
-  const admin = createServiceClient()
-  const { data, error: insertError } = await admin
+  const { data, error: insertError } = await supabase
     .from('appointments')
     .insert({
       user_id: user.id,
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
     .single()
 
   if (insertError) {
-    console.error('Failed to create appointment:', insertError)
+    Sentry.captureException(insertError)
     return NextResponse.json(
       { error: 'Failed to create appointment.' },
       { status: 500 },

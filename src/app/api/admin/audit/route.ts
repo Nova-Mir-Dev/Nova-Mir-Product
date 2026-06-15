@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function GET(request: Request) {
   const supabase = await createClient()
@@ -18,6 +19,14 @@ export async function GET(request: Request) {
     .single()
   if (profile?.role !== 'admin')
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  const { allowed } = await rateLimit(`admin:audit:${user.id}`, 30, 60000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 },
+    )
+  }
 
   const admin = createServiceClient()
 

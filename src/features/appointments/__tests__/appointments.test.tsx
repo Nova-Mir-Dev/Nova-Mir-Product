@@ -50,9 +50,7 @@ describe('Appointments', () => {
 
   it('renders schedule button', () => {
     render(<Appointments />)
-    expect(
-      screen.getByRole('button', { name: 'Schedule' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Schedule' })).toBeInTheDocument()
   })
 
   it('renders empty list by default', () => {
