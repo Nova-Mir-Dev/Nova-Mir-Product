@@ -1,38 +1,14 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import AdminNav from '@/features/admin/components/admin-nav'
 
 export const metadata: Metadata = {
   title: 'Admin',
   robots: { index: false, follow: false },
 }
 
-export default async function AdminLayout({
+export default function AdminRootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') redirect('/login')
-
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <AdminNav />
-      <main style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>
-        {children}
-      </main>
-    </div>
-  )
+  return <>{children}</>
 }

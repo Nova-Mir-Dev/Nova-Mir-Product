@@ -1,9 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import {
-  SettingsPage,
-  type ApiKeyItem,
-} from '@/features/admin/settings/settings-page'
+import { SettingsPage } from '@/features/admin/settings/settings-page'
 
 export default async function SettingsRoute() {
   const supabase = await createClient()
@@ -11,7 +8,7 @@ export default async function SettingsRoute() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/admin/auth/login')
 
   const { data: profile } = await supabase
     .from('users')
@@ -19,7 +16,7 @@ export default async function SettingsRoute() {
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'admin') redirect('/login')
+  if (profile?.role !== 'admin') redirect('/admin/auth/login')
 
   const { data: apiKeys } = await supabase
     .from('api_keys')
@@ -31,7 +28,7 @@ export default async function SettingsRoute() {
   return (
     <SettingsPage
       user={{ email: user.email!, name: profile?.name ?? null }}
-      apiKeys={(apiKeys ?? []) as ApiKeyItem[]}
+      apiKeys={apiKeys ?? []}
     />
   )
 }

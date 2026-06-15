@@ -70,7 +70,9 @@ async function getDashboardData(): Promise<DashboardData> {
     { data: clients },
     { count: pendingInvoices },
   ] = await Promise.all([
-    supabase.from('portfolio_clients').select('*', { count: 'exact', head: true }),
+    supabase
+      .from('portfolio_clients')
+      .select('*', { count: 'exact', head: true }),
     supabase
       .from('projects')
       .select('*', { count: 'exact', head: true })
@@ -129,7 +131,7 @@ export default async function AdminDashboard() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/admin/auth/login')
 
   const { data: profile } = await supabase
     .from('users')
@@ -137,7 +139,7 @@ export default async function AdminDashboard() {
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'admin') redirect('/login')
+  if (profile?.role !== 'admin') redirect('/admin/auth/login')
 
   const data = await getDashboardData()
 

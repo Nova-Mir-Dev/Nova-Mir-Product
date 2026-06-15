@@ -17,7 +17,7 @@ export default async function ProjectsPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/admin/auth/login')
 
   const { data: profile } = await supabase
     .from('users')
@@ -25,7 +25,7 @@ export default async function ProjectsPage() {
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'admin') redirect('/login')
+  if (profile?.role !== 'admin') redirect('/admin/auth/login')
 
   const { data: projects } = await supabase
     .from('projects')

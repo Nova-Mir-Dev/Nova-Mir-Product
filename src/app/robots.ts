@@ -5,8 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        disallow: ['/api/', '/admin/', '/dashboard/', '/setup/', '/intake/', '/login/'],
+        disallow: ['/api/', '/admin/', '/dashboard/', '/setup/', '/intake/'],
       },
     ],
+    sitemap: 'https://novamir.dev/sitemap.xml',
   }
 }

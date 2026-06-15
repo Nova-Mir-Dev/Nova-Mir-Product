@@ -9,10 +9,22 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
 
 function addCorsHeaders(response: NextResponse, origin: string | null): void {
   if (origin && isAllowedOrigin(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', getCorsOriginHeader(origin))
-    response.headers.set('Access-Control-Allow-Methods', CORS_HEADERS['Access-Control-Allow-Methods'])
-    response.headers.set('Access-Control-Allow-Headers', CORS_HEADERS['Access-Control-Allow-Headers'])
-    response.headers.set('Access-Control-Max-Age', CORS_HEADERS['Access-Control-Max-Age'])
+    response.headers.set(
+      'Access-Control-Allow-Origin',
+      getCorsOriginHeader(origin),
+    )
+    response.headers.set(
+      'Access-Control-Allow-Methods',
+      CORS_HEADERS['Access-Control-Allow-Methods'],
+    )
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      CORS_HEADERS['Access-Control-Allow-Headers'],
+    )
+    response.headers.set(
+      'Access-Control-Max-Age',
+      CORS_HEADERS['Access-Control-Max-Age'],
+    )
   }
 }
 
@@ -24,30 +36,31 @@ function hasSupabaseEnv(): boolean {
 }
 
 async function getAuth(request: NextRequest) {
-  if (!hasSupabaseEnv()) return { user: null, role: null, supabaseResponse: NextResponse.next({ request }) }
+  if (!hasSupabaseEnv())
+    return {
+      user: null,
+      role: null,
+      supabaseResponse: NextResponse.next({ request }),
+    }
 
   let supabaseResponse = NextResponse.next({ request })
 
-  const supabase = createServerClient(
-    supabaseUrl()!,
-    supabaseAnonKey()!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          for (const { name, value } of cookiesToSet) {
-            request.cookies.set(name, value)
-          }
-          supabaseResponse = NextResponse.next({ request })
-          for (const { name, value, options } of cookiesToSet) {
-            supabaseResponse.cookies.set(name, value, options)
-          }
-        },
+  const supabase = createServerClient(supabaseUrl()!, supabaseAnonKey()!, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll()
+      },
+      setAll(cookiesToSet) {
+        for (const { name, value } of cookiesToSet) {
+          request.cookies.set(name, value)
+        }
+        supabaseResponse = NextResponse.next({ request })
+        for (const { name, value, options } of cookiesToSet) {
+          supabaseResponse.cookies.set(name, value, options)
+        }
       },
     },
-  )
+  })
 
   const {
     data: { user },
@@ -60,7 +73,7 @@ async function getAuth(request: NextRequest) {
       .select('role')
       .eq('id', user.id)
       .single()
-    role = (profile as { role: string | null } | null)?.role ?? null
+    role = (profile?.role as string) ?? null
   }
 
   return { user, role, supabaseResponse }
@@ -74,10 +87,22 @@ export async function middleware(request: NextRequest) {
   if (isApiRoute && request.method === 'OPTIONS') {
     if (isAllowedOrigin(origin)) {
       const response = new NextResponse(null, { status: 204 })
-      response.headers.set('Access-Control-Allow-Origin', getCorsOriginHeader(origin))
-      response.headers.set('Access-Control-Allow-Methods', CORS_HEADERS['Access-Control-Allow-Methods'])
-      response.headers.set('Access-Control-Allow-Headers', CORS_HEADERS['Access-Control-Allow-Headers'])
-      response.headers.set('Access-Control-Max-Age', CORS_HEADERS['Access-Control-Max-Age'])
+      response.headers.set(
+        'Access-Control-Allow-Origin',
+        getCorsOriginHeader(origin),
+      )
+      response.headers.set(
+        'Access-Control-Allow-Methods',
+        CORS_HEADERS['Access-Control-Allow-Methods'],
+      )
+      response.headers.set(
+        'Access-Control-Allow-Headers',
+        CORS_HEADERS['Access-Control-Allow-Headers'],
+      )
+      response.headers.set(
+        'Access-Control-Max-Age',
+        CORS_HEADERS['Access-Control-Max-Age'],
+      )
       return response
     }
     return new NextResponse(null, { status: 204 })
@@ -90,33 +115,54 @@ export async function middleware(request: NextRequest) {
         origin,
       )
     }
+    const referer = request.headers.get('referer')
+    if (
+      !origin &&
+      !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL ?? '')
+    ) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
   }
 
-  if (pathname.startsWith('/admin') || pathname.startsWith('/dashboard') || pathname.startsWith('/setup') || (pathname === '/' && hasSupabaseEnv())) {
+  if (
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/setup') ||
+    (pathname === '/' && hasSupabaseEnv())
+  ) {
     const { user, role, supabaseResponse } = await getAuth(request)
 
     if (pathname === '/' && user) {
       if (role === 'admin') {
-        return addCorsHeaders(NextResponse.redirect(new URL('/admin', request.url)), origin)
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/admin', request.url)),
+          origin,
+        )
       }
       if (role === 'client') {
-        return addCorsHeaders(NextResponse.redirect(new URL('/dashboard', request.url)), origin)
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/dashboard', request.url)),
+          origin,
+        )
       }
-      addCorsHeaders(supabaseResponse!, origin)
-      return supabaseResponse!
+      addCorsHeaders(supabaseResponse, origin)
+      return supabaseResponse
     }
 
     if (pathname.startsWith('/admin')) {
       if (!user) {
-        const url = new URL('/login', request.url)
+        const url = new URL('/admin/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role === 'client') {
-        return addCorsHeaders(NextResponse.redirect(new URL('/dashboard', request.url)), origin)
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/dashboard', request.url)),
+          origin,
+        )
       }
       if (role !== 'admin') {
-        const url = new URL('/login', request.url)
+        const url = new URL('/admin/auth/login', request.url)
         url.searchParams.set('reason', 'no_role')
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
@@ -124,15 +170,18 @@ export async function middleware(request: NextRequest) {
 
     if (pathname.startsWith('/dashboard')) {
       if (!user) {
-        const url = new URL('/login', request.url)
+        const url = new URL('/clients/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role === 'admin') {
-        return addCorsHeaders(NextResponse.redirect(new URL('/admin', request.url)), origin)
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/admin', request.url)),
+          origin,
+        )
       }
       if (role !== 'client') {
-        const url = new URL('/login', request.url)
+        const url = new URL('/clients/auth/login', request.url)
         url.searchParams.set('reason', 'no_role')
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
@@ -140,16 +189,19 @@ export async function middleware(request: NextRequest) {
 
     if (pathname.startsWith('/setup')) {
       if (!user) {
-        const url = new URL('/login', request.url)
+        const url = new URL('/admin/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role !== 'admin') {
-        return addCorsHeaders(NextResponse.redirect(new URL('/', request.url)), origin)
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/', request.url)),
+          origin,
+        )
       }
     }
 
-    return addCorsHeaders(supabaseResponse!, origin)
+    return addCorsHeaders(supabaseResponse, origin)
   }
 
   if (isApiRoute && request.method !== 'OPTIONS') {
@@ -160,15 +212,21 @@ export async function middleware(request: NextRequest) {
 
     if (!isPublic) {
       if (!user) {
-        return addCorsHeaders(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), origin)
+        return addCorsHeaders(
+          NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+          origin,
+        )
       }
       if (pathname.startsWith('/api/admin') && role !== 'admin') {
-        return addCorsHeaders(NextResponse.json({ error: 'Forbidden' }, { status: 403 }), origin)
+        return addCorsHeaders(
+          NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
+          origin,
+        )
       }
     }
 
-    addCorsHeaders(supabaseResponse!, origin)
-    return supabaseResponse!
+    addCorsHeaders(supabaseResponse, origin)
+    return supabaseResponse
   }
 
   const response = NextResponse.next({ request })
