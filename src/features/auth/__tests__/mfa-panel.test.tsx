@@ -22,9 +22,7 @@ describe('MfaPanel', () => {
 
   it('shows empty state when no factors', () => {
     render(<MfaPanel factors={[]} />)
-    expect(
-      screen.getByText('No 2FA methods configured.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('No 2FA methods configured.')).toBeInTheDocument()
   })
 
   it('renders Enable 2FA button when not enrolling', () => {
