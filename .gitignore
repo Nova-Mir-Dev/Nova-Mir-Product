@@ -21,3 +21,6 @@ public/slack-manifest.json
 
 # Supabase temp files
 supabase/.temp/
+
+# Beads / Dolt files (added by bd init)
+.beads/proxieddb/
