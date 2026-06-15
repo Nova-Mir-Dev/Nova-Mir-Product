@@ -149,7 +149,7 @@ export default function ServicesPage() {
               Looking for a founding client slot?
             </Text>
             <Text element={{ size: 'sm' }}>
-              First 3 clients at a flat $1,500 rate.{' '}
+              First 3 clients at a flat $2,500 rate.{' '}
               <a
                 href="/pricing"
                 style={{
@@ -162,7 +162,7 @@ export default function ServicesPage() {
               .
             </Text>
             <Text element={{ size: 'sm' }} style={{ marginTop: '0.5rem', color: 'var(--azimuth-color-text-secondary)' }}>
-              Maintenance retainer from $500/month after launch.
+              Maintenance retainer from $100–$200/month after launch.
             </Text>
           </Stack>
         </Card>

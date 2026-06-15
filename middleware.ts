@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isAllowedOrigin, CORS_HEADERS, getCorsOriginHeader } from '@/lib/cors'
+import { rateLimit } from '@/lib/rate-limit'
 
 const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/health', new Set(['GET'])],
@@ -207,10 +208,37 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isApiRoute && request.method !== 'OPTIONS') {
-    const { user, role, supabaseResponse } = await getAuth(request)
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+      request.headers.get('x-real-ip') ??
+      '127.0.0.1'
+    const identifier = `${ip}:${request.method}:${pathname}`
 
     const publicMethods = PUBLIC_API_ROUTES.get(pathname)
     const isPublic = publicMethods?.has(request.method)
+    const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
+
+    let limit: number
+    if (isMutation) limit = 5
+    else if (isPublic) limit = 10
+    else limit = 30
+
+    const result = await rateLimit(identifier, limit, 10000)
+
+    if (!result.allowed) {
+      const response = NextResponse.json(
+        { error: 'Too many requests, please try again later.' },
+        { status: 429 },
+      )
+      response.headers.set(
+        'Retry-After',
+        String(Math.ceil((result.reset - Date.now()) / 1000)),
+      )
+      addCorsHeaders(response, origin, true)
+      return response
+    }
+
+    const { user, role, supabaseResponse } = await getAuth(request)
 
     if (!isPublic) {
       if (!user) {

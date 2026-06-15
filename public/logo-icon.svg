@@ -1,0 +1,8 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Nova Mir Icon</title>
+  <desc id="desc">Nova Mir standalone icon.</desc>
+
+  <rect width="120" height="120" rx="28" fill="#1a1a2e"/>
+  <path d="M60 24L68.8 51.2H97.4L74.3 68L83.1 95.2L60 78.4L36.9 95.2L45.7 68L22.6 51.2H51.2L60 24Z" fill="#3b82f6"/>
+  <circle cx="60" cy="60" r="17" fill="#ffffff"/>
+</svg>

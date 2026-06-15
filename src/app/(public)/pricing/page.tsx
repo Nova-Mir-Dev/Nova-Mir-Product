@@ -117,7 +117,7 @@ export default function PricingPage() {
               Founding Client Program
             </Text>
             <Text element={{ size: 'base' }}>
-              First 3 clients at a flat $1,500 rate &mdash; a limited-time
+              First 3 clients at a flat $2,500 rate &mdash; a limited-time
               opportunity to get a custom website at a founding price.
             </Text>
             <div>
@@ -148,7 +148,7 @@ export default function PricingPage() {
               standard rates.
             </Text>
             <Text element={{ size: 'sm' }} color="secondary" style={{ marginTop: '1rem' }}>
-              Maintenance retainer available from $500/month after launch &mdash;
+              Maintenance retainer available from $100–$200/month after launch &mdash;
               hosting checks, content updates, and priority support.
             </Text>
             <Button

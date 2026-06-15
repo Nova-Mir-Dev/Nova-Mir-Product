@@ -9,7 +9,7 @@ export interface PricingTier {
 export const PRICING_TIERS: PricingTier[] = [
   {
     name: 'Managed Website',
-    startingPrice: 1500,
+    startingPrice: 2500,
     description:
       'Small businesses that need a credible online presence.',
     features: [
@@ -24,7 +24,7 @@ export const PRICING_TIERS: PricingTier[] = [
   },
   {
     name: 'Website + Lead System',
-    startingPrice: 3000,
+    startingPrice: 4000,
     description:
       'Businesses ready to capture and track leads.',
     features: [
@@ -38,8 +38,8 @@ export const PRICING_TIERS: PricingTier[] = [
     href: '/services',
   },
   {
-    name: 'Website + Operations System',
-    startingPrice: 5000,
+    name: 'Full Growth System',
+    startingPrice: 7000,
     description:
       'Businesses needing booking, payments, and dashboards.',
     features: [

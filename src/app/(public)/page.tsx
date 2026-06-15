@@ -5,7 +5,7 @@ import styles from './landing.module.css'
 const TIER_DATA = [
   {
     name: 'Managed Website',
-    priceRange: '$1,500–$2,500',
+    priceRange: '$2,500',
     popular: false,
     features: [
       'Custom-designed site',
@@ -18,7 +18,7 @@ const TIER_DATA = [
   },
   {
     name: 'Website + Lead System',
-    priceRange: '$3,000–$4,500',
+    priceRange: '$4,000',
     popular: true,
     features: [
       'Everything in Managed Website, plus:',
@@ -30,8 +30,8 @@ const TIER_DATA = [
     ],
   },
   {
-    name: 'Website + Operations System',
-    priceRange: '$5,000–$10,000+',
+    name: 'Full Growth System',
+    priceRange: '$7,000+',
     popular: false,
     features: [
       'Everything in Lead System, plus:',
@@ -47,19 +47,19 @@ const TIER_DATA = [
 const PRICING_SUMMARY = [
   {
     name: 'Managed Website',
-    range: '$1,500–$2,500',
+    range: '$2,500',
     oneLiner: 'Custom site that builds credibility.',
     popular: false,
   },
   {
     name: 'Website + Lead System',
-    range: '$3,000–$4,500',
+    range: '$4,000',
     oneLiner: 'Site + automated lead capture.',
     popular: true,
   },
   {
-    name: 'Website + Operations System',
-    range: '$5,000–$10,000+',
+    name: 'Full Growth System',
+    range: '$7,000+',
     oneLiner: 'Full system with booking and dashboards.',
     popular: false,
   },
