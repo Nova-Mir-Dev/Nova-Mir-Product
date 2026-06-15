@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
+import { createClient as createAnonClient } from '@supabase/supabase-js'
 import { rateLimit } from '@/lib/rate-limit'
 import { notifyNewLead } from '@/lib/slack'
 import { createLeadSchema } from '@/features/leads/schemas'
@@ -103,12 +103,16 @@ export async function POST(request: Request) {
       consent,
     } = parsed.data
 
-    // NOTE: Must use service_role client because the `leads` RLS policy
-    // only permits `service_role` inserts (see schema.sql: the policy is
-    // `leads_admin_only USING (auth.role() = 'service_role')`). There is no
-    // anon insert policy. If a public anon RLS policy is added later, switch
-    // to `createClient()` from `@/lib/supabase-server`.
-    const supabase = createServiceClient()
+    // Uses anon (browser) client so the insert respects RLS.
+    // Requires a Supabase RLS policy allowing anon inserts on `leads`:
+    //   CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
+    //     TO anon WITH CHECK (true);
+    // See schema.sql for the existing admin-only policy.
+    const supabase = createAnonClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false } },
+    )
     const { data, error } = await supabase
       .from('leads')
       .insert({

@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://novamir.dev'),
+  metadataBase: new URL('https://www.novamir.dev'),
   title: {
     template: '%s | Nova Mir',
     default: 'Nova Mir — Web Development for Small Businesses',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
     siteName: 'Nova Mir',
     type: 'website',
-    url: 'https://novamir.dev',
+    url: 'https://www.novamir.dev',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     description:
       'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
   },
-  alternates: { canonical: 'https://novamir.dev' },
+  alternates: { canonical: 'https://www.novamir.dev' },
 }
 
 export default function RootLayout({

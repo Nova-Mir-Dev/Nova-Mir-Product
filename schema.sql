@@ -276,8 +276,15 @@ CREATE INDEX idx_leads_created ON leads(created_at DESC);
 CREATE INDEX idx_leads_status ON leads(status);
 
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+
+-- Admin access: full control via service_role (bypasses RLS)
 CREATE POLICY "leads_admin_only" ON leads FOR ALL
   USING (auth.role() = 'service_role');
+
+-- Public submissions: anon users can only INSERT (contact form)
+CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
+  TO anon
+  WITH CHECK (true);
 
 -- =============================================================================
 -- Line items (for invoices)
