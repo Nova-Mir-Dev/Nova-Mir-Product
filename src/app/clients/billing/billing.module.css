@@ -1,0 +1,63 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgePending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badgePaid {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badgeOverdue {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--azimuth-color-border);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--azimuth-color-text-secondary, #6b7280);
+}
+
+.table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--azimuth-color-border);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+}

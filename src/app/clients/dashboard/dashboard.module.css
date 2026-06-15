@@ -1,0 +1,121 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.welcomeBanner {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-sm);
+  flex-wrap: wrap;
+}
+
+.projectStatusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  background-color: var(--azimuth-color-bg-secondary, #f9fafb);
+  border-radius: var(--azimuth-radius-md, 8px);
+}
+
+.stageItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.stageCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--azimuth-color-border, #d1d5db);
+  color: var(--azimuth-color-text-secondary, #6b7280);
+  background-color: var(--azimuth-color-white, #fff);
+}
+
+.stageCircleActive {
+  border-color: #3b82f6;
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.stageCircleFuture {
+  border-color: var(--azimuth-color-border, #d1d5db);
+  background-color: var(--azimuth-color-white, #fff);
+  color: var(--azimuth-color-text-secondary, #6b7280);
+}
+
+.stageLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--azimuth-color-text-secondary, #6b7280);
+}
+
+.stageLabelActive {
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.stageConnector {
+  flex: 1;
+  height: 2px;
+  background-color: var(--azimuth-color-border, #d1d5db);
+  margin: 0 8px;
+  margin-bottom: 30px;
+}
+
+.stageConnectorActive {
+  background-color: #3b82f6;
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--azimuth-spacing-md);
+}
+
+.actionCard {
+  text-decoration: none;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.emptyStateHeading {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1a1a2e;
+}
+
+.emptyStateText {
+  font-size: 14px;
+  color: var(--azimuth-color-text-secondary, #6b7280);
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .quickActions {
+    grid-template-columns: 1fr;
+  }
+
+  .projectStatusBar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .stageConnector {
+    display: none;
+  }
+}

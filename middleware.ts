@@ -142,6 +142,7 @@ export async function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/admin') ||
     pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/clients') ||
     pathname.startsWith('/setup') ||
     (pathname === '/' && hasSupabaseEnv())
   ) {
@@ -156,7 +157,7 @@ export async function middleware(request: NextRequest) {
       }
       if (role === 'client') {
         return addCorsHeaders(
-          NextResponse.redirect(new URL('/dashboard', request.url)),
+          NextResponse.redirect(new URL('/clients/dashboard', request.url)),
           origin,
         )
       }
@@ -172,7 +173,7 @@ export async function middleware(request: NextRequest) {
       }
       if (role === 'client') {
         return addCorsHeaders(
-          NextResponse.redirect(new URL('/dashboard', request.url)),
+          NextResponse.redirect(new URL('/clients/dashboard', request.url)),
           origin,
         )
       }
@@ -184,6 +185,25 @@ export async function middleware(request: NextRequest) {
     }
 
     if (pathname.startsWith('/dashboard')) {
+      if (!user) {
+        const url = new URL('/clients/auth/login', request.url)
+        url.searchParams.set('redirect', pathname)
+        return addCorsHeaders(NextResponse.redirect(url), origin)
+      }
+      if (role === 'admin') {
+        return addCorsHeaders(
+          NextResponse.redirect(new URL('/admin', request.url)),
+          origin,
+        )
+      }
+      if (role !== 'client') {
+        const url = new URL('/clients/auth/login', request.url)
+        url.searchParams.set('reason', 'no_role')
+        return addCorsHeaders(NextResponse.redirect(url), origin)
+      }
+    }
+
+    if (pathname.startsWith('/clients') && !pathname.startsWith('/clients/auth')) {
       if (!user) {
         const url = new URL('/clients/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
@@ -283,6 +303,7 @@ export const config = {
     '/',
     '/admin/:path*',
     '/dashboard/:path*',
+    '/clients/:path*',
     '/setup/:path*',
     '/api/:path*',
   ],

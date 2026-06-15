@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Stack, Text } from 'azimuth-ui'
-import styles from './client-layout.module.css'
+import styles from './clients-layout.module.css'
 
 interface ClientUser {
   id: string
@@ -12,12 +12,12 @@ interface ClientUser {
 }
 
 const NAV_ITEMS = [
-  { label: 'Home', path: '/clients/dashboard', tabIcon: '🏠' },
-  { label: 'Billing', path: '/clients/billing', tabIcon: '💰' },
-  { label: 'Support', path: 'mailto:support@novamir.dev', tabIcon: '📧' },
+  { label: 'Home', path: '/clients/dashboard', icon: '🏠' },
+  { label: 'Billing', path: '/clients/billing', icon: '💰' },
+  { label: 'Support', path: 'mailto:support@novamir.dev', icon: '📧' },
 ]
 
-export default function ClientLayout({
+export default function ClientsLayout({
   children,
 }: {
   children: React.ReactNode
@@ -48,7 +48,10 @@ export default function ClientLayout({
   return (
     <div className={styles.container}>
       <nav className={styles.sidebar}>
-        <Stack spacing="sm" className={styles.sidebarInner}>
+        <Stack
+          spacing="sm"
+          className={styles.sidebarInner}
+        >
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
             Client Portal
           </Text>
@@ -98,7 +101,7 @@ export default function ClientLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.tabIcon}</span>
+              <span className={styles.bottomTabIcon}>{item.icon}</span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </a>
           ) : (
@@ -107,7 +110,7 @@ export default function ClientLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.tabIcon}</span>
+              <span className={styles.bottomTabIcon}>{item.icon}</span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </Link>
           )
