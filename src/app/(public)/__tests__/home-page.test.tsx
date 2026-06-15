@@ -31,7 +31,9 @@ describe('HomePage', () => {
 
   it('renders CTA section', () => {
     render(<HomePage />)
-    expect(screen.getAllByText('Ready to get started?').length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText('Ready to get started?').length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Get Started button', () => {

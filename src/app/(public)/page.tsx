@@ -1,36 +1,63 @@
-'use client'
+import Link from 'next/link'
+import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
+import styles from './landing.module.css'
 
-import { Button, Card, Container, Stack, Text, Badge } from 'azimuth-ui'
-import { PRICING_TIERS } from '@/lib/pricing'
-
-const SHORT_FEATURES: string[][] = [
-  [
-    'Booking / intake workflows',
-    'Payment & deposit flow',
-    'Customer dashboard & automations',
-    'Priority support & maintenance',
-  ],
-  [
-    'Everything in Website + Operations System',
-    'Automated lead capture & CRM',
-    'Email follow-up sequences',
-    'Monthly performance reports',
-  ],
-  [
-    'Custom-designed, mobile-friendly site',
-    'Contact forms & map integration',
-    'Basic SEO & analytics setup',
-    'Hosting & security included',
-  ],
+const TIER_DATA = [
+  {
+    name: 'Website',
+    priceRange: '$1,000–$2,500',
+    popular: false,
+    features: [
+      'Custom-designed, mobile-friendly site',
+      'Contact forms & map integration',
+      'Basic SEO & analytics setup',
+      'Hosting & security included',
+    ],
+  },
+  {
+    name: 'Website + Lead System',
+    priceRange: '$1,500–$4,500',
+    popular: true,
+    features: [
+      'Everything in Website, plus:',
+      'Automated lead capture & CRM',
+      'Email follow-up sequences',
+      'Monthly performance reports',
+    ],
+  },
+  {
+    name: 'Website + Operations',
+    priceRange: '$3,000–$10,000+',
+    popular: false,
+    features: [
+      'Everything in Lead System, plus:',
+      'Booking / intake workflows',
+      'Payment & deposit flow',
+      'Customer dashboard & automations',
+    ],
+  },
 ]
-const reversed = [...PRICING_TIERS].reverse()
-const TIERS = reversed.map((tier, i) => ({
-  title: tier.name,
-  price: `${tier.startingPrice}+`,
-  popular: i === 1,
-  features: SHORT_FEATURES[i]!,
-  href: '/services',
-}))
+
+const PRICING_SUMMARY = [
+  {
+    name: 'Website',
+    range: '$1,000–$2,500',
+    oneLiner: 'Custom site that captures leads.',
+    popular: false,
+  },
+  {
+    name: 'Website + Lead System',
+    range: '$1,500–$4,500',
+    oneLiner: 'Site + automated lead generation.',
+    popular: true,
+  },
+  {
+    name: 'Website + Operations',
+    range: '$3,000–$10,000+',
+    oneLiner: 'Full system with automations and workflows.',
+    popular: false,
+  },
+]
 
 const STEPS = [
   {
@@ -63,406 +90,272 @@ const PROJECTS = [
 
 export default function Home() {
   return (
-    <Container
-      style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}
-    >
-      <Stack spacing="2xl">
-        {/* 1. Hero Section */}
-        <section style={{ textAlign: 'center', padding: '6rem 0 4rem' }}>
-          <Text
-            element={{ as: 'h1', size: 'h1' }}
-            weight="bold"
-            style={{
-              maxWidth: 760,
-              margin: '0 auto 1.25rem',
-              fontSize: 'clamp(2rem, 5vw, 3.25rem)',
-              lineHeight: 1.15,
-            }}
-          >
-            Your website should be bringing in customers — not collecting dust.
-          </Text>
-          <Text
-            element={{ size: 'lg' }}
-            style={{
-              color: 'var(--azimuth-color-text-secondary)',
-              maxWidth: 640,
-              margin: '0 auto 2.5rem',
-              fontSize: '1.15rem',
-              lineHeight: 1.6,
-            }}
-          >
-            Whether you run a law firm, a gym, or a plumbing business — we build
-            websites and systems that bring in customers and save you time.
-          </Text>
-          <Stack direction="horizontal" spacing="sm" justify="center" wrap>
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => (window.location.href = '/contact')}
-            >
-              Get Started
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => (window.location.href = '/process')}
-            >
-              See How It Works
-            </Button>
-          </Stack>
-        </section>
+    <>
+      <section className={styles.hero}>
+        <Container size="lg">
+          <div className={styles.heroContent}>
+            <h1 className={styles.heroTitle}>
+              Your website should be bringing in customers — not collecting
+              dust.
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Whether you run a law firm, a gym, or a plumbing business — we
+              build websites and systems that bring in customers and save you
+              time.
+            </p>
+            <div className={styles.heroActions}>
+              <Button variant="primary" size="lg" asChild>
+                <Link href="/contact">Get Started</Link>
+              </Button>
+              <Button variant="secondary" size="lg" asChild>
+                <Link href="/process">See How It Works</Link>
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </section>
 
-        {/* 2. Services Section */}
-        <section style={{ padding: '4rem 0' }}>
+      <section className={styles.section}>
+        <Container size="lg">
           <Text
             element={{ as: 'h2', size: 'h2' }}
             weight="semibold"
-            style={{ textAlign: 'center', marginBottom: '3rem' }}
+            className={styles.sectionTitle}
           >
             Services
           </Text>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '1.5rem',
-              alignItems: 'stretch',
-            }}
-          >
-            {TIERS.map((tier) => (
+          <div className={styles.tierGrid}>
+            {TIER_DATA.map((tier) => (
               <Card
-                key={tier.title}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: tier.popular
-                    ? '2px solid var(--azimuth-color-primary)'
-                    : '1px solid var(--azimuth-color-border)',
-                  transform: tier.popular ? 'scale(1.04)' : undefined,
-                  position: 'relative',
-                  zIndex: tier.popular ? 1 : 0,
-                }}
+                key={tier.name}
+                className={`${styles.tierCard} ${tier.popular ? styles.tierCardPopular : ''}`}
               >
-                <div
-                  style={{
-                    padding: '1.75rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    flex: 1,
-                  }}
-                >
+                <div className={styles.tierCardInner}>
                   {tier.popular && (
                     <Badge
                       variant="accent"
                       size="sm"
-                      style={{ alignSelf: 'flex-start' }}
+                      className={styles.mostPopularBadge}
                     >
                       Most Popular
                     </Badge>
                   )}
-                  <Stack spacing="xs">
+                  <div className={styles.tierHeader}>
                     <Text weight="bold" element={{ size: 'h5' }}>
-                      {tier.title}
+                      {tier.name}
                     </Text>
-                    <Text
-                      weight="bold"
-                      style={{
-                        color: 'var(--azimuth-color-primary)',
-                        fontSize: '1.5rem',
-                      }}
-                    >
-                      {tier.price}
+                    <Text weight="bold" className={styles.priceRange}>
+                      {tier.priceRange}
                     </Text>
-                  </Stack>
-                  <div
-                    style={{
-                      borderTop: '1px solid var(--azimuth-color-border)',
-                      margin: '0.25rem 0',
-                    }}
-                  />
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.6rem',
-                      flex: 1,
-                    }}
-                  >
-                    {tier.features.map((f) => (
-                      <Text
-                        key={f}
-                        element={{ size: 'sm' }}
-                        style={{
-                          color: 'var(--azimuth-color-text-secondary)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                        }}
-                      >
-                        <span style={{ color: 'var(--azimuth-color-primary)' }}>
-                          &#10003;
-                        </span>
-                        {f}
-                      </Text>
-                    ))}
                   </div>
+                  <div className={styles.divider} />
+                  <ul className={styles.featureList}>
+                    {tier.features.map((f) => (
+                      <li key={f} className={styles.featureItem}>
+                        <span className={styles.checkmark}>&#10003;</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
                   <Button
                     variant={tier.popular ? 'primary' : 'secondary'}
                     fullWidth
-                    onClick={() => (window.location.href = tier.href)}
+                    asChild
                   >
-                    Learn More
+                    <Link href="/services">Learn More</Link>
                   </Button>
                 </div>
               </Card>
             ))}
           </div>
-        </section>
+        </Container>
+      </section>
 
-        {/* 3. Process Section */}
-        <section style={{ padding: '4rem 0' }}>
+      <section className={`${styles.section} ${styles.sectionAlt}`}>
+        <Container size="lg">
           <Text
             element={{ as: 'h2', size: 'h2' }}
             weight="semibold"
-            style={{ textAlign: 'center', marginBottom: '3rem' }}
+            className={styles.sectionTitle}
           >
             How It Works
           </Text>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '2rem',
-            }}
-          >
+          <div className={styles.stepsGrid}>
             {STEPS.map((step) => (
-              <div key={step.number} style={{ textAlign: 'center' }}>
-                <div
-                  style={{
-                    width: '3rem',
-                    height: '3rem',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 700,
-                    fontSize: '1.125rem',
-                    color: 'var(--azimuth-color-on-primary)',
-                    background: 'var(--azimuth-color-primary)',
-                    margin: '0 auto 1rem',
-                  }}
-                >
-                  {step.number}
-                </div>
+              <div key={step.number} className={styles.stepCard}>
+                <div className={styles.stepNumber}>{step.number}</div>
                 <Text
                   weight="semibold"
                   element={{ size: 'lg' }}
-                  style={{ marginBottom: '0.5rem' }}
+                  className={styles.stepTitle}
                 >
                   {step.title}
                 </Text>
                 <Text
                   element={{ size: 'sm' }}
-                  style={{
-                    color: 'var(--azimuth-color-text-secondary)',
-                    maxWidth: 280,
-                    margin: '0 auto',
-                  }}
+                  color="secondary"
+                  className={styles.stepDesc}
                 >
                   {step.description}
                 </Text>
               </div>
             ))}
           </div>
-        </section>
+        </Container>
+      </section>
 
-        {/* 4. Portfolio Section */}
-        <section style={{ padding: '4rem 0' }}>
+      <section className={styles.section}>
+        <Container size="lg">
           <Text
             element={{ as: 'h2', size: 'h2' }}
             weight="semibold"
-            style={{ textAlign: 'center', marginBottom: '3rem' }}
+            className={styles.sectionTitle}
           >
             Recent Work
           </Text>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '1.5rem',
-            }}
-          >
-            {PROJECTS.map((project, i) => {
-              const card = (
-                <Card
-                  key={i}
-                  style={{
-                    padding: '1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <div
-                    style={{
-                      aspectRatio: '16 / 9',
-                      borderRadius: 'var(--azimuth-radius)',
-                      background: 'var(--azimuth-color-surface)',
-                      marginBottom: '1rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'var(--azimuth-color-text-secondary)',
-                      fontSize: '0.875rem',
-                      border: '1px solid var(--azimuth-color-border)',
-                    }}
-                  >
+          <div className={styles.portfolioGrid}>
+            {PROJECTS.map((project, i) => (
+              <Link
+                key={i}
+                href={project.href}
+                className={styles.portfolioLink}
+              >
+                <Card className={styles.portfolioCard}>
+                  <div className={styles.portfolioThumb}>
                     Project Screenshot
                   </div>
-                  <Text weight="semibold" style={{ marginBottom: '0.25rem' }}>
-                    {project.title}
-                  </Text>
+                  <Text weight="semibold">{project.title}</Text>
                   {project.description && (
                     <Text
                       element={{ size: 'sm' }}
-                      style={{
-                        color: 'var(--azimuth-color-text-secondary)',
-                        marginBottom: '1rem',
-                        flex: 1,
-                      }}
+                      color="secondary"
+                      className={styles.portfolioDesc}
                     >
                       {project.description}
                     </Text>
                   )}
                 </Card>
-              )
-              return project.href ? (
-                <a
-                  key={i}
-                  href={project.href}
-                  style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-                >
-                  {card}
-                </a>
-              ) : (
-                card
-              )
-            })}
+              </Link>
+            ))}
+            {[...Array(2)].map((_, i) => (
+              <Card key={`ph-${i}`} className={styles.portfolioCard}>
+                <div className={styles.portfolioThumb}>
+                  <Text color="muted" element={{ size: 'sm' }}>
+                    Coming soon
+                  </Text>
+                </div>
+                <Text weight="semibold" color="muted">
+                  More coming soon
+                </Text>
+              </Card>
+            ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Button
-              variant="secondary"
-              onClick={() => (window.location.href = '/portfolio')}
-            >
-              View All Work
+          <div className={styles.sectionFooter}>
+            <Button variant="secondary" asChild>
+              <Link href="/portfolio">View All Work</Link>
             </Button>
           </div>
-        </section>
+        </Container>
+      </section>
 
-        {/* 5. Pricing Summary */}
-        <section style={{ padding: '4rem 0' }}>
+      <section className={`${styles.section} ${styles.sectionAlt}`}>
+        <Container size="lg">
           <Text
             element={{ as: 'h2', size: 'h2' }}
             weight="semibold"
-            style={{ textAlign: 'center', marginBottom: '3rem' }}
+            className={styles.sectionTitle}
           >
             Pricing
           </Text>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1rem',
-            }}
-          >
-            {TIERS.map((tier) => (
+          <div className={styles.pricingGrid}>
+            {PRICING_SUMMARY.map((tier) => (
               <Card
-                key={tier.title}
-                style={{
-                  padding: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem',
-                  border: tier.popular
-                    ? '2px solid var(--azimuth-color-primary)'
-                    : '1px solid var(--azimuth-color-border)',
-                  position: 'relative',
-                }}
+                key={tier.name}
+                className={`${styles.pricingCard} ${tier.popular ? styles.pricingCardPopular : ''}`}
               >
                 {tier.popular && (
                   <Badge
                     variant="accent"
                     size="sm"
-                    style={{ alignSelf: 'flex-start' }}
+                    className={styles.mostPopularBadge}
                   >
                     Most Popular
                   </Badge>
                 )}
-                <Text weight="semibold">{tier.title}</Text>
-                <Text
-                  weight="bold"
-                  style={{
-                    color: 'var(--azimuth-color-primary)',
-                    fontSize: '1.25rem',
-                  }}
-                >
-                  {tier.price}
+                <Text weight="semibold">{tier.name}</Text>
+                <Text weight="bold" className={styles.priceRange}>
+                  {tier.range}
                 </Text>
-                <Text
-                  element={{ size: 'sm' }}
-                  style={{ color: 'var(--azimuth-color-text-secondary)' }}
-                >
-                  {tier.features[0]}
+                <Text element={{ size: 'sm' }} color="muted">
+                  {tier.oneLiner}
                 </Text>
               </Card>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Button
-              variant="secondary"
-              onClick={() => (window.location.href = '/pricing')}
-            >
-              See Full Pricing
+          <div className={styles.sectionFooter}>
+            <Button variant="secondary" asChild>
+              <Link href="/pricing">See Full Pricing</Link>
             </Button>
           </div>
-        </section>
+        </Container>
+      </section>
 
-        {/* 6. Bottom CTA */}
-        <section
-          style={{
-            textAlign: 'center',
-            padding: '5rem 0',
-            borderTop: '1px solid var(--azimuth-color-border)',
-          }}
-        >
+      <section className={styles.section}>
+        <Container size="lg">
           <Text
             element={{ as: 'h2', size: 'h2' }}
-            weight="bold"
-            style={{ marginBottom: '0.75rem' }}
+            weight="semibold"
+            className={styles.sectionTitle}
           >
-            Ready to get started?
+            Trusted by businesses like yours
           </Text>
-          <Text
-            element={{ size: 'lg' }}
-            style={{
-              color: 'var(--azimuth-color-text-secondary)',
-              maxWidth: 520,
-              margin: '0 auto 2rem',
-              fontSize: '1.1rem',
-            }}
-          >
-            Tell me about your project and I&apos;ll follow up within 1–2
-            business days.
-          </Text>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => (window.location.href = '/contact')}
-          >
-            Start Your Project
-          </Button>
-        </section>
-      </Stack>
-    </Container>
+          <div className={styles.testimonialGrid}>
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className={styles.testimonialCard}>
+                <div className={styles.testimonialBadge}>Coming soon</div>
+                <div className={styles.testimonialContent}>
+                  <div className={styles.testimonialQuote}>
+                    <Text color="muted" element={{ size: 'sm' }}>
+                      Real testimonials from our clients will appear here once
+                      we complete our first projects.
+                    </Text>
+                  </div>
+                  <div className={styles.testimonialAuthor}>
+                    <div className={styles.avatarPlaceholder} />
+                    <div>
+                      <Text
+                        weight="semibold"
+                        element={{ size: 'sm' }}
+                        color="muted"
+                      >
+                        Client Name
+                      </Text>
+                      <Text element={{ size: 'xs' }} color="muted">
+                        Business
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className={styles.ctaSection}>
+        <Container size="lg">
+          <div className={styles.ctaContent}>
+            <h2 className={styles.ctaTitle}>Ready to get started?</h2>
+            <p className={styles.ctaSubtitle}>
+              Tell me about your project and I&apos;ll follow up within 1–2
+              business days.
+            </p>
+            <Button variant="primary" size="lg" asChild>
+              <Link href="/contact">Start Your Project</Link>
+            </Button>
+          </div>
+        </Container>
+      </section>
+    </>
   )
 }

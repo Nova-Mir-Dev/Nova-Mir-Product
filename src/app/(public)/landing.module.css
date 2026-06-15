@@ -1,0 +1,279 @@
+.hero {
+  padding: 6rem 0 4rem;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.15;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 auto 1.25rem;
+}
+
+.heroSubtitle {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--azimuth-color-text-secondary);
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.section {
+  padding: 5rem 0;
+}
+
+.sectionAlt {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionFooter {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.tierGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.tierCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.tierCardPopular {
+  transform: scale(1.04);
+  border: 2px solid var(--azimuth-color-accent);
+  z-index: 1;
+}
+
+.tierCardInner {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.tierHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.priceRange {
+  color: var(--azimuth-color-accent);
+  font-size: 1.5rem;
+}
+
+.mostPopularBadge {
+  align-self: flex-start;
+}
+
+.divider {
+  border-top: 1px solid var(--azimuth-color-border);
+  margin: 0.25rem 0;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.checkmark {
+  color: var(--azimuth-color-accent);
+  flex-shrink: 0;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.stepCard {
+  text-align: center;
+}
+
+.stepNumber {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--azimuth-color-on-primary);
+  background: var(--azimuth-color-primary);
+  margin: 0 auto 1rem;
+}
+
+.stepTitle {
+  margin-bottom: 0.5rem;
+}
+
+.stepDesc {
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.portfolioGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.portfolioLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.portfolioCard {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolioThumb {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--azimuth-radius);
+  background: var(--azimuth-color-surface);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  border: 1px solid var(--azimuth-color-border);
+}
+
+.portfolioDesc {
+  flex: 1;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.pricingCard {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.pricingCardPopular {
+  border: 2px solid var(--azimuth-color-accent);
+}
+
+.testimonialGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.testimonialCard {
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonialBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  background: var(--azimuth-color-accent);
+  color: white;
+  padding: 0.25rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  z-index: 1;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.testimonialContent {
+  opacity: 0.4;
+}
+
+.testimonialQuote {
+  margin-bottom: 1rem;
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatarPlaceholder {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: var(--azimuth-color-border);
+}
+
+.ctaSection {
+  padding: 5rem 0;
+  border-top: 1px solid var(--azimuth-color-border);
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.75rem;
+}
+
+.ctaSubtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--azimuth-color-text-secondary);
+  margin: 0 auto 2rem;
+}
