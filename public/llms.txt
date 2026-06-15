@@ -1,0 +1,22 @@
+# Nova Mir
+
+> Web development for small businesses. Custom websites, lead systems, and operational tools.
+
+Nova Mir builds websites and digital tools that help small businesses get found, capture leads, and run smoother. Based in Oregon, USA. All prices in USD.
+
+## Pages
+
+- [Home](https://www.novamir.dev/): Overview of services and approach
+- [Services](https://www.novamir.dev/services): Managed Website ($1,500+), Website + Lead System ($3,000+), Website + Operations System ($5,000+)
+- [Pricing](https://www.novamir.dev/pricing): Standard pricing and founding client program (3 slots at $1,500 flat)
+- [Portfolio](https://www.novamir.dev/portfolio): Past work
+- [Process](https://www.novamir.dev/process): How projects work — Discovery, Build, Launch
+- [About](https://www.novamir.dev/about): Founder story
+- [Contact](https://www.novamir.dev/contact): Get in touch
+
+## Optional
+
+- [Privacy Policy](https://www.novamir.dev/privacy)
+- [Terms of Service](https://www.novamir.dev/terms)
+- [Admin Portal](https://www.novamir.dev/admin)
+- [Client Portal](https://www.novamir.dev/dashboard)
