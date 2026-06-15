@@ -146,10 +146,10 @@ export default function ServicesPage() {
         >
           <Stack spacing="sm">
             <Text element={{ as: 'h3', size: 'h4' }} weight="bold">
-              Looking for a launch deal?
+              Looking for a founding client slot?
             </Text>
             <Text element={{ size: 'sm' }}>
-              We&rsquo;re offering a limited number of flat-rate launch slots.{' '}
+              First 3 clients at a flat $1,500 rate.{' '}
               <a
                 href="/pricing"
                 style={{
@@ -160,6 +160,9 @@ export default function ServicesPage() {
                 See details on our pricing page
               </a>
               .
+            </Text>
+            <Text element={{ size: 'sm' }} style={{ marginTop: '0.5rem', color: 'var(--azimuth-color-text-secondary)' }}>
+              Maintenance retainer from $500/month after launch.
             </Text>
           </Stack>
         </Card>

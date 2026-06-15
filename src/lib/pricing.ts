@@ -6,48 +6,49 @@ export interface PricingTier {
   href: string
 }
 
-export type PricingTierSlug = 'starter' | 'growth' | 'enterprise'
-
 export const PRICING_TIERS: PricingTier[] = [
   {
-    name: 'Website',
-    startingPrice: 2500,
+    name: 'Managed Website',
+    startingPrice: 1500,
     description:
-      'Custom-designed, mobile-friendly website that captures leads.',
+      'Small businesses that need a credible online presence.',
     features: [
-      'Custom design & development',
+      'Custom-designed site',
       'Mobile responsive',
-      'Contact forms & map integration',
-      'Basic SEO & analytics',
-      'Hosting & security included',
+      'Contact form',
+      'SEO basics',
+      'Analytics',
+      'Hosting setup',
     ],
     href: '/services',
   },
   {
-    name: 'Website + Operations',
+    name: 'Website + Lead System',
+    startingPrice: 3000,
+    description:
+      'Businesses ready to capture and track leads.',
+    features: [
+      'Everything in Managed Website',
+      'Lead capture form',
+      'Email notifications',
+      'CRM / spreadsheet log',
+      'Confirmation messages',
+      'Simple reporting',
+    ],
+    href: '/services',
+  },
+  {
+    name: 'Website + Operations System',
     startingPrice: 5000,
     description:
-      'Everything in Website plus booking, payments, and automations.',
+      'Businesses needing booking, payments, and dashboards.',
     features: [
+      'Everything in Website + Lead System',
       'Booking / intake workflows',
       'Payment & deposit flow',
-      'Customer dashboard',
-      'Email follow-up sequences',
-      'Monthly performance reports',
-    ],
-    href: '/services',
-  },
-  {
-    name: 'Full Growth System',
-    startingPrice: 8500,
-    description:
-      'Full-stack growth system with CRM, lead capture, and priority support.',
-    features: [
-      'Automated lead capture & CRM',
-      'Email & SMS automations',
-      'Priority support & maintenance',
-      'Custom integrations',
-      'Dedicated account manager',
+      'Dashboard',
+      'Automated follow-up',
+      'System documentation',
     ],
     href: '/services',
   },

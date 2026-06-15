@@ -114,11 +114,11 @@ export default function PricingPage() {
         >
           <Stack spacing="md">
             <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
-              Launch Client Program
+              Founding Client Program
             </Text>
             <Text element={{ size: 'base' }}>
-              We&rsquo;re offering 2-3 launch client slots at a flat $1,000
-              rate.
+              First 3 clients at a flat $1,500 rate &mdash; a limited-time
+              opportunity to get a custom website at a founding price.
             </Text>
             <div>
               <Text element={{ size: 'sm' }} weight="semibold">
@@ -143,9 +143,13 @@ export default function PricingPage() {
               </ul>
             </div>
             <Text element={{ size: 'sm' }} color="secondary">
-              <strong>Timeboxed:</strong> first 3 clients or first 60 days —
+              <strong>Timeboxed:</strong> first 3 clients or first 60 days &mdash;
               whichever comes first. After slots are filled, pricing returns to
               standard rates.
+            </Text>
+            <Text element={{ size: 'sm' }} color="secondary" style={{ marginTop: '1rem' }}>
+              Maintenance retainer available from $500/month after launch &mdash;
+              hosting checks, content updates, and priority support.
             </Text>
             <Button
               variant="primary"

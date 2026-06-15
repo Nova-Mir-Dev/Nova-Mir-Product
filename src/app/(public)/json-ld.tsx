@@ -43,7 +43,7 @@ export function JsonLd() {
         '@type': 'Offer',
         itemOffered: { '@type': 'Service', name: tier.name },
         price: String(tier.startingPrice).replace(/[$,]/g, ''),
-        priceCurrency: 'CAD',
+        priceCurrency: 'USD',
       })),
     },
   }
