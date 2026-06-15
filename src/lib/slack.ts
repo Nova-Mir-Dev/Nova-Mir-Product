@@ -1,6 +1,7 @@
 import 'server-only'
+import type { App as SlackApp } from '@slack/bolt'
 
-let _app: import('@slack/bolt').App | null = null
+let _app: SlackApp | null = null
 
 async function getApp() {
   if (_app) return _app
