@@ -1,13 +1,13 @@
 'use client'
 
 import { Suspense, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { Button, Card, Text, Stack } from 'azimuth-ui'
 import styles from './check-email.module.css'
 
 function CheckEmailContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
   const [resending, setResending] = useState(false)
@@ -67,12 +67,26 @@ function CheckEmailContent() {
             </Button>
           )}
 
-          <Button
-            variant="tertiary"
-            onClick={() => router.push('/clients/auth/login')}
+          <Link
+            href="/clients/auth/login"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '8px 16px',
+              borderRadius: 'var(--azimuth-radius-md, 8px)',
+              fontSize: '14px',
+              fontWeight: 500,
+              lineHeight: 1.5,
+              textDecoration: 'none',
+              cursor: 'pointer',
+              border: 'none',
+              background: 'none',
+              color: 'var(--azimuth-color-text)',
+            }}
           >
             Back to login
-          </Button>
+          </Link>
         </Stack>
       </Card>
     </div>

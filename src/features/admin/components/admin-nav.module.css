@@ -37,12 +37,44 @@
   transition: background-color 0.15s ease;
 }
 
-.link:hover {
+.link:hover,
+.link:focus-visible {
   background-color: var(--azimuth-color-surface-hover);
+  outline: none;
 }
 
 .backToSite {
   margin-top: auto;
   padding-top: var(--azimuth-spacing-md);
   border-top: 1px solid var(--azimuth-color-border);
+}
+
+@media (max-width: 768px) {
+  .nav {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    z-index: 100;
+    flex-direction: row;
+    min-height: auto;
+  }
+  .navInner {
+    flex-direction: row;
+    padding: var(--azimuth-spacing-xs);
+  }
+  .link {
+    flex-direction: column;
+    padding: 8px;
+    font-size: 0.7rem;
+  }
+  .link span {
+    display: none;
+  }
+  .backToSite {
+    display: none;
+  }
+  .title {
+    display: none;
+  }
 }

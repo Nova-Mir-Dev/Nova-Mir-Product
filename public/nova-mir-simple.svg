@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256mm"
+   height="256mm"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask3">
+      <g
+         id="g4"
+         transform="matrix(0.95105655,0,0,0.95049554,6.2647671,0)">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:7.99999;stroke-dasharray:none;stroke-opacity:1"
+           id="rect4"
+           width="277.37991"
+           height="275.04572"
+           x="-9.3367701"
+           y="-10.8929" />
+        <circle
+           style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+           id="circle4"
+           cx="128"
+           cy="128"
+           r="82.891563" />
+      </g>
+    </mask>
+  </defs>
+  <g
+     id="layer1">
+    <g
+       id="g5"
+       transform="translate(3.0856078e-6,6.1929164)">
+      <path
+         style="fill:#00ddcc;fill-opacity:1;stroke-width:0.264583"
+         id="path2"
+         d="m 128,0 30.0946,86.578332 91.64064,1.867496 -73.04115,55.375842 26.54242,87.73251 L 128,179.2 52.763485,231.55417 79.305909,143.82167 6.264767,88.445821 97.905397,86.578332 Z"
+         transform="matrix(1.0514622,0,0,1.0520828,-6.5871658,0)"
+         mask="url(#mask3)" />
+      <circle
+         style="fill:none;stroke:#00ddcc;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+         id="path3"
+         cx="128"
+         cy="128"
+         r="82.891563" />
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#00ddcc;fill-opacity:1;stroke:none;stroke-width:7.99999;stroke-dasharray:none;stroke-opacity:1"
+         x="56.202671"
+         y="157.93842"
+         id="text4"><tspan
+           id="tspan4"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90.3111px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke:none;stroke-width:8"
+           x="56.202671"
+           y="157.93842">NM</tspan></text>
+    </g>
+  </g>
+</svg>

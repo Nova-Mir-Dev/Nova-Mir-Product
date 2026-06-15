@@ -45,6 +45,7 @@ function Navbar() {
             }}
             className="nav-toggle"
             aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
           >
             <svg
               width="24"

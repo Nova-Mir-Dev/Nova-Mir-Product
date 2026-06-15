@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import AdminNav from '@/features/admin/components/admin-nav'
+import styles from './admin-layout.module.css'
 
 export default async function AdminMainLayout({
   children,
@@ -22,9 +23,9 @@ export default async function AdminMainLayout({
   if (profile?.role !== 'admin') redirect('/admin/auth/login')
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className={styles.container}>
       <AdminNav />
-      <main style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>
+      <main id="main-content" className={styles.main}>
         {children}
       </main>
     </div>

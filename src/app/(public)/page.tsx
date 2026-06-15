@@ -147,7 +147,7 @@ export default function Home() {
                     </Badge>
                   )}
                   <div className={styles.tierHeader}>
-                    <Text weight="bold" element={{ size: 'h5' }}>
+                    <Text weight="bold" element={{ as: 'h5', size: 'h5' }}>
                       {tier.name}
                     </Text>
                     <Text weight="bold" className={styles.priceRange}>
@@ -168,7 +168,7 @@ export default function Home() {
                     fullWidth
                     asChild
                   >
-                    <Link href="/services">Learn More</Link>
+                    <Link href="/services">Learn more about {tier.name}</Link>
                   </Button>
                 </div>
               </Card>

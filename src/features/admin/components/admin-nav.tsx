@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Stack, Text } from 'azimuth-ui'
 import styles from './admin-nav.module.css'
 
@@ -21,8 +24,10 @@ const navItems: NavItem[] = [
 ]
 
 export default function AdminNav() {
+  const pathname = usePathname()
+
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} aria-label="Admin navigation">
       <div className={styles.navInner}>
         <Stack spacing="sm">
           <Text
@@ -35,7 +40,11 @@ export default function AdminNav() {
           <ul className={styles.navList}>
             {navItems.map((item) => (
               <li key={item.path} className={styles.navItem}>
-                <Link href={item.path} className={styles.link}>
+                <Link
+                  href={item.path}
+                  className={styles.link}
+                  aria-current={pathname === item.path ? 'page' : undefined}
+                >
                   <Text>{item.label}</Text>
                 </Link>
               </li>

@@ -8,8 +8,12 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/leads', new Set(['POST'])],
 ])
 
-function addCorsHeaders(response: NextResponse, origin: string | null, apiRoute = false): void {
-  if (!apiRoute) return
+function addCorsHeaders(
+  response: NextResponse,
+  origin: string | null,
+  apiRoute = false,
+): NextResponse {
+  if (!apiRoute) return response
   if (origin && isAllowedOrigin(origin)) {
     response.headers.set(
       'Access-Control-Allow-Origin',
@@ -28,6 +32,7 @@ function addCorsHeaders(response: NextResponse, origin: string | null, apiRoute 
       CORS_HEADERS['Access-Control-Max-Age'],
     )
   }
+  return response
 }
 
 const supabaseUrl = () => process.env.NEXT_PUBLIC_SUPABASE_URL

@@ -47,4 +47,16 @@ describe('rateLimit with in-memory fallback', () => {
     const reset = await rateLimit('expire-key', 1, 50)
     expect(reset.allowed).toBe(true)
   })
+
+  it('clears the in-memory map when it exceeds 10,000 entries', async () => {
+    const { rateLimit } = await import('../rate-limit')
+
+    for (let i = 0; i < 10001; i++) {
+      await rateLimit(`eviction-key-${i}`, 10, 60000)
+    }
+
+    const result = await rateLimit('fresh-key-after-eviction', 5, 60000)
+    expect(result.allowed).toBe(true)
+    expect(result.remaining).toBe(4)
+  })
 })

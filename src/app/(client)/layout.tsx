@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Stack, Text } from 'azimuth-ui'
+import styles from './client-layout.module.css'
 
 interface ClientUser {
   id: string
@@ -50,7 +51,7 @@ export default function ClientLayout({
   if (!user) return null
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className={styles.container}>
       <nav
         style={{
           width: 240,
@@ -77,6 +78,7 @@ export default function ClientLayout({
               <Link
                 key={item.path}
                 href={item.path}
+                aria-current={isActive ? 'page' : undefined}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -114,10 +116,7 @@ export default function ClientLayout({
           </Link>
         </div>
       </nav>
-      <main
-        id="main-content"
-        style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}
-      >
+      <main id="main-content" className={styles.main}>
         {children}
       </main>
     </div>
