@@ -49,7 +49,7 @@ export function AdminList({ admins }: { admins: AdminUser[] }) {
                     <Text element={{ size: 'sm' }}>{a.email}</Text>
                   </td>
                   <td style={{ padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
-                    <Badge variant={a.role === 'admin' ? 'primary' : 'secondary'}>
+                    <Badge variant={a.role === 'admin' ? 'accent' : 'neutral'}>
                       {a.role === 'admin' ? 'Admin' : 'Read Only'}
                     </Badge>
                   </td>

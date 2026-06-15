@@ -89,7 +89,14 @@ async function getAuth(request: NextRequest) {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const origin = request.headers.get('origin')
+  const host = request.headers.get('host') || ''
   const isApiRoute = pathname.startsWith('/api/')
+
+  if (host.endsWith('.vercel.app')) {
+    const url = new URL('https://www.novamir.dev' + pathname)
+    url.search = request.nextUrl.search
+    return NextResponse.redirect(url, 301)
+  }
 
   if (isApiRoute && request.method === 'OPTIONS') {
     if (isAllowedOrigin(origin)) {
