@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
@@ -76,8 +77,11 @@ export async function POST(request: Request) {
 
   const parsed = createClientBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Admin clients validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

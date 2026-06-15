@@ -64,8 +64,11 @@ export async function PATCH(
 
     const parsed = updateLeadStatusSchema.safeParse(body)
     if (!parsed.success) {
+      Sentry.captureMessage('Lead status update validation failed', {
+        extra: { issues: parsed.error.issues },
+      })
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+        { error: 'Validation failed.' },
         { status: 400 },
       )
     }

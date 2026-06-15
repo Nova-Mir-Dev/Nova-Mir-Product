@@ -25,6 +25,5 @@ export async function POST() {
   return NextResponse.json({
     id: result.id,
     qr: result.qr,
-    secret: result.secret,
   })
 }

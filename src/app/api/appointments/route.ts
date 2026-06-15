@@ -41,8 +41,11 @@ export async function POST(request: Request) {
 
   const parsed = createAppointmentSchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Appointments validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

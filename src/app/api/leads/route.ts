@@ -58,6 +58,14 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const contentType = request.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Unsupported Media Type. Expected application/json.' },
+        { status: 415 },
+      )
+    }
+
     const ip =
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
       request.headers.get('x-real-ip') ||
@@ -75,8 +83,11 @@ export async function POST(request: Request) {
 
     const parsed = createLeadSchema.safeParse(body)
     if (!parsed.success) {
+      Sentry.captureMessage('Leads validation failed', {
+        extra: { issues: parsed.error.issues },
+      })
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+        { error: 'Validation failed.' },
         { status: 400 },
       )
     }
@@ -92,6 +103,11 @@ export async function POST(request: Request) {
       consent,
     } = parsed.data
 
+    // NOTE: Must use service_role client because the `leads` RLS policy
+    // only permits `service_role` inserts (see schema.sql: the policy is
+    // `leads_admin_only USING (auth.role() = 'service_role')`). There is no
+    // anon insert policy. If a public anon RLS policy is added later, switch
+    // to `createClient()` from `@/lib/supabase-server`.
     const supabase = createServiceClient()
     const { data, error } = await supabase
       .from('leads')

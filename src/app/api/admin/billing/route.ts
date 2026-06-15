@@ -105,8 +105,11 @@ export async function POST(request: Request) {
 
   const parsed = createInvoiceBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Billing POST validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }
@@ -222,8 +225,11 @@ export async function PATCH(request: Request) {
 
   const parsed = updateInvoiceBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Billing PATCH validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { sanitizeFilename } from '@/lib/sanitize'
@@ -39,8 +40,11 @@ export async function POST(request: Request) {
 
   const parsed = createDocumentBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Documents validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

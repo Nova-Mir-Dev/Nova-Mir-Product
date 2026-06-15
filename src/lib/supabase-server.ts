@@ -28,6 +28,13 @@ export async function createClient() {
   )
 }
 
+/**
+ * WARNING: Bypasses Row Level Security (RLS) because it authenticates with
+ * the `SUPABASE_SERVICE_ROLE_KEY`. Only use in trusted server contexts where
+ * RLS bypass is intentional (e.g. admin-only server actions, background jobs).
+ * Must be imported with `import 'server-only'` — do NOT use in client
+ * components or user-facing SSR.
+ */
 export async function createAdminClient() {
   const cookieStore = await cookies()
   return createServerClient(

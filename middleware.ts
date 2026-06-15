@@ -7,7 +7,8 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/leads', new Set(['POST'])],
 ])
 
-function addCorsHeaders(response: NextResponse, origin: string | null): void {
+function addCorsHeaders(response: NextResponse, origin: string | null, apiRoute = false): void {
+  if (!apiRoute) return
   if (origin && isAllowedOrigin(origin)) {
     response.headers.set(
       'Access-Control-Allow-Origin',
@@ -113,12 +114,13 @@ export async function middleware(request: NextRequest) {
       return addCorsHeaders(
         NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
         origin,
+        isApiRoute,
       )
     }
     const referer = request.headers.get('referer')
     if (
       !origin &&
-      !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL ?? '')
+      (!process.env.NEXT_PUBLIC_SITE_URL || !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL))
     ) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
@@ -215,17 +217,19 @@ export async function middleware(request: NextRequest) {
         return addCorsHeaders(
           NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
           origin,
+          true,
         )
       }
       if (pathname.startsWith('/api/admin') && role !== 'admin') {
         return addCorsHeaders(
           NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
           origin,
+          true,
         )
       }
     }
 
-    addCorsHeaders(supabaseResponse, origin)
+    addCorsHeaders(supabaseResponse, origin, true)
     return supabaseResponse
   }
 

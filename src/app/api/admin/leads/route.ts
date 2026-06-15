@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
@@ -104,8 +105,11 @@ export async function PATCH(request: Request) {
 
   const parsed = updateLeadBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Admin leads PATCH validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }
@@ -169,8 +173,11 @@ export async function POST(request: Request) {
 
   const parsed = createLeadBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('Admin leads POST validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

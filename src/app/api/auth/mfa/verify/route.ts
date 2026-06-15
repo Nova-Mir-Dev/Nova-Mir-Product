@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
@@ -31,8 +32,11 @@ export async function POST(request: Request) {
 
   const parsed = verifyMfaBodySchema.safeParse(await request.json())
   if (!parsed.success) {
+    Sentry.captureMessage('MFA verify validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message || 'Validation failed.' },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase-server'
@@ -136,14 +137,11 @@ export async function POST(request: Request) {
   const raw = await request.json().catch(() => ({}))
   const parsed = BootstrapSchema.safeParse(raw)
   if (!parsed.success) {
+    Sentry.captureMessage('Bootstrap validation failed', {
+      extra: { issues: parsed.error.issues },
+    })
     return NextResponse.json(
-      {
-        error: 'Validation failed',
-        issues: parsed.error.issues.map((i) => ({
-          field: i.path.join('.'),
-          message: i.message,
-        })),
-      },
+      { error: 'Validation failed.' },
       { status: 400 },
     )
   }

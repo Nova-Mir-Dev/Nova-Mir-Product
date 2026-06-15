@@ -32,6 +32,10 @@ export async function rateLimit(
     }
   }
 
+  if (inMemory.size > 10_000) {
+    inMemory.clear()
+  }
+
   const now = Date.now()
   const key = `${identifier}:${String(Math.floor(now / windowMs))}`
   const entry = inMemory.get(key)
