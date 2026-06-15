@@ -1,17 +1,31 @@
-# Nova-Mir-Product
+# Nova Mir Product Portal
 
-Product portal for Nova Mir — web development for small businesses. Custom websites, lead systems, and operational tools.
+Web development for small businesses. Custom websites, lead systems, and operational tools.
+
+## Portals
+
+| Portal        | URL            | Auth                      | Audience       |
+| ------------- | -------------- | ------------------------- | -------------- |
+| **Marketing** | `/`            | Public                    | Everyone       |
+| **Admin**     | `/admin/*`     | Password (email/password) | Internal team  |
+| **Client**    | `/dashboard/*` | Magic link                | Active clients |
+
+### Auth
+
+- **Admin login**: `/admin/auth/login` — password-based, redirects to `/admin`
+- **Client login**: `/clients/auth/login` — magic-link, redirects to `/dashboard`
+- **Middleware**: Edge-level auth enforcement + role-based routing. Layout-level inline checks for defense in depth.
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Database**: PostgreSQL (Supabase)
-- **Auth**: Supabase SSR (session-based, edge-level via middleware + inline)
+- **Auth**: Supabase SSR (session-based)
 - **Hosting**: Vercel
 - **Monitoring**: Sentry
 - **Analytics**: Plausible
-- **Cache**: Upstash Redis
-- **Integrations**: Slack
+- **Cache**: Upstash Redis (with in-memory fallback)
+- **Integrations**: Resend, Slack, Twilio, Stripe
 
 ## Getting Started
 
@@ -35,20 +49,20 @@ npm run dev
 
 ## Environment Variables
 
-| Variable                        | Description                                        |
-| ------------------------------- | -------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                               |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key (safe for client)           |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase service role key (server-only)            |
+| Variable                        | Description                                                         |
+| ------------------------------- | ------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                                                |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key (safe for client)                            |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase service role key (server-only)                             |
 | `CORS_ORIGINS`                  | Comma-separated allowed CORS origins (default: https://novamir.dev) |
-| `UPSTASH_REDIS_URL`             | Upstash Redis URL for rate limiting                |
-| `UPSTASH_REDIS_TOKEN`           | Upstash Redis token                                |
-| `NEXT_PUBLIC_SENTRY_DSN`        | Sentry DSN for client-side error tracking          |
-| `SENTRY_AUTH_TOKEN`             | Sentry auth token for sourcemap uploads            |
-| `SENTRY_ORG`                    | Sentry organisation slug                           |
-| `SENTRY_PROJECT`                | Sentry project slug                                |
-| `SLACK_BOT_TOKEN`               | Slack bot token for messaging                      |
-| `SLACK_SIGNING_SECRET`          | Slack signing secret for verifying requests        |
+| `UPSTASH_REDIS_URL`             | Upstash Redis URL for rate limiting                                 |
+| `UPSTASH_REDIS_TOKEN`           | Upstash Redis token                                                 |
+| `NEXT_PUBLIC_SENTRY_DSN`        | Sentry DSN for client-side error tracking                           |
+| `SENTRY_AUTH_TOKEN`             | Sentry auth token for sourcemap uploads                             |
+| `SENTRY_ORG`                    | Sentry organisation slug                                            |
+| `SENTRY_PROJECT`                | Sentry project slug                                                 |
+| `SLACK_BOT_TOKEN`               | Slack bot token for messaging                                       |
+| `SLACK_SIGNING_SECRET`          | Slack signing secret for verifying requests                         |
 
 See `.env.example` for the full list.
 
@@ -59,11 +73,29 @@ Before deploying, ensure these pass:
 - `npm run typecheck` — zero errors
 - `npm run build` — succeeds
 - `npm test` — all tests passing
-- `npm run lint` — zero warnings (pre-existing config issue noted)
+- `npm run lint` — zero errors
+- `npx prettier --check .` — all files formatted
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for architecture overview, route layout, and auth flow.
+```
+src/
+  app/
+    admin/
+      (main)/           → Admin portal (auth-protected)
+      auth/login/       → Admin login page
+    clients/auth/       → Client login + magic-link confirmation
+    (client)/dashboard/ → Client portal
+    (public)/           → Marketing pages
+    api/                → API routes
+  features/
+    admin/              → Admin components & logic
+    auth/               → Auth components (login forms)
+    ...                 → Other feature modules
+  lib/                  → Shared utilities
+```
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a full architecture overview.
 
 ### Compliance Docs
 

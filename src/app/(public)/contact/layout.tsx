@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Get in touch with Nova Mir. Tell us about your project and we will follow up within 1-2 business days.',
+    'Ready to start your project? Get in touch with Nova Mir for a free consultation. We typically respond within 1-2 business days.',
 }
 
 export default function ContactLayout({

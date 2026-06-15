@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'How It Works',
   description:
-    'Nova Mir process: Discovery, Design & Development, Launch & Grow. See how we build websites for small businesses.',
+    'From discovery to launch: our three-step process for building custom websites and operational tools for small businesses.',
 }
 
 export default function ProcessLayout({

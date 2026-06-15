@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Portfolio',
   description:
-    'View Nova Mir portfolio of custom websites and web applications built for small businesses.',
+    'Websites and web applications built for small businesses by Nova Mir. See real projects from real clients.',
 }
 
 export default function PortfolioLayout({

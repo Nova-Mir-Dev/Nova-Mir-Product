@@ -23,6 +23,7 @@ This document outlines the security baseline for nova-mir-product.
 The CSP in `next.config.ts` includes `'unsafe-inline'` and `'strict-dynamic'`, which Next.js requires for hydration. The CSP also covers `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`, `frame-src 'none'`, and `upgrade-insecure-requests`.
 
 For production hardening, consider:
+
 1. Generating nonces for inline scripts via middleware
 2. Removing `'unsafe-inline'` after verifying nonce-based loading works
 3. Moving theme-detection inline script to an external file loaded via Next.js `<Script>` component with nonce

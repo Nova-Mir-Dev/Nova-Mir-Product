@@ -42,6 +42,7 @@ export const metadata: Metadata = {
       'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
     siteName: 'Nova Mir',
     type: 'website',
+    url: 'https://novamir.dev',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
@@ -52,7 +53,6 @@ export const metadata: Metadata = {
       'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
   },
   alternates: { canonical: 'https://novamir.dev' },
-  other: { 'google-site-verification': '' },
 }
 
 export default function RootLayout({
@@ -72,7 +72,8 @@ export default function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: "navigator.serviceWorker.getRegistrations().then(r=>r.forEach(r=>r.unregister()))",
+            __html:
+              'navigator.serviceWorker.getRegistrations().then(r=>r.forEach(r=>r.unregister()))',
           }}
         />
       </head>

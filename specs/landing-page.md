@@ -73,9 +73,3 @@ Direct, warm, no jargon. "You"-focused, not "we"-focused. Short sentences. Indus
 - CSS variables from azimuth theme (--azimuth-color-\*)
 - Keep existing layout.tsx and navigation
 - No new dependencies
-
-## Open Questions
-
-- Portfolio: Should we show the pilot project live, or wait until it's more complete?
-- Pricing: Exact starting numbers for each tier on the landing page?
-- Testimonials: Just hide the section until we have real ones, or show placeholder?
