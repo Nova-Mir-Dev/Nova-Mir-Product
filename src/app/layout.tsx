@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: 'Nova Mir',
     type: 'website',
     url: 'https://www.novamir.dev',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    images: [{ url: '/og-image.svg', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',

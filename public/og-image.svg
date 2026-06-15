@@ -1,0 +1,20 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="0" fill="#1a1a2e"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#gradient)"/>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="50%" stop-color="#16213e"/>
+      <stop offset="100%" stop-color="#0f3460"/>
+    </linearGradient>
+  </defs>
+  <text x="80" y="220" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#ffffff" letter-spacing="-1">Nova Mir</text>
+  <text x="80" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400" fill="#a0aec0" letter-spacing="-0.3">Web Development for Small Businesses</text>
+  <line x1="80" y1="330" x2="400" y2="330" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
+  <text x="80" y="390" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#cbd5e1">Custom websites · Lead systems · Process automation</text>
+  <text x="80" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#cbd5e1">From $1,500 · Founding client slots available</text>
+  <rect x="80" y="470" width="200" height="50" rx="25" fill="#3b82f6"/>
+  <text x="180" y="501" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">novamir.dev</text>
+  <circle cx="1100" cy="140" r="120" fill="#3b82f6" opacity="0.08"/>
+  <circle cx="1080" cy="120" r="80" fill="#3b82f6" opacity="0.12"/>
+</svg>
