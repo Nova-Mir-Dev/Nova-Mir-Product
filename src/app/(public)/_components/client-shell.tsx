@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { ThemeProvider, Container, Text } from 'azimuth-ui'
 import { APP_CONFIG, NAV_PAGES } from '@/lib/navigation'
 
@@ -27,11 +28,11 @@ function Navbar() {
             justifyContent: 'space-between',
           }}
         >
-          <a href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Text weight="bold" element={{ size: 'lg' }}>
               {APP_CONFIG.title}
             </Text>
-          </a>
+          </Link>
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -69,7 +70,9 @@ function Navbar() {
             }}
             className="nav-links"
           >
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+            <div
+              style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}
+            >
               {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
                 <a
                   key={page.path}

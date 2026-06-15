@@ -16,7 +16,9 @@ describe('ContactPage', () => {
 
   it('renders the form title', () => {
     render(<ContactPage />)
-    expect(screen.getAllByText(/let.*s build something/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/let.*s build something/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Send Message button', () => {

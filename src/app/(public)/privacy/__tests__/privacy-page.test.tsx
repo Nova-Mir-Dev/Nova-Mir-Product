@@ -16,16 +16,22 @@ describe('PrivacyPage', () => {
 
   it('renders Privacy Policy title', () => {
     render(<PrivacyPage />)
-    expect(screen.getAllByText('Privacy Policy').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Privacy Policy').length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 
   it('renders data collection section', () => {
     render(<PrivacyPage />)
-    expect(screen.getAllByText(/information we collect/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/information we collect/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders last updated date', () => {
     render(<PrivacyPage />)
-    expect(screen.getAllByText(/last updated/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/last updated/i).length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 })

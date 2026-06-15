@@ -46,7 +46,11 @@ export default function PrivacyPage() {
     >
       <Stack spacing="2xl">
         <div>
-          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" style={{ textAlign: 'center' }}>
+          <Text
+            element={{ as: 'h1', size: 'h1' }}
+            weight="bold"
+            style={{ textAlign: 'center' }}
+          >
             Privacy Policy
           </Text>
           <Text

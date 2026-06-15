@@ -21,11 +21,15 @@ describe('PricingPage', () => {
 
   it('renders transparent pricing text', () => {
     render(<PricingPage />)
-    expect(screen.getAllByText(/transparent pricing/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/transparent pricing/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Launch Client Program section', () => {
     render(<PricingPage />)
-    expect(screen.getAllByText(/Launch Client Program/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/Launch Client Program/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 })

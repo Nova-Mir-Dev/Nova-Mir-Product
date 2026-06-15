@@ -5,18 +5,26 @@ import SettingsPage from '../page'
 vi.mock('@/lib/supabase-server', () => ({
   createClient: () => ({
     auth: {
-      getUser: () => Promise.resolve({
-        data: { user: { id: 'test-user', email: 'test@example.com', role: 'client' } },
-        error: null,
-      }),
+      getUser: () =>
+        Promise.resolve({
+          data: {
+            user: {
+              id: 'test-user',
+              email: 'test@example.com',
+              role: 'client',
+            },
+          },
+          error: null,
+        }),
     },
     from: () => ({
       select: () => ({
         eq: () => ({
-          single: () => Promise.resolve({
-            data: { name: 'Test User', email: 'test@example.com' },
-            error: null,
-          }),
+          single: () =>
+            Promise.resolve({
+              data: { name: 'Test User', email: 'test@example.com' },
+              error: null,
+            }),
         }),
       }),
     }),
@@ -56,7 +64,9 @@ describe('SettingsPage', () => {
   it('renders Notifications section', async () => {
     const element = await SettingsPage()
     render(element)
-    expect(screen.getAllByText('Notifications').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Notifications').length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 
   it('renders MFA panel', async () => {

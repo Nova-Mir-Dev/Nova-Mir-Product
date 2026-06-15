@@ -226,6 +226,7 @@ CREATE POLICY "portfolio_clients_admin_only" ON portfolio_clients FOR ALL
 -- =============================================================================
 CREATE TABLE IF NOT EXISTS portfolio_invoices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id),
   client_name TEXT NOT NULL,
   amount INTEGER NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending',

@@ -1,65 +1,73 @@
-"use server";
+'use server'
 
-import { createClient } from "@/lib/supabase-server";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { createClient } from '@/lib/supabase-server'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 const ALLOWED_TYPES = [
-  "application/pdf",
-  "image/png",
-  "image/jpeg",
-  "image/jpg",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "text/plain",
-  "application/zip",
-];
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain',
+  'application/zip',
+]
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[/\\]/g, "_").replace(/[^a-zA-Z0-9._-]/g, "_");
+  return name.replace(/[/\\]/g, '_').replace(/[^a-zA-Z0-9._-]/g, '_')
 }
 
 export async function uploadDocument(formData: FormData) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/dashboard/documents?error=Unauthorized");
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/dashboard/documents?error=Unauthorized')
 
-  const file = formData.get("file") as File;
-  if (!file) redirect("/dashboard/documents?error=No+file+selected");
+  const file = formData.get('file') as File
+  if (!file) redirect('/dashboard/documents?error=No+file+selected')
 
   if (file.size > MAX_FILE_SIZE) {
-    redirect("/dashboard/documents?error=File+too+large+%28max+10MB%29");
+    redirect('/dashboard/documents?error=File+too+large+%28max+10MB%29')
   }
 
   if (!ALLOWED_TYPES.includes(file.type)) {
-    redirect("/dashboard/documents?error=File+type+not+allowed");
+    redirect('/dashboard/documents?error=File+type+not+allowed')
   }
 
-  const safeName = sanitizeFilename(file.name);
-  const fileName = user.id + "/" + Date.now() + "_" + safeName;
+  const safeName = sanitizeFilename(file.name)
+  const fileName = user.id + '/' + Date.now() + '_' + safeName
 
   const { error: uploadError } = await supabase.storage
-    .from("documents")
-    .upload(fileName, file);
+    .from('documents')
+    .upload(fileName, file)
 
-  if (uploadError) redirect("/dashboard/documents?error=" + encodeURIComponent(uploadError.message));
+  if (uploadError)
+    redirect(
+      '/dashboard/documents?error=' + encodeURIComponent(uploadError.message),
+    )
 
-  const { data: { publicUrl } } = supabase.storage
-    .from("documents")
-    .getPublicUrl(fileName);
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from('documents').getPublicUrl(fileName)
 
-  const { error: dbError } = await supabase.from("documents").insert({
+  const { error: dbError } = await supabase.from('documents').insert({
     user_id: user.id,
     name: safeName,
     file_url: publicUrl,
     file_type: file.type,
     file_size: file.size,
-    status: "active",
-  });
+    status: 'active',
+  })
 
-  if (dbError) redirect("/dashboard/documents?error=" + encodeURIComponent(dbError.message));
+  if (dbError)
+    redirect(
+      '/dashboard/documents?error=' + encodeURIComponent(dbError.message),
+    )
 
-  revalidatePath("/dashboard/documents");
-  redirect("/dashboard/documents");
+  revalidatePath('/dashboard/documents')
+  redirect('/dashboard/documents')
 }

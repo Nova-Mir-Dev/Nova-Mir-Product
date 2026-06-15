@@ -5,18 +5,20 @@ import BillingPage from '../page'
 vi.mock('@/lib/supabase-server', () => ({
   createClient: () => ({
     auth: {
-      getUser: () => Promise.resolve({
-        data: { user: { id: 'test-user', email: 'test@example.com' } },
-        error: null,
-      }),
+      getUser: () =>
+        Promise.resolve({
+          data: { user: { id: 'test-user', email: 'test@example.com' } },
+          error: null,
+        }),
     },
     from: () => ({
       select: () => ({
         eq: () => ({
-          single: () => Promise.resolve({
-            data: { name: 'Test User', email: 'test@example.com' },
-            error: null,
-          }),
+          single: () =>
+            Promise.resolve({
+              data: { name: 'Test User', email: 'test@example.com' },
+              error: null,
+            }),
           order: () => Promise.resolve({ data: [], error: null }),
         }),
       }),
@@ -46,18 +48,24 @@ describe('BillingPage', () => {
   it('renders Current Plan section', async () => {
     const element = await BillingPage()
     render(element)
-    expect(screen.getAllByText(/current plan/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/current plan/i).length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 
   it('renders Invoice History section', async () => {
     const element = await BillingPage()
     render(element)
-    expect(screen.getAllByText(/invoice history/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/invoice history/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('shows empty state when no invoices', async () => {
     const element = await BillingPage()
     render(element)
-    expect(screen.getAllByText(/no invoices yet/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/no invoices yet/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 })

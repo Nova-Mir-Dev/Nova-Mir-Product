@@ -27,6 +27,12 @@ export async function createInvoice(formData: FormData) {
 
   const admin = createServiceClient()
 
+  const { data: userRecord } = await admin
+    .from('users')
+    .select('id')
+    .eq('name', clientName.trim())
+    .maybeSingle()
+
   const year = new Date().getFullYear()
   const { count } = await admin
     .from('portfolio_invoices')
@@ -36,13 +42,15 @@ export async function createInvoice(formData: FormData) {
 
   const invoiceNumber = generateInvoiceNumber((count ?? 0) + 1)
   const items = computeLineItems(formData)
-  const totalAmount = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) ||
+  const totalAmount =
+    items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) ||
     Math.round(Number(formData.get('amount') || '0') * 100)
 
   const { data: invoice, error: createError } = await admin
     .from('portfolio_invoices')
     .insert({
       client_name: clientName.trim(),
+      user_id: userRecord?.id ?? null,
       amount: totalAmount,
       status: 'pending',
       invoice_number: invoiceNumber,

@@ -16,7 +16,9 @@ describe('IntakePage', () => {
 
   it('renders project intake title', () => {
     render(<IntakePage />)
-    expect(screen.getAllByText(/tell me about your project/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/tell me about your project/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Submit Intake Form button', () => {

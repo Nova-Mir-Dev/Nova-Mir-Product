@@ -5,18 +5,24 @@ import DashboardPage from '../page'
 vi.mock('@/lib/supabase-server', () => ({
   createClient: () => ({
     auth: {
-      getUser: () => Promise.resolve({
-        data: { user: { id: 'test-user', email: 'test@example.com' } },
-        error: null,
-      }),
+      getUser: () =>
+        Promise.resolve({
+          data: { user: { id: 'test-user', email: 'test@example.com' } },
+          error: null,
+        }),
     },
     from: () => ({
       select: () => ({
         eq: () => ({
-          single: () => Promise.resolve({
-            data: { name: 'Test User', email: 'test@example.com', role: 'client' },
-            error: null,
-          }),
+          single: () =>
+            Promise.resolve({
+              data: {
+                name: 'Test User',
+                email: 'test@example.com',
+                role: 'client',
+              },
+              error: null,
+            }),
           order: () => ({
             limit: () => Promise.resolve({ data: [], error: null }),
           }),
@@ -48,19 +54,25 @@ describe('DashboardPage', () => {
   it('renders Active Projects stat', async () => {
     const element = await DashboardPage()
     render(element)
-    expect(screen.getAllByText(/active projects/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/active projects/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Quick Actions', async () => {
     const element = await DashboardPage()
     render(element)
-    expect(screen.getAllByText(/quick actions/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/quick actions/i).length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 
   it('renders Recent Activity', async () => {
     const element = await DashboardPage()
     render(element)
-    expect(screen.getAllByText(/recent activity/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/recent activity/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('shows welcome with user name', async () => {
@@ -72,6 +84,8 @@ describe('DashboardPage', () => {
   it('shows empty state for no active projects', async () => {
     const element = await DashboardPage()
     render(element)
-    expect(screen.getAllByText(/no active projects yet/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/no active projects yet/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 })

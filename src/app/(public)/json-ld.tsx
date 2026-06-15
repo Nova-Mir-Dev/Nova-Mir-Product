@@ -42,7 +42,7 @@ export function JsonLd() {
       itemListElement: PRICING_TIERS.map((tier) => ({
         '@type': 'Offer',
         itemOffered: { '@type': 'Service', name: tier.name },
-        price: tier.startingPrice.replace(/[$,]/g, ''),
+        price: String(tier.startingPrice).replace(/[$,]/g, ''),
         priceCurrency: 'CAD',
       })),
     },

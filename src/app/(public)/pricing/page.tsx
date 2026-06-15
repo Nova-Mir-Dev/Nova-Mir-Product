@@ -108,7 +108,8 @@ export default function PricingPage() {
         <Card
           style={{
             border: '2px dashed var(--azimuth-color-primary)',
-            background: 'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
+            background:
+              'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
           }}
         >
           <Stack spacing="md">
@@ -116,7 +117,8 @@ export default function PricingPage() {
               Launch Client Program
             </Text>
             <Text element={{ size: 'base' }}>
-              We&rsquo;re offering 2-3 launch client slots at a flat $1,000 rate.
+              We&rsquo;re offering 2-3 launch client slots at a flat $1,000
+              rate.
             </Text>
             <div>
               <Text element={{ size: 'sm' }} weight="semibold">
@@ -141,10 +143,14 @@ export default function PricingPage() {
               </ul>
             </div>
             <Text element={{ size: 'sm' }} color="secondary">
-              <strong>Timeboxed:</strong> first 3 clients or first 60 days — whichever comes
-              first. After slots are filled, pricing returns to standard rates.
+              <strong>Timeboxed:</strong> first 3 clients or first 60 days —
+              whichever comes first. After slots are filled, pricing returns to
+              standard rates.
             </Text>
-            <Button variant="primary" onClick={() => (window.location.href = '/contact')}>
+            <Button
+              variant="primary"
+              onClick={() => (window.location.href = '/contact')}
+            >
               Claim a Launch Slot
             </Button>
           </Stack>

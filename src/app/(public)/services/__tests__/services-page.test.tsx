@@ -16,7 +16,9 @@ describe('ServicesPage', () => {
 
   it('renders Services & Pricing title', () => {
     render(<ServicesPage />)
-    expect(screen.getAllByText(/services.*pricing/i).length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText(/services.*pricing/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders Get Started buttons', () => {

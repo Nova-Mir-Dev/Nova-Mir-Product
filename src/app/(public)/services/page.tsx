@@ -140,7 +140,8 @@ export default function ServicesPage() {
         <Card
           style={{
             border: '2px dashed var(--azimuth-color-primary)',
-            background: 'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
+            background:
+              'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
           }}
         >
           <Stack spacing="sm">

@@ -8,10 +8,23 @@ export default function ClientError({
   reset: () => void
 }) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <div style={{ textAlign: 'center' }}>
         <h2 style={{ marginBottom: 8 }}>Something went wrong</h2>
-        <p style={{ color: 'var(--azimuth-color-muted)', marginBottom: 16, maxWidth: 400 }}>
+        <p
+          style={{
+            color: 'var(--azimuth-color-muted)',
+            marginBottom: 16,
+            maxWidth: 400,
+          }}
+        >
           An unexpected error occurred in the client portal.
         </p>
         <button

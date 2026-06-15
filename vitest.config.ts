@@ -9,7 +9,11 @@ export default defineConfig({
     coverage: {
       provider: 'istanbul',
       reporter: ['text', 'json-summary'],
-      include: ['src/**/*.{ts,tsx}', 'lib/**/*.{ts,tsx}', 'emails/**/*.{ts,tsx}'],
+      include: [
+        'src/**/*.{ts,tsx}',
+        'lib/**/*.{ts,tsx}',
+        'emails/**/*.{ts,tsx}',
+      ],
       exclude: [
         '**/*.test.*',
         '**/*.spec.*',
@@ -21,10 +25,14 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: /^@\/lib\/(.*)/, replacement: path.resolve(__dirname, 'lib/$1') },
-      { find: /^@\/emails\/(.*)/, replacement: path.resolve(__dirname, 'emails/$1') },
-      { find: /^@\/slack-app\/(.*)/, replacement: path.resolve(__dirname, 'slack-app/$1') },
-      { find: /^@\/scripts\/(.*)/, replacement: path.resolve(__dirname, 'scripts/$1') },
+      {
+        find: /^@\/lib\/(.*)/,
+        replacement: path.resolve(__dirname, 'src/lib/$1'),
+      },
+      {
+        find: /^@\/emails\/(.*)/,
+        replacement: path.resolve(__dirname, 'emails/$1'),
+      },
       { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
     ],
   },

@@ -16,7 +16,9 @@ describe('TermsPage', () => {
 
   it('renders Terms of Service title', () => {
     render(<TermsPage />)
-    expect(screen.getAllByText('Terms of Service').length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText('Terms of Service').length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('renders services section', () => {
@@ -26,6 +28,8 @@ describe('TermsPage', () => {
 
   it('renders last updated date', () => {
     render(<TermsPage />)
-    expect(screen.getAllByText(/last updated/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/last updated/i).length).toBeGreaterThanOrEqual(
+      1,
+    )
   })
 })

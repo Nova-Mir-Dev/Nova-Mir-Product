@@ -1,5 +1,10 @@
 import {
-  Html, Head, Preview, Body, Text, Heading,
+  Html,
+  Head,
+  Preview,
+  Body,
+  Text,
+  Heading,
 } from '@react-email/components'
 
 interface WelcomeEmailProps {
