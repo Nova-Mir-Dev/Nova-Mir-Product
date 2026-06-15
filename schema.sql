@@ -301,3 +301,8 @@ CREATE TABLE IF NOT EXISTS line_items (
 ALTER TABLE line_items ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "line_items_admin_only" ON line_items FOR ALL
   USING (auth.role() = 'service_role');
+
+-- Client provisioning
+ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS company TEXT;
+ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS invite_sent_at TIMESTAMPTZ;

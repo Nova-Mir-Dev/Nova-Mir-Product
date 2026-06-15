@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { label: 'Revenue', path: '/admin/revenue' },
   { label: 'Monitoring', path: '/admin/monitoring' },
   { label: 'Bootstrap', path: '/admin/bootstrap' },
+  { label: 'Admins', path: '/admin/admins' },
   { label: 'Audit Log', path: '/admin/audit' },
   { label: 'Settings', path: '/admin/settings' },
 ]
