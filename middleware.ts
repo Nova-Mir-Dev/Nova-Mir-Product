@@ -165,7 +165,7 @@ export async function middleware(request: NextRequest) {
       return supabaseResponse
     }
 
-    if (pathname.startsWith('/admin')) {
+    if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/auth')) {
       if (!user) {
         const url = new URL('/admin/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
