@@ -32,8 +32,8 @@ describe('PRICING_TIERS', () => {
   it('has all expected tier names', () => {
     const names = PRICING_TIERS.map((t) => t.name)
     expect(names).toEqual([
-      'Website',
-      'Website + Operations',
+      'Managed Website',
+      'Website + Lead System',
       'Full Growth System',
     ])
   })

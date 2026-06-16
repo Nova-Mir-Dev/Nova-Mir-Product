@@ -2,8 +2,21 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 import { enrollMfa } from '@/features/auth/mfa'
+import { z } from 'zod'
 
-export async function POST() {
+const enrollBodySchema = z.object({
+  factorType: z.enum(['totp', 'phone', 'webauthn']).optional(),
+  friendlyName: z.string().max(100).optional(),
+})
+
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}))
+  const parsed = enrollBodySchema.safeParse(body)
+  if (!parsed.success)
+    return NextResponse.json(
+      { error: 'Invalid request body', details: parsed.error.flatten() },
+      { status: 400 },
+    )
   const supabase = await createClient()
   const {
     data: { user },

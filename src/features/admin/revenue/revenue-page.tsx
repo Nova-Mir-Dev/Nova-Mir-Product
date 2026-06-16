@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import {
   Badge,
   Button,
   Card,
   DataTable,
   EmptyState,
-  Input,
   KPICard,
   Stack,
   Text,
@@ -19,12 +17,10 @@ import type {
   ExpenseEntry,
   BusinessSummary,
 } from '@/features/admin/types'
-import {
-  createRevenueEntry,
-  createExpenseEntry,
-  deleteRevenueEntry,
-  deleteExpenseEntry,
-} from './actions'
+import { deleteRevenueEntry, deleteExpenseEntry } from './actions'
+import { CategoryBreakdown } from './components/category-breakdown'
+import { RevenueForm } from './components/revenue-form'
+import { ExpenseForm } from './components/expense-form'
 import styles from './revenue-page.module.css'
 
 interface RevenuePageProps {
@@ -66,7 +62,6 @@ export default function RevenuePage({
   showRevenueForm,
   showExpenseForm,
 }: RevenuePageProps) {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState<'revenue' | 'expenses'>('revenue')
 
   const {
@@ -196,57 +191,21 @@ export default function RevenuePage({
         </Card>
       </div>
 
-      <Card>
-        <Stack spacing="sm">
-          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Revenue by Category
-          </Text>
-          {Object.keys(summary.revenueByCategory).length === 0 ? (
-            <Text color="muted">No revenue data.</Text>
-          ) : (
-            <div className={styles.categoryGrid}>
-              {Object.entries(summary.revenueByCategory).map(
-                ([cat, amount]) => (
-                  <Card key={cat} className={styles.statCard}>
-                    <Stack spacing="xs">
-                      <Text element={{ size: 'sm' }} color="secondary">
-                        {revenueCategoryLabels[cat] ?? cat}
-                      </Text>
-                      <Text weight="semibold">{formatAmount(amount)}</Text>
-                    </Stack>
-                  </Card>
-                ),
-              )}
-            </div>
-          )}
-        </Stack>
-      </Card>
+      <CategoryBreakdown
+        title="Revenue by Category"
+        categories={summary.revenueByCategory}
+        categoryLabels={revenueCategoryLabels}
+        formatAmount={formatAmount}
+        emptyMessage="No revenue data."
+      />
 
-      <Card>
-        <Stack spacing="sm">
-          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Expenses by Category
-          </Text>
-          {Object.keys(summary.expensesByCategory).length === 0 ? (
-            <Text color="muted">No expense data.</Text>
-          ) : (
-            <div className={styles.categoryGrid}>
-              {Object.entries(summary.expensesByCategory).map(
-                ([cat, amount]) => (
-                  <Card key={cat} className={styles.statCard}>
-                    <Stack spacing="xs">
-                      <Text element={{ size: 'sm' }} color="secondary">
-                        {expenseCategoryLabels[cat] ?? cat}
-                      </Text>
-                      <Text weight="semibold">{formatAmount(amount)}</Text>
-                    </Stack>
-                  </Card>
-                ),
-              )}
-            </div>
-          )}
-        </Stack>
-      </Card>
+      <CategoryBreakdown
+        title="Expenses by Category"
+        categories={summary.expensesByCategory}
+        categoryLabels={expenseCategoryLabels}
+        formatAmount={formatAmount}
+        emptyMessage="No expense data."
+      />
 
       <div className={styles.toggleRow}>
         <Button
@@ -293,152 +252,11 @@ export default function RevenuePage({
       </div>
 
       {activeTab === 'revenue' && showRevenueForm && (
-        <Card>
-          <form
-            action={async (formData) => {
-              const result = await createRevenueEntry(null, formData)
-              if (result?.error) {
-                alert(result.error)
-              } else {
-                router.push('/admin/revenue')
-              }
-            }}
-          >
-            <Stack spacing="sm">
-              <Input
-                label={{ text: 'Client Name' }}
-                name="clientName"
-                required
-              />
-              <Input
-                label={{ text: 'Description' }}
-                name="description"
-                required
-              />
-              <Input
-                label={{ text: 'Amount ($)' }}
-                name="amount"
-                type="number"
-                stepper={{ enabled: true, step: 0.01 }}
-                required
-              />
-              <label>
-                <Text element={{ size: 'sm' }}>Category</Text>
-                <select
-                  name="category"
-                  required
-                  style={{
-                    width: '100%',
-                    padding: 'var(--azimuth-spacing-xs)',
-                    borderRadius: 'var(--azimuth-radius-sm)',
-                    border: '1px solid var(--azimuth-color-border)',
-                  }}
-                >
-                  <option value="">Select category...</option>
-                  {Object.entries(revenueCategoryLabels).map(
-                    ([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ),
-                  )}
-                </select>
-              </label>
-              <Input
-                label={{ text: 'Date' }}
-                name="recordedAt"
-                type="date"
-                required
-                defaultValue={new Date().toISOString().slice(0, 10)}
-              />
-              <div className={styles.formActions}>
-                <Button variant="primary" type="submit">
-                  Create
-                </Button>
-                <a href="/admin/revenue">
-                  <Button variant="tertiary" type="button">
-                    Cancel
-                  </Button>
-                </a>
-              </div>
-            </Stack>
-          </form>
-        </Card>
+        <RevenueForm categoryLabels={revenueCategoryLabels} />
       )}
 
       {activeTab === 'expenses' && showExpenseForm && (
-        <Card>
-          <form
-            action={async (formData) => {
-              const result = await createExpenseEntry(null, formData)
-              if (result?.error) {
-                alert(result.error)
-              } else {
-                router.push('/admin/revenue')
-              }
-            }}
-          >
-            <Stack spacing="sm">
-              <Input label={{ text: 'Vendor' }} name="vendor" required />
-              <Input
-                label={{ text: 'Description' }}
-                name="description"
-                required
-              />
-              <Input
-                label={{ text: 'Amount ($)' }}
-                name="amount"
-                type="number"
-                stepper={{ enabled: true, step: 0.01 }}
-                required
-              />
-              <label>
-                <Text element={{ size: 'sm' }}>Category</Text>
-                <select
-                  name="category"
-                  required
-                  style={{
-                    width: '100%',
-                    padding: 'var(--azimuth-spacing-xs)',
-                    borderRadius: 'var(--azimuth-radius-sm)',
-                    border: '1px solid var(--azimuth-color-border)',
-                  }}
-                >
-                  <option value="">Select category...</option>
-                  {Object.entries(expenseCategoryLabels).map(
-                    ([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ),
-                  )}
-                </select>
-              </label>
-              <Input
-                label={{ text: 'Date' }}
-                name="recordedAt"
-                type="date"
-                required
-                defaultValue={new Date().toISOString().slice(0, 10)}
-              />
-              <Input
-                label={{ text: 'Receipt URL (optional)' }}
-                name="receiptUrl"
-                type="url"
-              />
-              <div className={styles.formActions}>
-                <Button variant="primary" type="submit">
-                  Create
-                </Button>
-                <a href="/admin/revenue">
-                  <Button variant="tertiary" type="button">
-                    Cancel
-                  </Button>
-                </a>
-              </div>
-            </Stack>
-          </form>
-        </Card>
+        <ExpenseForm categoryLabels={expenseCategoryLabels} />
       )}
 
       {activeTab === 'revenue' && (

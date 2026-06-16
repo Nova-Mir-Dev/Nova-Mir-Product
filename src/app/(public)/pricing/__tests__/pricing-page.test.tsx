@@ -29,7 +29,7 @@ describe('PricingPage', () => {
   it('renders Launch Client Program section', () => {
     render(<PricingPage />)
     expect(
-      screen.getAllByText(/Launch Client Program/i).length,
+      screen.getAllByText(/Founding Client Program/i).length,
     ).toBeGreaterThanOrEqual(1)
   })
 })

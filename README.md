@@ -22,10 +22,14 @@ Web development for small businesses. Custom websites, lead systems, and operati
 - **Database**: PostgreSQL (Supabase)
 - **Auth**: Supabase SSR (session-based)
 - **Hosting**: Vercel
-- **Monitoring**: Sentry
+- **Monitoring**: Sentry + Upstash Redis
 - **Analytics**: Plausible
 - **Cache**: Upstash Redis (with in-memory fallback)
 - **Integrations**: Resend, Slack, Twilio, Stripe
+
+## Theme
+
+The app uses `azimuth-ui`'s `ThemeProvider` for dark/light mode support via `src/components/theme-root.tsx`. A `ThemeToggle` component (`src/components/theme-toggle.tsx`) cycles between light, dark, and system modes and is rendered in the admin shell, client shell, and public marketing shell.
 
 ## Getting Started
 
@@ -72,7 +76,7 @@ Before deploying, ensure these pass:
 
 - `npm run typecheck` — zero errors
 - `npm run build` — succeeds
-- `npm test` — all tests passing
+- `npm test` — 562 tests across 56 test files
 - `npm run lint` — zero errors
 - `npx prettier --check .` — all files formatted
 
@@ -88,6 +92,10 @@ src/
     (client)/dashboard/ → Client portal
     (public)/           → Marketing pages
     api/                → API routes
+  components/
+    theme-root.tsx      → ThemeProvider wrapper (dark/light mode)
+    theme-toggle.tsx    → Dark/light/system mode toggle
+    admin-shell.tsx     → Admin layout shell
   features/
     admin/              → Admin components & logic
     auth/               → Auth components (login forms)

@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const exportParamsSchema = z.object({
+  format: z.enum(['json', 'csv']).default('json'),
+  entity: z.string().min(1).max(50).default('users'),
+})
 
 export async function GET(request: Request) {
   const supabase = await createServerClient()
@@ -27,9 +33,15 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url)
-  const { searchParams } = url
-  const format = searchParams.get('format') || 'json'
-  const entity = searchParams.get('entity') || 'users'
+  const params = Object.fromEntries(url.searchParams)
+  const parsed = exportParamsSchema.safeParse(params)
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid query parameters', details: parsed.error.flatten() },
+      { status: 400 },
+    )
+  }
+  const { format, entity } = parsed.data
 
   // TODO: Replace with actual data fetching
   const data: Array<Record<string, unknown>> = [{ id: 'example' }]

@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { hasPermission } from '@/lib/roles'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
+
+const createKeySchema = z.object({
+  name: z.string().max(100).optional(),
+})
 
 export async function GET() {
   const supabase = await createServerClient()
@@ -22,7 +27,15 @@ export async function GET() {
   return NextResponse.json({ keys: [] })
 }
 
-export async function POST() {
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}))
+  const parsed = createKeySchema.safeParse(body)
+  if (!parsed.success)
+    return NextResponse.json(
+      { error: 'Invalid request body', details: parsed.error.flatten() },
+      { status: 400 },
+    )
+
   const supabase = await createServerClient()
   const {
     data: { user },

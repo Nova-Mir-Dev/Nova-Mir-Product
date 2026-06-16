@@ -25,6 +25,7 @@ vi.mock('../../admin/billing/actions', () => ({
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/admin',
 }))
 
 const mockClient: PortfolioClient = {

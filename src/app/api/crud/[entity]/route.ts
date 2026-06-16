@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
@@ -8,6 +7,9 @@ import {
   rateLimited,
   internalError,
 } from '@/lib/api-error'
+import { z } from 'zod'
+
+const crudBodySchema = z.object({}).passthrough()
 
 const ALLOWED_ENTITIES = new Set(['users', 'projects', 'tasks'])
 
@@ -65,28 +67,15 @@ export async function POST(
       return rateLimited()
     }
 
-    const contentType = request.headers.get('content-type') || ''
-    if (!contentType.includes('application/json')) {
-      return NextResponse.json(
-        { error: 'Unsupported Media Type. Expected application/json.' },
-        { status: 415 },
-      )
-    }
-
-    const body = await request.json()
-
-    if (typeof body !== 'object' || body === null || Array.isArray(body)) {
-      Sentry.captureMessage('CRUD body validation failed', {
-        extra: { body },
-      })
+    const parsed = crudBodySchema.safeParse(await request.json())
+    if (!parsed.success)
       return validationError('Request body must be a JSON object.')
-    }
 
     return NextResponse.json(
       {
         entity,
         method: 'POST',
-        data: body,
+        data: parsed.data,
         message:
           'CRUD scaffold ready. Implement create logic for ' + entity + '.',
       },
