@@ -5,7 +5,7 @@ export function ThemeScript() {
         __html: `
           (function() {
             try {
-              var mode = localStorage.getItem('theme-mode') || 'system';
+              var mode = localStorage.getItem('azimuth-theme-mode') || 'system';
               if (mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.setAttribute('data-theme', 'dark');
               } else {

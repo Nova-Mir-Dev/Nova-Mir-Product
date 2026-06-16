@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ThemeProvider, Container, Text } from 'azimuth-ui'
+import { Container, Text } from 'azimuth-ui'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { APP_CONFIG, NAV_PAGES } from '@/lib/navigation'
 
 function Navbar() {
@@ -128,6 +129,7 @@ function Navbar() {
             >
               Clients
             </a>
+            <ThemeToggle />
           </div>
         </nav>
       </Container>
@@ -229,16 +231,14 @@ function Footer() {
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider config={{ mode: 'system' }}>
-      <div
-        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-      >
-        <Navbar />
-        <main id="main-content" style={{ flex: 1 }}>
-          {children}
-        </main>
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+    >
+      <Navbar />
+      <main id="main-content" style={{ flex: 1 }}>
+        {children}
+      </main>
+      <Footer />
+    </div>
   )
 }

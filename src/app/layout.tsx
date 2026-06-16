@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Sora, Onest } from 'next/font/google'
+import { ThemeRoot } from '@/components/theme-root'
 import { ThemeScript } from './(public)/_components/theme-script'
 import { JsonLd } from './(public)/json-ld'
 import './globals.css'
@@ -82,7 +83,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeScript />
-        {children}
+        <ThemeRoot>{children}</ThemeRoot>
         <JsonLd />
       </body>
     </html>
