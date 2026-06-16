@@ -39,18 +39,18 @@
   font-weight: 600;
   border: 2px solid var(--azimuth-color-border, #d1d5db);
   color: var(--azimuth-color-text-secondary, #6b7280);
-  background-color: var(--azimuth-color-white, #fff);
+  background-color: var(--azimuth-color-bg);
 }
 
 .stageCircleActive {
-  border-color: #3b82f6;
-  background-color: #3b82f6;
-  color: #fff;
+  border-color: var(--azimuth-color-primary);
+  background-color: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
 }
 
 .stageCircleFuture {
   border-color: var(--azimuth-color-border, #d1d5db);
-  background-color: var(--azimuth-color-white, #fff);
+  background-color: var(--azimuth-color-bg);
   color: var(--azimuth-color-text-secondary, #6b7280);
 }
 
@@ -61,7 +61,7 @@
 }
 
 .stageLabelActive {
-  color: #1a1a2e;
+  color: var(--azimuth-color-text);
   font-weight: 600;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .stageConnectorActive {
-  background-color: #3b82f6;
+  background-color: var(--azimuth-color-primary);
 }
 
 .quickActions {
@@ -96,7 +96,7 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #1a1a2e;
+  color: var(--azimuth-color-text);
 }
 
 .emptyStateText {
