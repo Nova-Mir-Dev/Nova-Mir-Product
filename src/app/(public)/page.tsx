@@ -107,7 +107,7 @@ export default function Home() {
                     </Badge>
                   )}
                   <div className={styles.tierHeader}>
-                    <Text weight="bold" element={{ as: 'h5', size: 'h5' }}>
+                    <Text weight="bold" element={{ as: 'h3', size: 'h5' }}>
                       {tier.name}
                     </Text>
                     <Text weight="bold" className={styles.priceRange}>

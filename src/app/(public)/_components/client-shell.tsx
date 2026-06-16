@@ -28,6 +28,9 @@ function Navbar() {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setMenuOpen(false)
+          }}
         >
           <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Text weight="bold" element={{ size: 'lg' }}>
@@ -55,6 +58,7 @@ function Navbar() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               {menuOpen ? (
                 <path d="M6 6l12 12M6 18L18 6" />

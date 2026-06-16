@@ -1,6 +1,10 @@
 'use client'
 import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
-import { PRICING_TIERS, getFoundingOfferLabel, getMaintenanceRetainer } from '@/lib/pricing'
+import {
+  PRICING_TIERS,
+  getFoundingOfferLabel,
+  getMaintenanceRetainer,
+} from '@/lib/pricing'
 
 export default function PricingPage() {
   return (
@@ -117,8 +121,8 @@ export default function PricingPage() {
               Founding Client Program
             </Text>
             <Text element={{ size: 'base' }}>
-              {getFoundingOfferLabel()} &mdash; a limited-time
-              opportunity to get a custom website at a founding price.
+              {getFoundingOfferLabel()} &mdash; a limited-time opportunity to
+              get a custom website at a founding price.
             </Text>
             <div>
               <Text element={{ size: 'sm' }} weight="semibold">
@@ -143,13 +147,18 @@ export default function PricingPage() {
               </ul>
             </div>
             <Text element={{ size: 'sm' }} color="secondary">
-              <strong>Timeboxed:</strong> first 3 clients or first 60 days &mdash;
-              whichever comes first. After slots are filled, pricing returns to
-              standard rates.
+              <strong>Timeboxed:</strong> first 3 clients or first 60 days
+              &mdash; whichever comes first. After slots are filled, pricing
+              returns to standard rates.
             </Text>
-            <Text element={{ size: 'sm' }} color="secondary" style={{ marginTop: '1rem' }}>
-              Maintenance retainer available at {getMaintenanceRetainer()} after launch &mdash;
-              hosting checks, content updates, and priority support.
+            <Text
+              element={{ size: 'sm' }}
+              color="secondary"
+              style={{ marginTop: '1rem' }}
+            >
+              Maintenance retainer available at {getMaintenanceRetainer()} after
+              launch &mdash; hosting checks, content updates, and priority
+              support.
             </Text>
             <Button
               variant="primary"

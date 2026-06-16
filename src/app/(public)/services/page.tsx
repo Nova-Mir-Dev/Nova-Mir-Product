@@ -1,6 +1,10 @@
 'use client'
 import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
-import { PRICING_TIERS, getFoundingOfferLabel, getMaintenanceRetainer } from '@/lib/pricing'
+import {
+  PRICING_TIERS,
+  getFoundingOfferLabel,
+  getMaintenanceRetainer,
+} from '@/lib/pricing'
 
 export default function ServicesPage() {
   return (
@@ -161,7 +165,13 @@ export default function ServicesPage() {
               </a>
               .
             </Text>
-            <Text element={{ size: 'sm' }} style={{ marginTop: '0.5rem', color: 'var(--azimuth-color-text-secondary)' }}>
+            <Text
+              element={{ size: 'sm' }}
+              style={{
+                marginTop: '0.5rem',
+                color: 'var(--azimuth-color-text-secondary)',
+              }}
+            >
               Maintenance retainer at {getMaintenanceRetainer()} after launch.
             </Text>
           </Stack>

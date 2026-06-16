@@ -25,35 +25,87 @@ export function AdminList({ admins }: { admins: AdminUser[] }) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
-                  <Text element={{ size: 'xs' }} weight="semibold">Name</Text>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: '0.5rem',
+                    borderBottom: '1px solid var(--azimuth-color-border)',
+                  }}
+                >
+                  <Text element={{ size: 'xs' }} weight="semibold">
+                    Name
+                  </Text>
                 </th>
-                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
-                  <Text element={{ size: 'xs' }} weight="semibold">Email</Text>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: '0.5rem',
+                    borderBottom: '1px solid var(--azimuth-color-border)',
+                  }}
+                >
+                  <Text element={{ size: 'xs' }} weight="semibold">
+                    Email
+                  </Text>
                 </th>
-                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
-                  <Text element={{ size: 'xs' }} weight="semibold">Role</Text>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: '0.5rem',
+                    borderBottom: '1px solid var(--azimuth-color-border)',
+                  }}
+                >
+                  <Text element={{ size: 'xs' }} weight="semibold">
+                    Role
+                  </Text>
                 </th>
-                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
-                  <Text element={{ size: 'xs' }} weight="semibold">Created</Text>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: '0.5rem',
+                    borderBottom: '1px solid var(--azimuth-color-border)',
+                  }}
+                >
+                  <Text element={{ size: 'xs' }} weight="semibold">
+                    Created
+                  </Text>
                 </th>
               </tr>
             </thead>
             <tbody>
               {admins.map((a) => (
                 <tr key={a.id}>
-                  <td style={{ padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      borderBottom: '1px solid var(--azimuth-color-border)',
+                    }}
+                  >
                     <Text element={{ size: 'sm' }}>{a.name || '—'}</Text>
                   </td>
-                  <td style={{ padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      borderBottom: '1px solid var(--azimuth-color-border)',
+                    }}
+                  >
                     <Text element={{ size: 'sm' }}>{a.email}</Text>
                   </td>
-                  <td style={{ padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      borderBottom: '1px solid var(--azimuth-color-border)',
+                    }}
+                  >
                     <Badge variant={a.role === 'admin' ? 'accent' : 'neutral'}>
                       {a.role === 'admin' ? 'Admin' : 'Read Only'}
                     </Badge>
                   </td>
-                  <td style={{ padding: '0.5rem', borderBottom: '1px solid var(--azimuth-color-border)' }}>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      borderBottom: '1px solid var(--azimuth-color-border)',
+                    }}
+                  >
                     <Text element={{ size: 'xs' }} color="secondary">
                       {new Date(a.created_at).toLocaleDateString()}
                     </Text>

@@ -7,6 +7,10 @@
   padding: var(--azimuth-spacing-lg);
 }
 @media (max-width: 768px) {
-  .container { flex-direction: column; }
-  .main { padding: var(--azimuth-spacing-md); }
+  .container {
+    flex-direction: column;
+  }
+  .main {
+    padding: var(--azimuth-spacing-md);
+  }
 }

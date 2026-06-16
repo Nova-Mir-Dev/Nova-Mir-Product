@@ -140,10 +140,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('Bootstrap validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
 
   const { mode = 'validate', ...configFields } = parsed.data

@@ -35,7 +35,11 @@ export function AdminLoginForm({ redirect }: { redirect?: string }) {
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing="md">
-        {error && <Text color="accent">{error}</Text>}
+        {error && (
+          <Text color="accent" role="alert">
+            {error}
+          </Text>
+        )}
         <Input
           label={{ text: 'Email' }}
           type="email"

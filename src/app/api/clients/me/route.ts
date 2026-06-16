@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
 import { unauthorized, notFound, internalError } from '@/lib/api-error'
 import { z } from 'zod'
 
@@ -24,8 +23,7 @@ export async function GET() {
     } = await supabase.auth.getUser()
     if (error || !user) return unauthorized()
 
-    const admin = createServiceClient()
-    const { data: client, error: clientError } = await admin
+    const { data: client, error: clientError } = await supabase
       .from('portfolio_clients')
       .select('*')
       .eq('email', user.email)

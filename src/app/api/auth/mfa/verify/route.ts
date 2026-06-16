@@ -35,10 +35,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('MFA verify validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const { factorId, code } = parsed.data
   const result = await verifyMfa(factorId, code)

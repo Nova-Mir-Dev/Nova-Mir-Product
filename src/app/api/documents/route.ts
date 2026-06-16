@@ -43,10 +43,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('Documents validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
   const safePath = sanitizeFilename(body.filePath || `doc_${Date.now()}.pdf`)

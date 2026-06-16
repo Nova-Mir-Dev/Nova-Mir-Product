@@ -40,7 +40,8 @@ export default function BillingError({
             lineHeight: 1.5,
           }}
         >
-          Something went wrong loading your invoices. Try again or contact support.
+          Something went wrong loading your invoices. Try again or contact
+          support.
         </p>
         <button
           onClick={reset}

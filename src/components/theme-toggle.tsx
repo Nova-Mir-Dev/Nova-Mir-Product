@@ -20,7 +20,13 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      title={mode === 'system' ? 'System theme' : mode === 'light' ? 'Light mode' : 'Dark mode'}
+      title={
+        mode === 'system'
+          ? 'System theme'
+          : mode === 'light'
+            ? 'Light mode'
+            : 'Dark mode'
+      }
       aria-label={`Current theme: ${mode}. Click to change.`}
       style={{
         background: 'none',

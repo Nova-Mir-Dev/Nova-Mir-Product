@@ -44,10 +44,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('Appointments validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
 

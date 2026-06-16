@@ -8,7 +8,10 @@ export function AdminSetupForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
-  const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [result, setResult] = useState<{
+    type: 'success' | 'error'
+    message: string
+  } | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,16 +26,24 @@ export function AdminSetupForm() {
 
     try {
       await createFirstAdmin(form)
-      setResult({ type: 'success', message: 'Admin user created! Redirecting to login...' })
+      setResult({
+        type: 'success',
+        message: 'Admin user created! Redirecting to login...',
+      })
       setTimeout(() => window.location.assign('/admin/auth/login'), 1500)
     } catch (err) {
-      setResult({ type: 'error', message: err instanceof Error ? err.message : 'Failed' })
+      setResult({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Failed',
+      })
     }
     setLoading(false)
   }
 
   return (
-    <Container style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}>
+    <Container
+      style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}
+    >
       <Card>
         <form onSubmit={handleSubmit}>
           <Stack spacing="md">
@@ -57,17 +68,27 @@ export function AdminSetupForm() {
             <Input
               label={{ text: 'Email' }}
               type="email"
-              value={{ value: email, onChange: (e) => setEmail(e.target.value) }}
+              value={{
+                value: email,
+                onChange: (e) => setEmail(e.target.value),
+              }}
               placeholder="jasper@novamir.dev"
             />
             <Input
               label={{ text: 'Password' }}
               type="password"
-              value={{ value: password, onChange: (e) => setPassword(e.target.value) }}
+              value={{
+                value: password,
+                onChange: (e) => setPassword(e.target.value),
+              }}
               placeholder="At least 8 characters"
             />
 
-            <Button variant="primary" type="submit" disabled={loading || !email || !password || !name}>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading || !email || !password || !name}
+            >
               {loading ? 'Creating...' : 'Create Admin Account'}
             </Button>
           </Stack>

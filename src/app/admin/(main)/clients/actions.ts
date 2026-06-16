@@ -29,12 +29,14 @@ export async function createClientAction(formData: FormData) {
 
   const admin = createServiceClient()
 
-  const { data: authUser, error: authError } = await admin.auth.admin.createUser({
-    email: email.trim(),
-    email_confirm: true,
-    user_metadata: { name: name.trim(), role: 'client' },
-  })
-  if (authError) throw new Error('Failed to create user account: ' + authError.message)
+  const { data: authUser, error: authError } =
+    await admin.auth.admin.createUser({
+      email: email.trim(),
+      email_confirm: true,
+      user_metadata: { name: name.trim(), role: 'client' },
+    })
+  if (authError)
+    throw new Error('Failed to create user account: ' + authError.message)
 
   const { error: clientError } = await admin.from('portfolio_clients').insert({
     user_id: authUser.user.id,

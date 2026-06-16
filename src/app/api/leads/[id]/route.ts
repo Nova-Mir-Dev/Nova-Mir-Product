@@ -67,10 +67,7 @@ export async function PATCH(
       Sentry.captureMessage('Lead status update validation failed', {
         extra: { issues: parsed.error.issues },
       })
-      return NextResponse.json(
-        { error: 'Validation failed.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
     }
 
     const { data, error } = await supabase

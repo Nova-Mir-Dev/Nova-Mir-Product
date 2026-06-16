@@ -24,17 +24,20 @@ export async function createFirstAdmin(formData: FormData) {
   if (!email?.trim() || !password?.trim() || !name?.trim()) {
     throw new Error('Name, email, and password are required')
   }
-  if (password.length < 8) throw new Error('Password must be at least 8 characters')
+  if (password.length < 8)
+    throw new Error('Password must be at least 8 characters')
 
   const admin = createServiceClient()
 
-  const { data: authUser, error: authError } = await admin.auth.admin.createUser({
-    email: email.trim(),
-    password: password.trim(),
-    email_confirm: true,
-    user_metadata: { name: name.trim() },
-  })
-  if (authError) throw new Error('Failed to create auth user: ' + authError.message)
+  const { data: authUser, error: authError } =
+    await admin.auth.admin.createUser({
+      email: email.trim(),
+      password: password.trim(),
+      email_confirm: true,
+      user_metadata: { name: name.trim() },
+    })
+  if (authError)
+    throw new Error('Failed to create auth user: ' + authError.message)
 
   const { error: profileError } = await admin.from('users').insert({
     id: authUser.user.id,
@@ -42,7 +45,8 @@ export async function createFirstAdmin(formData: FormData) {
     name: name.trim(),
     role: 'admin',
   })
-  if (profileError) throw new Error('Failed to create profile: ' + profileError.message)
+  if (profileError)
+    throw new Error('Failed to create profile: ' + profileError.message)
 
   revalidatePath('/admin/admins')
   return { success: true }
@@ -50,7 +54,9 @@ export async function createFirstAdmin(formData: FormData) {
 
 export async function createAdminUser(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const { data: profile } = await supabase
@@ -64,18 +70,17 @@ export async function createAdminUser(formData: FormData) {
   const name = formData.get('name') as string
   const role = (formData.get('role') as string) || 'admin'
 
-  if (!email?.trim() || !name?.trim()) throw new Error('Name and email are required')
+  if (!email?.trim() || !name?.trim())
+    throw new Error('Name and email are required')
   if (!['admin', 'read_only'].includes(role)) throw new Error('Invalid role')
 
   const admin = createServiceClient()
 
-  const { data: authUser, error: authError } = await admin.auth.admin.inviteUserByEmail(
-    email.trim(),
-    {
+  const { data: authUser, error: authError } =
+    await admin.auth.admin.inviteUserByEmail(email.trim(), {
       data: { name: name.trim(), role },
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin`,
-    },
-  )
+    })
   if (authError) throw new Error('Failed to invite user: ' + authError.message)
 
   const { error: profileError } = await admin.from('users').insert({
@@ -84,7 +89,8 @@ export async function createAdminUser(formData: FormData) {
     name: name.trim(),
     role,
   })
-  if (profileError) throw new Error('Failed to create profile: ' + profileError.message)
+  if (profileError)
+    throw new Error('Failed to create profile: ' + profileError.message)
 
   revalidatePath('/admin/admins')
   return { success: true }
@@ -92,7 +98,9 @@ export async function createAdminUser(formData: FormData) {
 
 export async function listAdminUsers() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const admin = createServiceClient()

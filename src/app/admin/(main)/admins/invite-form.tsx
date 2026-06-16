@@ -8,7 +8,10 @@ export function InviteForm() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [role, setRole] = useState<'admin' | 'read_only'>('read_only')
-  const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [result, setResult] = useState<{
+    type: 'success' | 'error'
+    message: string
+  } | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -27,7 +30,10 @@ export function InviteForm() {
       setEmail('')
       setName('')
     } catch (err) {
-      setResult({ type: 'error', message: err instanceof Error ? err.message : 'Failed' })
+      setResult({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Failed',
+      })
     }
     setLoading(false)
   }
@@ -58,7 +64,11 @@ export function InviteForm() {
             placeholder="liz@novamir.dev"
           />
           <div>
-            <Text element={{ size: 'sm' }} weight="semibold" style={{ marginBottom: '0.25rem', display: 'block' }}>
+            <Text
+              element={{ size: 'sm' }}
+              weight="semibold"
+              style={{ marginBottom: '0.25rem', display: 'block' }}
+            >
               Role
             </Text>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -79,12 +89,22 @@ export function InviteForm() {
                 Read Only
               </Button>
             </div>
-            <Text element={{ size: 'xs' }} color="secondary" style={{ marginTop: '0.25rem' }}>
-              {role === 'admin' ? 'Full access to all admin features.' : 'Can view dashboards only — no edits.'}
+            <Text
+              element={{ size: 'xs' }}
+              color="secondary"
+              style={{ marginTop: '0.25rem' }}
+            >
+              {role === 'admin'
+                ? 'Full access to all admin features.'
+                : 'Can view dashboards only — no edits.'}
             </Text>
           </div>
 
-          <Button variant="primary" type="submit" disabled={loading || !email || !name}>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={loading || !email || !name}
+          >
             {loading ? 'Sending...' : 'Send Invitation'}
           </Button>
         </Stack>

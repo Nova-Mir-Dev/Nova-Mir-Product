@@ -36,10 +36,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('Data correction validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
   const allowedFields = ['email', 'name', 'phone'] // Whitelist fields that can be self-corrected

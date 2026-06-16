@@ -134,12 +134,8 @@ describe('CORS - OPTIONS requests', () => {
     expect(response.headers.get('Access-Control-Allow-Origin')).toBe(
       'https://example.com',
     )
-    expect(
-      response.headers.get('Access-Control-Allow-Methods'),
-    ).toBeTruthy()
-    expect(
-      response.headers.get('Access-Control-Allow-Headers'),
-    ).toBeTruthy()
+    expect(response.headers.get('Access-Control-Allow-Methods')).toBeTruthy()
+    expect(response.headers.get('Access-Control-Allow-Headers')).toBeTruthy()
     expect(response.headers.get('Access-Control-Max-Age')).toBeTruthy()
   })
 
@@ -186,9 +182,7 @@ describe('CORS headers', () => {
 
     const response = await middleware(req)
     expect(response.headers.get('Access-Control-Allow-Origin')).toBeNull()
-    expect(
-      response.headers.get('Access-Control-Allow-Methods'),
-    ).toBeNull()
+    expect(response.headers.get('Access-Control-Allow-Methods')).toBeNull()
   })
 })
 

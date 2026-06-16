@@ -116,7 +116,10 @@ export default function DashboardPage() {
       <div className={styles.quickActions}>
         <Link href="/clients/billing" className={styles.actionCard}>
           <Card>
-            <Stack spacing="sm" style={{ textAlign: 'center', padding: '16px' }}>
+            <Stack
+              spacing="sm"
+              style={{ textAlign: 'center', padding: '16px' }}
+            >
               <Text element={{ size: 'h4' }} weight="semibold">
                 View Invoice
               </Text>
@@ -129,7 +132,10 @@ export default function DashboardPage() {
 
         <a href="mailto:support@novamir.dev" className={styles.actionCard}>
           <Card>
-            <Stack spacing="sm" style={{ textAlign: 'center', padding: '16px' }}>
+            <Stack
+              spacing="sm"
+              style={{ textAlign: 'center', padding: '16px' }}
+            >
               <Text element={{ size: 'h4' }} weight="semibold">
                 Contact Support
               </Text>

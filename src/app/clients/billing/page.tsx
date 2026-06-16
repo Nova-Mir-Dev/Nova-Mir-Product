@@ -66,7 +66,7 @@ export default function BillingPage() {
       {invoices.length === 0 ? (
         <Card>
           <div className={styles.emptyState}>
-            <Text element={{ size: 'h4' }} weight="semibold">
+            <Text element={{ size: 'h2' }} weight="semibold">
               No invoices yet
             </Text>
             <Text element={{ size: 'sm' }} color="secondary">
@@ -79,11 +79,11 @@ export default function BillingPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Invoice</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Due Date</th>
-                <th>Description</th>
+                <th scope="col">Invoice</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -96,7 +96,9 @@ export default function BillingPage() {
                     {formatAmount(inv.amount)}
                   </td>
                   <td>
-                    <span className={`${styles.badge} ${statusBadgeClass(inv.status)}`}>
+                    <span
+                      className={`${styles.badge} ${statusBadgeClass(inv.status)}`}
+                    >
                       {inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
                     </span>
                   </td>

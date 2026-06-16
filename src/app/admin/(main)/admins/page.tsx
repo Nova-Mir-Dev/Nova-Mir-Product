@@ -7,7 +7,9 @@ import { InviteForm } from './invite-form'
 
 export default async function AdminsPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) {
     const isFirst = await checkFirstAdmin()

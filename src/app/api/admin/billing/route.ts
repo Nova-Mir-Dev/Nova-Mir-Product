@@ -108,10 +108,7 @@ export async function POST(request: Request) {
     Sentry.captureMessage('Billing POST validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
 
@@ -228,10 +225,7 @@ export async function PATCH(request: Request) {
     Sentry.captureMessage('Billing PATCH validation failed', {
       extra: { issues: parsed.error.issues },
     })
-    return NextResponse.json(
-      { error: 'Validation failed.' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
 

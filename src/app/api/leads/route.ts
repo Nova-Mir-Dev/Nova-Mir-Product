@@ -86,10 +86,7 @@ export async function POST(request: Request) {
       Sentry.captureMessage('Leads validation failed', {
         extra: { issues: parsed.error.issues },
       })
-      return NextResponse.json(
-        { error: 'Validation failed.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
     }
 
     const {

@@ -14,7 +14,7 @@ function AdminLoginContent() {
     <div className={styles.container}>
       <Card className={styles.card}>
         <div className={styles.brand}>
-          <div className={styles.brandName}>Nova Mir</div>
+          <h1 className={styles.brandName}>Nova Mir</h1>
           <div className={styles.brandSubtitle}>Admin Portal</div>
         </div>
         <AdminLoginForm redirect={redirect || undefined} />

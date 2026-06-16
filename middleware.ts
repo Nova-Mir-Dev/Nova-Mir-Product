@@ -4,7 +4,7 @@ import { isAllowedOrigin, CORS_HEADERS, getCorsOriginHeader } from '@/lib/cors'
 import { rateLimit } from '@/lib/rate-limit'
 
 const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
-  ['/api/health', new Set(['GET'])],
+  ['/api/health', new Set(['GET', 'HEAD'])],
   ['/api/leads', new Set(['POST'])],
 ])
 
@@ -133,7 +133,8 @@ export async function middleware(request: NextRequest) {
     const referer = request.headers.get('referer')
     if (
       !origin &&
-      (!process.env.NEXT_PUBLIC_SITE_URL || !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL))
+      (!process.env.NEXT_PUBLIC_SITE_URL ||
+        !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL))
     ) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
@@ -203,7 +204,10 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    if (pathname.startsWith('/clients') && !pathname.startsWith('/clients/auth')) {
+    if (
+      pathname.startsWith('/clients') &&
+      !pathname.startsWith('/clients/auth')
+    ) {
       if (!user) {
         const url = new URL('/clients/auth/login', request.url)
         url.searchParams.set('redirect', pathname)
@@ -248,7 +252,9 @@ export async function middleware(request: NextRequest) {
 
     const publicMethods = PUBLIC_API_ROUTES.get(pathname)
     const isPublic = publicMethods?.has(request.method)
-    const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
+    const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(
+      request.method,
+    )
 
     let limit: number
     if (isMutation) limit = 5

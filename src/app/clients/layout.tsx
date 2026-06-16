@@ -49,10 +49,7 @@ export default function ClientsLayout({
   return (
     <div className={styles.container}>
       <nav className={styles.sidebar}>
-        <Stack
-          spacing="sm"
-          className={styles.sidebarInner}
-        >
+        <Stack spacing="sm" className={styles.sidebarInner}>
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
             Client Portal
           </Text>
@@ -103,7 +100,9 @@ export default function ClientsLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.icon}</span>
+              <span className={styles.bottomTabIcon} aria-hidden="true">
+                {item.icon}
+              </span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </a>
           ) : (
@@ -112,7 +111,9 @@ export default function ClientsLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.icon}</span>
+              <span className={styles.bottomTabIcon} aria-hidden="true">
+                {item.icon}
+              </span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </Link>
           )

@@ -9,7 +9,7 @@ export default function ClientLoginPage() {
     <div className={styles.container}>
       <Card className={styles.card}>
         <div className={styles.brand}>
-          <div className={styles.brandName}>Nova Mir</div>
+          <h1 className={styles.brandName}>Nova Mir</h1>
           <div className={styles.brandSubtitle}>Client Portal</div>
         </div>
         <ClientLoginForm />
