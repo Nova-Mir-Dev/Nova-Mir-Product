@@ -130,14 +130,12 @@ export default function ContactPage() {
           >
             Let&rsquo;s Build Something
           </Text>
-          <Text
-            element={{ size: 'base' }}
-            color="secondary"
-            style={{ textAlign: 'center' }}
-          >
-            Tell me about your project and I&rsquo;ll follow up within 1-2
-            business days.
-          </Text>
+          <div style={{ textAlign: 'center' }}>
+            <Text element={{ size: 'base' }} color="secondary">
+              Tell me about your project and I&rsquo;ll follow up within 1-2
+              business days.
+            </Text>
+          </div>
         </Stack>
 
         <Card>

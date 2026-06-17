@@ -34,13 +34,11 @@ export default function PortfolioPage() {
           </Text>
         </div>
 
-        <Text
-          element={{ size: 'lg' }}
-          color="secondary"
-          style={{ textAlign: 'center' }}
-        >
-          Work we&rsquo;re proud of.
-        </Text>
+        <div style={{ textAlign: 'center' }}>
+          <Text element={{ size: 'lg' }} color="secondary">
+            Work we&rsquo;re proud of.
+          </Text>
+        </div>
 
         <div
           style={{

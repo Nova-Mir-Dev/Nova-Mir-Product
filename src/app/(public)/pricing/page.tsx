@@ -20,14 +20,12 @@ export default function PricingPage() {
           Pricing
         </Text>
 
-        <Text
-          element={{ size: 'lg' }}
-          color="secondary"
-          style={{ textAlign: 'center' }}
-        >
-          Transparent pricing for small businesses. Every project starts here
-          and scales with your needs.
-        </Text>
+        <div style={{ textAlign: 'center' }}>
+          <Text element={{ size: 'lg' }} color="secondary">
+            Transparent pricing for small businesses. Every project starts here
+            and scales with your needs.
+          </Text>
+        </div>
 
         <div
           style={{

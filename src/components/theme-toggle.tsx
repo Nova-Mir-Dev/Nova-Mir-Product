@@ -1,6 +1,5 @@
 'use client'
 
-import { IconButton } from 'azimuth-ui'
 import { SunIcon, MoonIcon, CircleDotIcon } from 'azimuth-ui/icons'
 import { useThemeMode } from 'azimuth-ui'
 
@@ -26,11 +25,24 @@ export function ThemeToggle() {
   }
 
   return (
-    <IconButton
-      variant="secondary"
-      icon={ICONS[mode]}
+    <button
       onClick={toggle}
+      title={LABELS[mode]}
       aria-label={`Current theme: ${LABELS[mode]}. Click to change.`}
-    />
+      style={{
+        background: 'none',
+        border: '1px solid var(--azimuth-color-border, #ccc)',
+        borderRadius: 6,
+        cursor: 'pointer',
+        fontSize: 18,
+        lineHeight: 1,
+        padding: '4px 8px',
+        color: 'var(--azimuth-color-text, inherit)',
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+    >
+      {ICONS[mode]}
+    </button>
   )
 }

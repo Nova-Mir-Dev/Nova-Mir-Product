@@ -270,14 +270,12 @@ export default function IntakePage() {
           >
             Tell Me About Your Project
           </Text>
-          <Text
-            element={{ size: 'base' }}
-            color="secondary"
-            style={{ textAlign: 'center' }}
-          >
-            The more I know, the better I can help. I&rsquo;ll follow up within
-            1-2 business days.
-          </Text>
+          <div style={{ textAlign: 'center' }}>
+            <Text element={{ size: 'base' }} color="secondary">
+              The more I know, the better I can help. I&rsquo;ll follow up within
+              1-2 business days.
+            </Text>
+          </div>
         </Stack>
 
         <Card>
