@@ -34,7 +34,7 @@ export default function PortfolioPage() {
           </Text>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', margin: 'auto' }}>
           <Text element={{ size: 'lg' }} color="secondary">
             Work we&rsquo;re proud of.
           </Text>
@@ -51,7 +51,11 @@ export default function PortfolioPage() {
             const card = (
               <Card
                 key={project.title}
-                style={{ display: 'flex', flexDirection: 'column' }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
               >
                 <Stack spacing="md">
                   <Text element={{ as: 'h2', size: 'h4' }} weight="bold">
@@ -83,7 +87,10 @@ export default function PortfolioPage() {
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                }}
               >
                 {card}
               </a>
@@ -97,7 +104,11 @@ export default function PortfolioPage() {
           <Text
             element={{ size: 'lg' }}
             weight="semibold"
-            style={{ marginBottom: '1rem' }}
+            style={{
+              marginBottom: '1rem',
+              margin: 'auto',
+              paddingBottom: '24px',
+            }}
           >
             Ready to be next?
           </Text>
