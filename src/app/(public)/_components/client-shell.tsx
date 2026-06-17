@@ -32,7 +32,23 @@ function Navbar() {
             if (e.key === 'Escape') setMenuOpen(false)
           }}
         >
-          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link
+            href="/"
+            style={{
+              textDecoration: 'none',
+              color: 'inherit',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <img
+              src="/nova-mir-simple.svg"
+              alt=""
+              width={24}
+              height={24}
+              style={{ display: 'block' }}
+            />
             <Text weight="bold" element={{ size: 'lg' }}>
               {APP_CONFIG.title}
             </Text>
