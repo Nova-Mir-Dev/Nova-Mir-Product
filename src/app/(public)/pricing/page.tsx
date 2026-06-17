@@ -21,7 +21,11 @@ export default function PricingPage() {
         </Text>
 
         <div style={{ textAlign: 'center' }}>
-          <Text element={{ size: 'lg' }} color="secondary">
+          <Text
+            element={{ size: 'lg' }}
+            color="secondary"
+            style={{ textAlign: 'center', display: 'block', width: '100%' }}
+          >
             Transparent pricing for small businesses. Every project starts here
             and scales with your needs.
           </Text>

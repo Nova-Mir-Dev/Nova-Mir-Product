@@ -1,12 +1,12 @@
 'use client'
 
 import { SunIcon, MoonIcon, CircleDotIcon } from 'azimuth-ui/icons'
-import { useThemeMode } from 'azimuth-ui'
+import { useThemeMode, Icon } from 'azimuth-ui'
 
 const ICONS: Record<string, React.ReactNode> = {
-  light: <SunIcon />,
-  dark: <MoonIcon />,
-  system: <CircleDotIcon />,
+  light: <Icon size="sm"><SunIcon /></Icon>,
+  dark: <Icon size="sm"><MoonIcon /></Icon>,
+  system: <Icon size="sm"><CircleDotIcon /></Icon>,
 }
 
 const LABELS: Record<string, string> = {
@@ -34,7 +34,7 @@ export function ThemeToggle() {
         border: '1px solid var(--azimuth-color-border, #ccc)',
         borderRadius: 6,
         cursor: 'pointer',
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 1,
         padding: '4px 8px',
         color: 'var(--azimuth-color-text, inherit)',
