@@ -1,11 +1,19 @@
 'use client'
 
+import { IconButton } from 'azimuth-ui'
+import { SunIcon, MoonIcon, CircleDotIcon } from 'azimuth-ui/icons'
 import { useThemeMode } from 'azimuth-ui'
 
-const ICONS: Record<string, string> = {
-  light: '\u2600\uFE0F',
-  dark: '\uD83C\uDF19',
-  system: '\uD83D\uDDBB\uFE0F',
+const ICONS: Record<string, React.ReactNode> = {
+  light: <SunIcon />,
+  dark: <MoonIcon />,
+  system: <CircleDotIcon />,
+}
+
+const LABELS: Record<string, string> = {
+  light: 'Light mode',
+  dark: 'Dark mode',
+  system: 'System theme',
 }
 
 export function ThemeToggle() {
@@ -18,28 +26,10 @@ export function ThemeToggle() {
   }
 
   return (
-    <button
+    <IconButton
+      icon={ICONS[mode]}
       onClick={toggle}
-      title={
-        mode === 'system'
-          ? 'System theme'
-          : mode === 'light'
-            ? 'Light mode'
-            : 'Dark mode'
-      }
-      aria-label={`Current theme: ${mode}. Click to change.`}
-      style={{
-        background: 'none',
-        border: '1px solid var(--azimuth-color-border, #ccc)',
-        borderRadius: 6,
-        cursor: 'pointer',
-        fontSize: 16,
-        lineHeight: 1,
-        padding: '4px 8px',
-        color: 'var(--azimuth-color-text, inherit)',
-      }}
-    >
-      {ICONS[mode]}
-    </button>
+      aria-label={`Current theme: ${LABELS[mode]}. Click to change.`}
+    />
   )
 }
