@@ -12,7 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#1a1a2e',
     icons: [
       {
-        src: '/favicon.svg',
+        src: '/nova-mir-simple.svg',
         sizes: 'any',
         type: 'image/svg+xml',
       },
