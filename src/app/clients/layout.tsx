@@ -48,6 +48,10 @@ export default function ClientsLayout({
       .finally(() => setLoading(false))
   }, [pathname])
 
+  if (pathname.startsWith('/clients/auth')) {
+    return <>{children}</>
+  }
+
   if (loading) return <Text>Loading...</Text>
   if (!user) return null
 
