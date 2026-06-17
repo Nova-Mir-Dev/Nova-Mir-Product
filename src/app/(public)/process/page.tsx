@@ -26,13 +26,14 @@ const steps = [
 export default function ProcessPage() {
   return (
     <Container
-      style={{ maxWidth: 640, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={640}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <Text
           element={{ as: 'h1', size: 'h1' }}
           weight="bold"
-          style={{ textAlign: 'center' }}
+          align="center"
         >
           How It Works
         </Text>

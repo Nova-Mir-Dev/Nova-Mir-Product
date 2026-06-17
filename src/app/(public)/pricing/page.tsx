@@ -1,5 +1,5 @@
 'use client'
-import { Container, Text, Button, Card, Stack } from 'azimuth-ui'
+import { Container, Text, Button, Card, Stack, Divider } from 'azimuth-ui'
 import {
   PRICING_TIERS,
   getFoundingOfferLabel,
@@ -9,28 +9,20 @@ import {
 export default function PricingPage() {
   return (
     <Container
-      style={{ maxWidth: 960, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={960}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <Text
           element={{ as: 'h1', size: 'h1' }}
           weight="bold"
-          style={{ textAlign: 'center' }}
+          align="center"
         >
           Pricing
         </Text>
 
         <div style={{ textAlign: 'center' }}>
-          <Text
-            element={{ size: 'lg' }}
-            color="secondary"
-            style={{
-              textAlign: 'center',
-              display: 'flex',
-              width: '100%',
-              margin: 'auto',
-            }}
-          >
+          <Text element={{ size: 'lg' }} color="secondary" align="center">
             Transparent pricing for small businesses. Every project starts here
             and scales with your needs.
           </Text>
@@ -90,12 +82,7 @@ export default function PricingPage() {
                   ${tier.startingPrice.toLocaleString()}+
                 </Text>
 
-                <div
-                  style={{
-                    borderTop: '1px solid var(--azimuth-color-border)',
-                    margin: '0.5rem 0',
-                  }}
-                />
+                <Divider margin="sm" />
 
                 <div
                   style={{
@@ -121,8 +108,8 @@ export default function PricingPage() {
         </div>
 
         <Card
+          variant="dashed"
           style={{
-            border: '2px dashed var(--azimuth-color-primary)',
             background:
               'color-mix(in srgb, var(--azimuth-color-primary) 6%, transparent)',
           }}

@@ -11,18 +11,21 @@ export default function Error({
 }) {
   return (
     <Container
-      style={{ maxWidth: 640, margin: '4rem auto', padding: '0 1rem' }}
+      maxWidth={640}
+      style={{ margin: '4rem auto', padding: '0 1rem' }}
     >
-      <Stack spacing="md" style={{ textAlign: 'center' }}>
-        <Text element={{ as: 'h1', size: 'h2' }} weight="bold">
+      <Stack spacing="md">
+        <Text element={{ as: 'h1', size: 'h2' }} weight="bold" align="center">
           Something went wrong
         </Text>
-        <Text element={{ size: 'base' }} color="secondary">
+        <Text element={{ size: 'base' }} color="secondary" align="center">
           An unexpected error occurred. Please try again.
         </Text>
-        <Button variant="primary" onClick={reset}>
-          Try Again
-        </Button>
+        <div style={{ textAlign: 'center' }}>
+          <Button variant="primary" onClick={reset}>
+            Try Again
+          </Button>
+        </div>
       </Stack>
     </Container>
   )

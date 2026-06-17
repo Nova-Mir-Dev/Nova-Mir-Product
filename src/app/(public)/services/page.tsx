@@ -9,13 +9,14 @@ import {
 export default function ServicesPage() {
   return (
     <Container
-      style={{ maxWidth: 960, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={960}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <Text
           element={{ as: 'h1', size: 'h1' }}
           weight="bold"
-          style={{ textAlign: 'center' }}
+          align="center"
         >
           Services &amp; Pricing
         </Text>

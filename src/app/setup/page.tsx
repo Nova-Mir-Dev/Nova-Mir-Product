@@ -309,7 +309,8 @@ export default function SetupPage() {
 
   return (
     <Container
-      style={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={800}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <div>

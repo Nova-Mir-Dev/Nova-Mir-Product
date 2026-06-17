@@ -94,7 +94,8 @@ export default function ContactPage() {
   if (submitted) {
     return (
       <Container
-        style={{ maxWidth: 640, margin: '2rem auto', padding: '0 1rem' }}
+        maxWidth={640}
+        style={{ margin: '2rem auto', padding: '0 1rem' }}
       >
         <Card>
           <Stack spacing="md">
@@ -119,19 +120,20 @@ export default function ContactPage() {
 
   return (
     <Container
-      style={{ maxWidth: 640, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={640}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <Stack spacing="sm">
           <Text
             element={{ as: 'h1', size: 'h1' }}
             weight="bold"
-            style={{ textAlign: 'center' }}
+            align="center"
           >
             Let&rsquo;s Build Something
           </Text>
           <div style={{ textAlign: 'center' }}>
-            <Text element={{ size: 'base' }} color="secondary">
+            <Text element={{ size: 'base' }} color="secondary" align="center">
               Tell me about your project and I&rsquo;ll follow up within 1-2
               business days.
             </Text>

@@ -5,14 +5,15 @@ import { Container, Text, Stack, Button, Card } from 'azimuth-ui'
 export default function AboutPage() {
   return (
     <Container
-      style={{ padding: '3rem 2rem', maxWidth: 640, margin: '0 auto' }}
+      maxWidth={640}
+      style={{ padding: '3rem 2rem', margin: '0 auto' }}
     >
       <Stack spacing="lg">
         <div style={{ paddingTop: '2rem' }}>
           <Text
             element={{ as: 'h1', size: 'h1' }}
             weight="bold"
-            style={{ textAlign: 'center' }}
+            align="center"
           >
             Hi, I&rsquo;m the founder
           </Text>

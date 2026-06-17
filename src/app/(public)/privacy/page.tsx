@@ -42,21 +42,23 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <Container
-      style={{ maxWidth: 640, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={640}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="2xl">
         <div>
           <Text
             element={{ as: 'h1', size: 'h1' }}
             weight="bold"
-            style={{ textAlign: 'center' }}
+            align="center"
           >
             Privacy Policy
           </Text>
           <Text
             element={{ size: 'sm' }}
             color="muted"
-            style={{ marginTop: '0.25rem', textAlign: 'center' }}
+            style={{ marginTop: '0.25rem' }}
+            align="center"
           >
             Last updated: June 2026
           </Text>

@@ -1,12 +1,12 @@
 'use client'
 
 import { SunIcon, MoonIcon, CircleDotIcon } from 'azimuth-ui/icons'
-import { useThemeMode, Icon } from 'azimuth-ui'
+import { useThemeMode } from 'azimuth-ui'
 
 const ICONS: Record<string, React.ReactNode> = {
-  light: <Icon size="sm"><SunIcon /></Icon>,
-  dark: <Icon size="sm"><MoonIcon /></Icon>,
-  system: <Icon size="sm"><CircleDotIcon /></Icon>,
+  light: <SunIcon />,
+  dark: <MoonIcon />,
+  system: <CircleDotIcon />,
 }
 
 const LABELS: Record<string, string> = {

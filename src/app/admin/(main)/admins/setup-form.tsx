@@ -42,7 +42,8 @@ export function AdminSetupForm() {
 
   return (
     <Container
-      style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}
+      maxWidth={480}
+      style={{ margin: '4rem auto', padding: '0 1rem' }}
     >
       <Card>
         <form onSubmit={handleSubmit}>

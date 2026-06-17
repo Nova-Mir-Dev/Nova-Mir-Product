@@ -20,7 +20,8 @@ function Navbar() {
       }}
     >
       <Container
-        style={{ maxWidth: 960, margin: '0 auto', padding: '0.75rem 1rem' }}
+        maxWidth={960}
+        style={{ margin: '0 auto', padding: '0.75rem 1rem' }}
       >
         <nav
           style={{
@@ -179,7 +180,7 @@ function Footer() {
         padding: '2rem 1rem',
       }}
     >
-      <Container style={{ maxWidth: 960, margin: '0 auto' }}>
+      <Container maxWidth={960} style={{ margin: '0 auto' }}>
         <div
           style={{
             display: 'flex',

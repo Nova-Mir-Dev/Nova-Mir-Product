@@ -234,7 +234,8 @@ export default function IntakePage() {
   if (submitted) {
     return (
       <Container
-        style={{ maxWidth: 720, margin: '2rem auto', padding: '0 1rem' }}
+        maxWidth={720}
+        style={{ margin: '2rem auto', padding: '0 1rem' }}
       >
         <Card>
           <Stack spacing="md">
@@ -259,19 +260,20 @@ export default function IntakePage() {
 
   return (
     <Container
-      style={{ maxWidth: 720, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={720}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <Stack spacing="sm">
           <Text
             element={{ as: 'h1', size: 'h1' }}
             weight="bold"
-            style={{ textAlign: 'center' }}
+            align="center"
           >
             Tell Me About Your Project
           </Text>
           <div style={{ textAlign: 'center' }}>
-            <Text element={{ size: 'base' }} color="secondary">
+            <Text element={{ size: 'base' }} color="secondary" align="center">
               The more I know, the better I can help. I&rsquo;ll follow up within
               1-2 business days.
             </Text>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Text, Stack, Button, Card } from 'azimuth-ui'
+import { Container, Text, Stack, Button, Card, Badge, Grid } from 'azimuth-ui'
 
 const projects = [
   {
@@ -21,42 +21,26 @@ const projects = [
 export default function PortfolioPage() {
   return (
     <Container
-      style={{ maxWidth: 960, margin: '2rem auto', padding: '0 1rem' }}
+      maxWidth={960}
+      style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
         <div style={{ paddingTop: '2rem' }}>
-          <Text
-            element={{ as: 'h1', size: 'h1' }}
-            weight="bold"
-            style={{ textAlign: 'center' }}
-          >
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
             Portfolio
           </Text>
         </div>
 
-        <div style={{ textAlign: 'center', margin: 'auto' }}>
-          <Text element={{ size: 'lg' }} color="secondary">
+        <div style={{ margin: 'auto' }}>
+          <Text element={{ size: 'lg' }} color="secondary" align="center">
             Work we&rsquo;re proud of.
           </Text>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem',
-          }}
-        >
+        <Grid cols="auto" minWidth={280} gap="lg">
           {projects.map((project) => {
             const card = (
-              <Card
-                key={project.title}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                }}
-              >
+              <Card key={project.title} fill>
                 <Stack spacing="md">
                   <Text element={{ as: 'h2', size: 'h4' }} weight="bold">
                     {project.title}
@@ -64,20 +48,9 @@ export default function PortfolioPage() {
                   <Text element={{ size: 'sm' }} color="secondary">
                     {project.description}
                   </Text>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: '999px',
-                      background: 'var(--azimuth-color-primary)',
-                      color: '#fff',
-                      alignSelf: 'flex-start',
-                    }}
-                  >
+                  <Badge variant="primary" size="sm">
                     {project.status}
-                  </span>
+                  </Badge>
                 </Stack>
               </Card>
             )
@@ -98,17 +71,13 @@ export default function PortfolioPage() {
               card
             )
           })}
-        </div>
+        </Grid>
 
         <div style={{ textAlign: 'center', paddingTop: '1.5rem' }}>
           <Text
             element={{ size: 'lg' }}
             weight="semibold"
-            style={{
-              marginBottom: '1rem',
-              margin: 'auto',
-              paddingBottom: '24px',
-            }}
+            style={{ margin: 'auto', paddingBottom: '24px' }}
           >
             Ready to be next?
           </Text>
