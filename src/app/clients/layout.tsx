@@ -28,6 +28,11 @@ export default function ClientsLayout({
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (pathname.startsWith('/clients/auth')) {
+      setLoading(false)
+      return
+    }
+
     fetch('/api/auth/me')
       .then((r) => r.json())
       .then((data) => {
@@ -41,7 +46,7 @@ export default function ClientsLayout({
         window.location.href = '/clients/auth/login'
       })
       .finally(() => setLoading(false))
-  }, [])
+  }, [pathname])
 
   if (loading) return <Text>Loading...</Text>
   if (!user) return null
