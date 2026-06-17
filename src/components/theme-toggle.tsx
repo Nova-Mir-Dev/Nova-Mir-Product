@@ -27,6 +27,7 @@ export function ThemeToggle() {
 
   return (
     <IconButton
+      variant="secondary"
       icon={ICONS[mode]}
       onClick={toggle}
       aria-label={`Current theme: ${LABELS[mode]}. Click to change.`}

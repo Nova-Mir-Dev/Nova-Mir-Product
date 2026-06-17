@@ -3,6 +3,16 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
+  async redirects() {
+    return [
+      {
+        source: '/favicon.ico',
+        destination: '/nova-mir-simple.svg',
+        permanent: true,
+      },
+    ]
+  },
+
   headers() {
     return [
       {
