@@ -61,7 +61,7 @@ export default function TermsPage() {
           <Text
             element={{ size: 'sm' }}
             color="muted"
-            style={{ marginTop: '0.25rem' }}
+            style={{ marginTop: '0.25rem', textAlign: 'center' }}
           >
             Last updated: June 2026
           </Text>
