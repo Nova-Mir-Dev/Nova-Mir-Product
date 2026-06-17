@@ -128,7 +128,7 @@ export default function Home() {
                     fullWidth
                     asChild
                   >
-                    <Link href="/services">Learn more about {tier.name}</Link>
+                    <Link href="/services">Learn More</Link>
                   </Button>
                 </div>
               </Card>
