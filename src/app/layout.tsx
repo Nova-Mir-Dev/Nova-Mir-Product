@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Sora, Onest } from 'next/font/google'
 import { ThemeRoot } from '@/components/theme-root'
 import { ThemeScript } from './(public)/_components/theme-script'
+import { CookieConsentBanner } from '@/components/cookie-consent-banner'
 import { JsonLd } from './(public)/json-ld'
 import './globals.css'
 import 'azimuth-ui/styles.css'
@@ -66,11 +67,6 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
         <link rel="apple-touch-icon" href="/nova-mir-simple.svg" />
         <script
-          defer
-          data-domain="novamir.dev"
-          src="https://plausible.io/js/script.js"
-        />
-        <script
           dangerouslySetInnerHTML={{
             __html:
               'navigator.serviceWorker.getRegistrations().then(r=>r.forEach(r=>r.unregister()))',
@@ -82,7 +78,10 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeScript />
-        <ThemeRoot>{children}</ThemeRoot>
+        <ThemeRoot>
+          {children}
+          <CookieConsentBanner />
+        </ThemeRoot>
         <JsonLd />
       </body>
     </html>

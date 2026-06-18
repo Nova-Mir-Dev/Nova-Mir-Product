@@ -10,7 +10,7 @@ This document outlines the security baseline for nova-mir-product.
 - [x] CSP headers configured (recommended for security profile)
 - [x] Environment variables never committed to repository
 - [ ] API keys and secrets rotated regularly
-- [ ] Dependencies scanned via `npm audit` in CI
+- [x] Dependencies scanned via `npm audit` in CI
 - [ ] SQL injection prevention via parameterized queries
 - [ ] CORS configured for allowed origins
 - [x] Rate limiting on public API endpoints
