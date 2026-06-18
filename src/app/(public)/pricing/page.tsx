@@ -79,8 +79,17 @@ export default function PricingPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  ${tier.startingPrice.toLocaleString()}+
+                  ${tier.startingPrice.toLocaleString()}{i === 1 ? '' : '+'}
                 </Text>
+                {i === 1 && (
+                  <Text
+                    element={{ size: 'xs' }}
+                    color="secondary"
+                    style={{ marginTop: '-0.25rem' }}
+                  >
+                    Founding rate — limited to 3 slots
+                  </Text>
+                )}
 
                 <Divider margin="sm" />
 

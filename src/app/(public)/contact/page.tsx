@@ -28,6 +28,20 @@ const BUDGET_OPTIONS = [
   { value: 'not-sure', label: 'Not sure' },
 ]
 
+const TIMELINE_OPTIONS = [
+  { value: 'asap', label: 'ASAP' },
+  { value: 'within-month', label: 'Within a month' },
+  { value: '1-3-months', label: '1 - 3 months' },
+  { value: 'just-exploring', label: 'Just exploring' },
+]
+
+const REFERRAL_OPTIONS = [
+  { value: 'google', label: 'Google search' },
+  { value: 'social-media', label: 'Social media' },
+  { value: 'friend', label: 'Friend or colleague' },
+  { value: 'other', label: 'Other' },
+]
+
 export default function ContactPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -35,6 +49,9 @@ export default function ContactPage() {
   const [phone, setPhone] = useState('')
   const [serviceInterest, setServiceInterest] = useState('')
   const [budgetRange, setBudgetRange] = useState('')
+  const [timeline, setTimeline] = useState('')
+  const [referralSource, setReferralSource] = useState('')
+  const [currentWebsite, setCurrentWebsite] = useState('')
   const [message, setMessage] = useState('')
   const [consent, setConsent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -60,6 +77,9 @@ export default function ContactPage() {
           phone: phone || undefined,
           serviceInterest: serviceInterest || undefined,
           budgetRange: budgetRange || undefined,
+          timeline: timeline || undefined,
+          referralSource: referralSource || undefined,
+          currentWebsite: currentWebsite || undefined,
           message,
           consent,
         }),
@@ -87,6 +107,9 @@ export default function ContactPage() {
     phone,
     serviceInterest,
     budgetRange,
+    timeline,
+    referralSource,
+    currentWebsite,
     message,
     consent,
   ])
@@ -103,7 +126,7 @@ export default function ContactPage() {
               Thanks for reaching out
             </Text>
             <Text element={{ size: 'base' }}>
-              Your message has been received. I typically follow up within 1-2
+              Your message has been received. We typically follow up within 1-2
               business days.
             </Text>
             <Button
@@ -134,7 +157,7 @@ export default function ContactPage() {
           </Text>
           <div style={{ textAlign: 'center' }}>
             <Text element={{ size: 'base' }} color="secondary" align="center">
-              Tell me about your project and I&rsquo;ll follow up within 1-2
+              Tell us about your project and we&rsquo;ll follow up within 1-2
               business days.
             </Text>
           </div>
@@ -180,6 +203,27 @@ export default function ContactPage() {
               placeholder="Select a budget range"
               value={budgetRange}
               onChange={(e) => setBudgetRange(e.target.value)}
+            />
+            <Select
+              label={{ text: 'Timeline' }}
+              options={TIMELINE_OPTIONS}
+              placeholder="When do you want to start?"
+              value={timeline}
+              onChange={(e) => setTimeline(e.target.value)}
+            />
+            <Select
+              label={{ text: 'How did you hear about us?' }}
+              options={REFERRAL_OPTIONS}
+              placeholder="Select one"
+              value={referralSource}
+              onChange={(e) => setReferralSource(e.target.value)}
+            />
+            <Input
+              label={{ text: 'Current Website' }}
+              value={{
+                value: currentWebsite,
+                onChange: (e) => setCurrentWebsite(e.target.value),
+              }}
             />
             <TextArea
               label={{ text: 'Message / Project Description', required: true }}

@@ -45,7 +45,7 @@ export const PRICING_TIERS: PricingTier[] = [
   },
   {
     name: envStr('NEXT_PUBLIC_TIER2_NAME', 'Website + Lead System'),
-    startingPrice: envPrice('NEXT_PUBLIC_TIER2_PRICE', 4000),
+    startingPrice: envPrice('NEXT_PUBLIC_TIER2_PRICE', 2500),
     description: 'Businesses ready to capture and track leads.',
     features: [
       'Everything in Managed Website',

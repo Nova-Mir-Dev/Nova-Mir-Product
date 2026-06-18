@@ -92,6 +92,16 @@ Run `skill { name: "full-audit" }` before releases.
 5. Tests: npm test — all passing
 6. A11y: New UI passes WCAG 2.2 AA check
 
+## Brand & Copy References
+
+This project's brand voice, headline bank, and marketing copy guidelines live in the **Nova Mir Planning** repo:
+
+- **Brand voice principles**: `Nova Mir Planning/tasks/business-knowledge/brand-voice.md` — tone, words to use/avoid, core principles (fresh, simple, collaborative, anti-template)
+- **Hero headline bank**: `Nova Mir Planning/tasks/hero-headlines.md` — all active and retired homepage hero/ tagline pairs for the rotating slot system
+- **Bead prefix**: Issues in this repo use the `Nova-Mir-Product` prefix (not `NMP-`). When creating beads, use descriptive titles, not just the prefix.
+
+For any copy changes on the marketing site, check these files first before writing. The brand voice principles defined there override anything inferred from code.
+
 ## Project Context
 
 Generated for: nova-mir-product

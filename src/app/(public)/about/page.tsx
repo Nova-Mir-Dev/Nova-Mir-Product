@@ -15,33 +15,33 @@ export default function AboutPage() {
             weight="bold"
             align="center"
           >
-            Hi, I&rsquo;m the founder
+            Hi, we&rsquo;re Nova Mir
           </Text>
         </div>
 
         <Text>
-          I started Nova Mir because I saw too many small businesses getting
+          Nova Mir started because we saw too many small businesses getting
           taken for a ride by agencies that charge enterprise prices for a basic
           website. A friend&rsquo;s bakery paid $8,000 for a site that
-          couldn&rsquo;t even take orders. I built them a better one in a
+          couldn&rsquo;t even take orders. We built them a better one in a
           weekend.
         </Text>
 
         <Text>
-          That weekend turned into a business. Nova Mir is me — one person who
-          builds websites and the systems that make them useful. No sales team,
-          no account managers, no overhead. Just direct, transparent work.
+          That weekend turned into a business. We build websites and the systems
+          that make them useful — no sales team, no account managers, no
+          overhead. Just direct, transparent work.
         </Text>
 
         <div style={{ paddingTop: '1rem' }}>
           <Text element={{ as: 'h2', size: 'h3' }} weight="semibold">
-            My philosophy
+            Our philosophy
           </Text>
         </div>
 
         <Text>
-          I don&rsquo;t do templates. I don&rsquo;t upsell you on features you
-          don&rsquo;t need. I figure out what your business actually requires
+          We don&rsquo;t do templates. We don&rsquo;t upsell you on features you
+          don&rsquo;t need. We figure out what your business actually requires
           and build exactly that — nothing less, nothing more. You get a site
           that loads fast, works on every device, and actually helps you get
           customers.
@@ -49,7 +49,7 @@ export default function AboutPage() {
 
         <div style={{ paddingTop: '1rem' }}>
           <Text element={{ as: 'h2', size: 'h3' }} weight="semibold">
-            What I build
+            What we build
           </Text>
         </div>
 
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
         <div style={{ paddingTop: '1rem' }}>
           <Text element={{ as: 'h2', size: 'h3' }} weight="semibold">
-            How I work
+            How we work
           </Text>
         </div>
 
@@ -100,7 +100,7 @@ export default function AboutPage() {
           >
             <Text weight="semibold">1. Understand</Text>
             <Text element={{ size: 'sm' }} color="secondary">
-              I learn your business, audience, and goals before writing a line
+              We learn your business, audience, and goals before writing a line
               of code.
             </Text>
           </div>
@@ -114,7 +114,7 @@ export default function AboutPage() {
           >
             <Text weight="semibold">2. Build</Text>
             <Text element={{ size: 'sm' }} color="secondary">
-              I design and develop your site — no fluff, no scope creep.
+              We design and develop your site — no fluff, no scope creep.
             </Text>
           </div>
           <div
@@ -127,7 +127,7 @@ export default function AboutPage() {
           >
             <Text weight="semibold">3. Launch</Text>
             <Text element={{ size: 'sm' }} color="secondary">
-              I deploy, set up analytics, and hand off with clear documentation.
+              We deploy, set up analytics, and hand off with clear documentation.
             </Text>
           </div>
         </Stack>

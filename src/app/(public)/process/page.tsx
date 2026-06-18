@@ -105,7 +105,7 @@ export default function ProcessPage() {
             weight="semibold"
             style={{ marginBottom: '1rem' }}
           >
-            Ready to get started?
+            Think this could be a fit?
           </Text>
           <Button
             variant="primary"

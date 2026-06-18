@@ -96,6 +96,9 @@ export async function POST(request: Request) {
       phone,
       serviceInterest,
       budgetRange,
+      timeline,
+      referralSource,
+      currentWebsite,
       message,
       consent,
     } = parsed.data
@@ -119,6 +122,9 @@ export async function POST(request: Request) {
         phone: phone || null,
         service_interest: serviceInterest || null,
         budget_range: budgetRange || null,
+        timeline: timeline || null,
+        referral_source: referralSource || null,
+        current_website: currentWebsite || null,
         message,
         consent,
       })
@@ -140,6 +146,9 @@ export async function POST(request: Request) {
       phone: phone || undefined,
       serviceInterest: serviceInterest || undefined,
       budgetRange: budgetRange || undefined,
+      timeline: timeline || undefined,
+      referralSource: referralSource || undefined,
+      currentWebsite: currentWebsite || undefined,
       message,
     }).catch((err) => console.error('Slack notification failed:', err))
 

@@ -72,8 +72,17 @@ export default function ServicesPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  Starting at ${tier.startingPrice.toLocaleString()}
+                  ${tier.startingPrice.toLocaleString()}{i === 1 ? '' : '+'}
                 </Text>
+                {i === 1 && (
+                  <Text
+                    element={{ size: 'xs' }}
+                    color="secondary"
+                    style={{ marginTop: '-0.25rem' }}
+                  >
+                    Founding rate — limited to 3 slots
+                  </Text>
+                )}
 
                 <Text element={{ size: 'sm' }} color="secondary">
                   For: {tier.description}

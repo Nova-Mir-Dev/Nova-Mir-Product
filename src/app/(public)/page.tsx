@@ -9,17 +9,17 @@ function formatPrice(price: number): string {
 
 const TIER_DATA = PRICING_TIERS.map((tier, i) => ({
   name: tier.name,
-  priceRange: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : ''}`,
+  priceRange: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : i === 1 ? '' : '+'}`,
   popular: i === 1,
   features: tier.features,
 }))
 
 const PRICING_SUMMARY = PRICING_TIERS.map((tier, i) => ({
   name: tier.name,
-  range: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : ''}`,
+  range: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : i === 1 ? '' : '+'}`,
   oneLiner: [
     'Custom site that builds credibility.',
-    'Site + automated lead capture.',
+    'Site + lead capture + automated follow-up.',
     'Full system with booking and dashboards.',
   ][i],
   popular: i === 1,
@@ -61,13 +61,11 @@ export default function Home() {
         <Container size="lg">
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
-              Your website should be bringing in customers — not collecting
-              dust.
+              A new kind of website for your business.
             </h1>
             <p className={styles.heroSubtitle}>
-              Whether you run a law firm, a gym, or a plumbing business — we
-              build websites and systems that bring in customers and save you
-              time.
+              No templates. No runaround. Just a site that actually works for
+              you.
             </p>
             <div className={styles.heroActions}>
               <Button variant="primary" size="lg" asChild>
@@ -311,9 +309,9 @@ export default function Home() {
       <section className={styles.ctaSection}>
         <Container size="lg">
           <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Ready to get started?</h2>
+            <h2 className={styles.ctaTitle}>Think this could be a fit?</h2>
             <p className={styles.ctaSubtitle}>
-              Tell me about your project and I&apos;ll follow up within 1–2
+              Tell us about your project and we&apos;ll follow up within 1–2
               business days.
             </p>
             <Button variant="primary" size="lg" asChild>

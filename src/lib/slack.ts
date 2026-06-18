@@ -21,6 +21,9 @@ export async function notifyNewLead(lead: {
   phone?: string
   serviceInterest?: string
   budgetRange?: string
+  timeline?: string
+  referralSource?: string
+  currentWebsite?: string
   message: string
 }) {
   if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_SIGNING_SECRET) {
@@ -49,6 +52,15 @@ export async function notifyNewLead(lead: {
             text: `*Service:* ${lead.serviceInterest || 'N/A'}`,
           },
           { type: 'mrkdwn', text: `*Budget:* ${lead.budgetRange || 'N/A'}` },
+          { type: 'mrkdwn', text: `*Timeline:* ${lead.timeline || 'N/A'}` },
+          {
+            type: 'mrkdwn',
+            text: `*Referral:* ${lead.referralSource || 'N/A'}`,
+          },
+          {
+            type: 'mrkdwn',
+            text: `*Website:* ${lead.currentWebsite || 'N/A'}`,
+          },
         ],
       },
       {
