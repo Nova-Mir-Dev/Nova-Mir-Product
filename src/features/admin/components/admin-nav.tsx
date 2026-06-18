@@ -8,6 +8,7 @@ import styles from './admin-nav.module.css'
 interface NavItem {
   label: string
   path: string
+  items?: NavItem[]
 }
 
 const navItems: NavItem[] = [
@@ -21,7 +22,12 @@ const navItems: NavItem[] = [
   { label: 'Bootstrap', path: '/admin/bootstrap' },
   { label: 'Admins', path: '/admin/admins' },
   { label: 'Audit Log', path: '/admin/audit' },
+  { label: 'DSAR', path: '/admin/compliance/dsar' },
   { label: 'Settings', path: '/admin/settings' },
+  { label: 'Content', path: '/admin/content', items: [
+    { label: 'Portfolio', path: '/admin/content/portfolio' },
+    { label: 'Hero Headlines', path: '/admin/content/hero-headlines' },
+  ]},
 ]
 
 export default function AdminNav() {
@@ -41,13 +47,32 @@ export default function AdminNav() {
           <ul className={styles.navList}>
             {navItems.map((item) => (
               <li key={item.path} className={styles.navItem}>
-                <Link
-                  href={item.path}
-                  className={styles.link}
-                  aria-current={pathname === item.path ? 'page' : undefined}
-                >
-                  <Text>{item.label}</Text>
-                </Link>
+                {item.items ? (
+                  <>
+                    <Text className={styles.navSectionLabel}>{item.label}</Text>
+                    <ul className={styles.navSublist}>
+                      {item.items.map((sub) => (
+                        <li key={sub.path} className={styles.navSubItem}>
+                          <Link
+                            href={sub.path}
+                            className={styles.link}
+                            aria-current={pathname === sub.path ? 'page' : undefined}
+                          >
+                            <Text>{sub.label}</Text>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <Link
+                    href={item.path}
+                    className={styles.link}
+                    aria-current={pathname === item.path ? 'page' : undefined}
+                  >
+                    <Text>{item.label}</Text>
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

@@ -83,7 +83,25 @@ Apply the 14-rule quality contract from `~/.config/opencode/agent-skills/referen
 
 Run `skill { name: "full-audit" }` before releases.
 
-### Quality Gates (Must Pass Before Merge)
+### Content Architecture Rule
+
+Content that is frequently updated or grows over time MUST live in database tables with admin CRUD, not hardcoded in source files. This includes:
+
+- Pricing tiers
+- Portfolio projects
+- Public navigation links
+- Hero headlines / taglines
+- Testimonials
+- Process steps
+
+Content that is SEO-critical, architectural, or changes < 1x/year stays in code:
+- Page metadata / OG descriptions
+- Admin navigation links
+- Legal pages (privacy, terms)
+
+When building a new content-driven feature, create typed DB tables (not a generic JSONB table) with: sort_order, is_published, content_history trigger, RLS policies. See the full-audit skill's content dimension for automated verification.
+
+## Quality Gates (Must Pass Before Merge)
 
 1. TypeScript: npm run typecheck — zero errors
 2. Build: npm run build — must succeed

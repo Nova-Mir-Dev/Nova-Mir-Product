@@ -34,11 +34,34 @@ export async function POST(request: Request) {
     )
   }
 
-  // Step 1: Delete all user data from application tables (uses anon client with RLS)
-  await supabase.from('sessions').delete().eq('user_id', user.id)
-  // Add other tables as needed
+  const tables = [
+    'sessions',
+    'projects',
+    'appointments',
+    'payments',
+    'documents',
+    'api_keys',
+    'support_tickets',
+    'activity_logs',
+    'portfolio_invoices',
+  ]
+  for (const table of tables) {
+    await supabase.from(table).delete().eq('user_id', user.id)
+  }
 
-  // Step 2: Delete the auth user (requires service_role client)
+  await supabase.from('signatures').delete().eq('signer_id', user.id)
+  await supabase.from('users').delete().eq('id', user.id)
+  await supabase.from('portfolio_clients').delete().eq('email', user.email)
+
+  const redactedId = crypto.randomUUID()
+  await supabase
+    .from('leads')
+    .update({
+      name: `redacted-${redactedId}`,
+      email: `redacted-${redactedId}@redacted.local`,
+    })
+    .eq('email', user.email)
+
   const admin = createServiceClient()
   const { error: deleteError } = await admin.auth.admin.deleteUser(user.id)
   if (deleteError)

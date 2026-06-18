@@ -309,3 +309,194 @@ CREATE POLICY "line_items_admin_only" ON line_items FOR ALL
 ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS phone TEXT;
 ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS company TEXT;
 ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS invite_sent_at TIMESTAMPTZ;
+
+-- =============================================================================
+-- Content history (audit trail for all managed content)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS content_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  content_table TEXT NOT NULL,
+  content_id UUID NOT NULL,
+  old_data JSONB,
+  changed_by UUID REFERENCES users(id),
+  changed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_content_history_table ON content_history(content_table, content_id);
+CREATE INDEX idx_content_history_time ON content_history(changed_at DESC);
+
+ALTER TABLE content_history ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "content_history_admin_only" ON content_history FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Pricing tiers (managed content)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS pricing_tiers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  starting_price INTEGER NOT NULL,
+  description TEXT,
+  features JSONB NOT NULL DEFAULT '[]'::jsonb,
+  founding_note TEXT,
+  is_featured BOOLEAN DEFAULT false,
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_pricing_tiers_published ON pricing_tiers(is_published, sort_order);
+CREATE INDEX idx_pricing_tiers_created ON pricing_tiers(created_at DESC);
+
+ALTER TABLE pricing_tiers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "pricing_tiers_anon_select" ON pricing_tiers FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "pricing_tiers_admin_all" ON pricing_tiers FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Portfolio projects (managed content)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS portfolio_projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  href TEXT,
+  thumbnail_url TEXT,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_portfolio_projects_published ON portfolio_projects(is_published, sort_order);
+CREATE INDEX idx_portfolio_projects_created ON portfolio_projects(created_at DESC);
+
+ALTER TABLE portfolio_projects ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "portfolio_projects_anon_select" ON portfolio_projects FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "portfolio_projects_admin_all" ON portfolio_projects FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Public navigation links (managed content)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS public_nav_links (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  label TEXT NOT NULL,
+  path TEXT NOT NULL,
+  parent_id UUID REFERENCES public_nav_links(id),
+  section TEXT NOT NULL DEFAULT 'main' CHECK (section IN ('main', 'footer', 'client')),
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_public_nav_links_section ON public_nav_links(section, sort_order);
+
+ALTER TABLE public_nav_links ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "public_nav_links_anon_select" ON public_nav_links FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "public_nav_links_admin_all" ON public_nav_links FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Hero headlines (managed content, rotating)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS hero_headlines (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  headline TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
+  cta_label TEXT NOT NULL,
+  cta_href TEXT NOT NULL DEFAULT '/contact',
+  industry TEXT,
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_hero_headlines_published ON hero_headlines(is_published, sort_order);
+
+ALTER TABLE hero_headlines ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "hero_headlines_anon_select" ON hero_headlines FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "hero_headlines_admin_all" ON hero_headlines FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Testimonials (deferred -- schema only, no active data yet)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS testimonials (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  quote TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  author_business TEXT,
+  author_avatar_url TEXT,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_testimonials_published ON testimonials(is_published, sort_order);
+
+ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "testimonials_anon_select" ON testimonials FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "testimonials_admin_all" ON testimonials FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- Process steps (deferred -- schema only)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS process_steps (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  step_number INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  page TEXT NOT NULL DEFAULT 'all',
+  sort_order INTEGER DEFAULT 0,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_process_steps_page ON process_steps(page, sort_order);
+
+ALTER TABLE process_steps ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "process_steps_anon_select" ON process_steps FOR SELECT
+  TO anon
+  USING (is_published = true);
+CREATE POLICY "process_steps_admin_all" ON process_steps FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- =============================================================================
+-- CCPA opt-outs (Do Not Sell / Share)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS ccpa_opt_outs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL,
+  opted_out_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ip_address TEXT
+);
+
+CREATE INDEX idx_ccpa_opt_outs_email ON ccpa_opt_outs(email);
+
+ALTER TABLE ccpa_opt_outs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "ccpa_opt_outs_admin_only" ON ccpa_opt_outs FOR ALL
+  USING (auth.role() = 'service_role');
+CREATE POLICY "ccpa_opt_outs_anon_insert" ON ccpa_opt_outs FOR INSERT
+  TO anon
+  WITH CHECK (true);

@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "build": "next build",
+    "audit:content": "npx tsx tasks/scripts/content-audit.ts",
+    "check:assets": "npx tsx tasks/scripts/check-public-assets.ts",
     "dev": "next dev --port 3000",
     "format": "prettier --write .",
     "lint": "eslint .",

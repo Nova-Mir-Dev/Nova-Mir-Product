@@ -1,0 +1,191 @@
+-- =============================================================================
+-- Seed Content
+--
+-- Run via: psql -f supabase/seed-content.sql
+-- Or via Supabase dashboard SQL editor.
+--
+-- Idempotent: DELETE first, then INSERT. Safe to run multiple times.
+-- =============================================================================
+
+-- =============================================================================
+-- Pricing Tiers
+-- =============================================================================
+
+DELETE FROM pricing_tiers;
+
+INSERT INTO pricing_tiers (name, slug, starting_price, description, features, founding_note, is_featured, sort_order, is_published)
+VALUES
+  (
+    'Managed Website',
+    'managed-website',
+    150000,
+    'A clean, fast website that establishes your online presence.',
+    '["Custom design (no templates)","Mobile-first responsive layout","Performance optimization","Contact form","Basic SEO setup","Hosting setup & configuration","1 round of revisions","Ongoing support available"]'::jsonb,
+    NULL,
+    false,
+    1,
+    true
+  ),
+  (
+    'Website + Lead System',
+    'website-lead-system',
+    250000,
+    'Everything in Managed Website, plus lead capture and automated follow-up.',
+    '["Everything in Managed Website","Lead capture forms & landing pages","Automated email follow-up sequences","CRM integration","Analytics dashboard","Lead scoring & qualification","A/B testing for conversions","Monthly performance reports"]'::jsonb,
+    'Founding rate — limited to 3 slots',
+    true,
+    2,
+    true
+  ),
+  (
+    'Website + Operations System',
+    'website-ops-system',
+    500000,
+    'Everything in Website + Lead System, plus booking, payments, and dashboards.',
+    '["Everything in Website + Lead System","Booking & scheduling system","Payment processing integration","Client portal & dashboards","Workflow automation","Custom integrations (API)","Priority support","Quarterly strategy sessions"]'::jsonb,
+    NULL,
+    false,
+    3,
+    true
+  );
+
+-- =============================================================================
+-- Portfolio Projects
+-- =============================================================================
+
+DELETE FROM portfolio_projects;
+
+INSERT INTO portfolio_projects (title, slug, description, href, thumbnail_url, status, sort_order, is_published)
+VALUES
+  (
+    'Nova Mir Website',
+    'nova-mir-website',
+    'Studio site for a web development business',
+    '/portfolio',
+    NULL,
+    'published',
+    1,
+    true
+  ),
+  (
+    'jcrose.dev',
+    'jcrose-dev',
+    'Personal site',
+    'https://jcrose.dev',
+    NULL,
+    'published',
+    2,
+    true
+  );
+
+-- =============================================================================
+-- Public Navigation Links
+-- =============================================================================
+
+DELETE FROM public_nav_links;
+
+INSERT INTO public_nav_links (label, path, section, sort_order, is_published)
+VALUES
+  ('Home',      '/',         'main',   1, true),
+  ('Services',  '/services', 'main',   2, true),
+  ('Process',   '/process',  'main',   3, true),
+  ('Portfolio', '/portfolio','main',   4, true),
+  ('Pricing',   '/pricing',  'main',   5, true),
+  ('Contact',   '/contact',  'main',   6, true),
+  ('Contact',         '/contact', 'footer', 1, true),
+  ('Privacy Policy',  '/privacy', 'footer', 2, true),
+  ('Terms of Service','/terms',   'footer', 3, true);
+
+-- =============================================================================
+-- Hero Headlines
+-- =============================================================================
+
+DELETE FROM hero_headlines;
+
+-- Active headline (published, sort_order 1)
+INSERT INTO hero_headlines (headline, subtitle, cta_label, cta_href, industry, sort_order, is_published)
+VALUES (
+  'A new kind of website for your business.',
+  'No templates. No runaround. Just a site that actually works for you.',
+  'Get Started',
+  '/contact',
+  NULL,
+  1,
+  true
+);
+
+-- Industry variants (unpublished, sort_order 2-9)
+INSERT INTO hero_headlines (headline, subtitle, cta_label, cta_href, industry, sort_order, is_published)
+VALUES
+  (
+    'Your professional services firm deserves a website that brings in clients.',
+    'Not a template. Not a brochure. A lead-generating machine for your firm.',
+    'Get Started',
+    '/contact',
+    'professional-services',
+    2,
+    false
+  ),
+  (
+    'Help more patients find you — not a website that just sits there.',
+    'A clean, trustworthy site that makes it easy for new clients to book.',
+    'Get Started',
+    '/contact',
+    'health-wellness',
+    3,
+    false
+  ),
+  (
+    'Your local service business should be easy to find and impossible to forget.',
+    'Stand out from competitors with a site that actually brings in leads.',
+    'Get Started',
+    '/contact',
+    'local-service',
+    4,
+    false
+  ),
+  (
+    'Your hospitality brand needs a website as warm as your welcome.',
+    'Showcase your space, streamline bookings, and keep guests coming back.',
+    'Get Started',
+    '/contact',
+    'hospitality',
+    5,
+    false
+  ),
+  (
+    'Your creative portfolio should open doors — not sit in a tab.',
+    'Show your best work in a site that loads fast, looks sharp, and gets you hired.',
+    'Get Started',
+    '/contact',
+    'creative',
+    6,
+    false
+  ),
+  (
+    'A small business website that actually works for small business owners.',
+    'No templates. No runaround. Just a site that brings in customers while you run your business.',
+    'Get Started',
+    '/contact',
+    'general-small-business',
+    7,
+    false
+  ),
+  (
+    'Your home service business deserves more than a Facebook page.',
+    'Get found, get called, get booked — with a website built for home services.',
+    'Get Started',
+    '/contact',
+    'home-services',
+    8,
+    false
+  ),
+  (
+    'A website that grows as fast as your ambition.',
+    'Start lean, scale up. From a simple site to a full operations system.',
+    'Get Started',
+    '/contact',
+    'general-small-business-aspiration',
+    9,
+    false
+  );

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
 import { PRICING_TIERS } from '@/lib/pricing'
+import { HeroContent } from './_components/hero-headlines'
 import styles from './landing.module.css'
 
 function formatPrice(price: number): string {
@@ -60,21 +61,16 @@ export default function Home() {
       <section className={styles.hero}>
         <Container size="lg">
           <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              A new kind of website for your business.
-            </h1>
-            <p className={styles.heroSubtitle}>
-              No templates. No runaround. Just a site that actually works for
-              you.
-            </p>
-            <div className={styles.heroActions}>
-              <Button variant="primary" size="lg" asChild>
-                <Link href="/contact">Get Started</Link>
-              </Button>
-              <Button variant="secondary" size="lg" asChild>
-                <Link href="/process">See How It Works</Link>
-              </Button>
-            </div>
+            <HeroContent
+              fallback={{
+                id: 'fallback',
+                headline: 'A new kind of website for your business.',
+                subtitle:
+                  'No templates. No runaround. Just a site that actually works for you.',
+                cta_label: 'Get Started',
+                cta_href: '/contact',
+              }}
+            />
           </div>
         </Container>
       </section>
