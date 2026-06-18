@@ -24,7 +24,7 @@
     "@supabase/supabase-js": "^2.108.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
-    "azimuth-ui": "file:../../personal/azimuth-ui",
+    "azimuth-ui": "^0.8.0",
     "next": "^16.2.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
