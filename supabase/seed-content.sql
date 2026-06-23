@@ -38,7 +38,7 @@ VALUES
     true
   ),
   (
-    'Website + Operations System',
+    'Full Growth System',
     'website-ops-system',
     500000,
     'Everything in Website + Lead System, plus booking, payments, and dashboards.',
