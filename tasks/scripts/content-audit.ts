@@ -23,7 +23,9 @@ function findFiles(dir: string, pattern: RegExp, results: string[] = []): string
         results.push(rel)
       }
     }
-  } catch {}
+  } catch {
+    // Directory may not exist or be readable — skip silently
+  }
   return results
 }
 

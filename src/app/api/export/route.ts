@@ -43,8 +43,21 @@ export async function GET(request: Request) {
   }
   const { format, entity } = parsed.data
 
-  // TODO: Replace with actual data fetching
-  const data: Array<Record<string, unknown>> = [{ id: 'example' }]
+  const allowedEntities = ['users', 'leads', 'clients', 'projects', 'invoices'] as const
+  if (!allowedEntities.includes(entity as typeof allowedEntities[number])) {
+    return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 400 })
+  }
+
+  const { data: raw, error: fetchError } = await supabase
+    .from(entity)
+    .select('*')
+    .limit(10000)
+
+  if (fetchError) {
+    return NextResponse.json({ error: fetchError.message }, { status: 500 })
+  }
+
+  const data = raw as Array<Record<string, unknown>>
 
   if (format === 'csv') {
     const headers = Object.keys(data[0] || {}).join(',')

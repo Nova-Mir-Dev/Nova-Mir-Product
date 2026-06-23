@@ -23,8 +23,8 @@ export function getFoundingOfferLabel(): string {
 }
 
 export function getMaintenanceRetainer(): string {
-  const min = envPrice('NEXT_PUBLIC_MAINTENANCE_MIN', 100)
-  const max = envPrice('NEXT_PUBLIC_MAINTENANCE_MAX', 200)
+  const min = envPrice('NEXT_PUBLIC_MAINTENANCE_MIN', 500)
+  const max = envPrice('NEXT_PUBLIC_MAINTENANCE_MAX', 1000)
   return `$${min}–$${max}/month`
 }
 
