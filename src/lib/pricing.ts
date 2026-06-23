@@ -18,20 +18,20 @@ function envStr(key: string, fallback: string): string {
 
 export function getFoundingOfferLabel(): string {
   const count = envStr('NEXT_PUBLIC_FOUNDING_OFFER_COUNT', '3')
-  const price = envPrice('NEXT_PUBLIC_FOUNDING_OFFER_PRICE', 2500)
+  const price = envPrice('NEXT_PUBLIC_FOUNDING_OFFER_PRICE', 2000)
   return `First ${count} clients at a flat $${price.toLocaleString()} rate`
 }
 
 export function getMaintenanceRetainer(): string {
-  const min = envPrice('NEXT_PUBLIC_MAINTENANCE_MIN', 500)
-  const max = envPrice('NEXT_PUBLIC_MAINTENANCE_MAX', 1000)
+  const min = envPrice('NEXT_PUBLIC_MAINTENANCE_MIN', 300)
+  const max = envPrice('NEXT_PUBLIC_MAINTENANCE_MAX', 500)
   return `$${min}–$${max}/month`
 }
 
 export const PRICING_TIERS: PricingTier[] = [
   {
     name: envStr('NEXT_PUBLIC_TIER1_NAME', 'Managed Website'),
-    startingPrice: envPrice('NEXT_PUBLIC_TIER1_PRICE', 2500),
+    startingPrice: envPrice('NEXT_PUBLIC_TIER1_PRICE', 1800),
     description: 'Small businesses that need a credible online presence.',
     features: [
       'Custom-designed site',
@@ -45,7 +45,7 @@ export const PRICING_TIERS: PricingTier[] = [
   },
   {
     name: envStr('NEXT_PUBLIC_TIER2_NAME', 'Website + Lead System'),
-    startingPrice: envPrice('NEXT_PUBLIC_TIER2_PRICE', 2500),
+    startingPrice: envPrice('NEXT_PUBLIC_TIER2_PRICE', 3000),
     description: 'Businesses ready to capture and track leads.',
     features: [
       'Everything in Managed Website',
@@ -58,8 +58,8 @@ export const PRICING_TIERS: PricingTier[] = [
     href: '/services',
   },
   {
-    name: envStr('NEXT_PUBLIC_TIER3_NAME', 'Full Growth System'),
-    startingPrice: envPrice('NEXT_PUBLIC_TIER3_PRICE', 7000),
+    name: envStr('NEXT_PUBLIC_TIER3_NAME', 'Website + Operations'),
+    startingPrice: envPrice('NEXT_PUBLIC_TIER3_PRICE', 5000),
     description: 'Businesses needing booking, payments, and dashboards.',
     features: [
       'Everything in Website + Lead System',

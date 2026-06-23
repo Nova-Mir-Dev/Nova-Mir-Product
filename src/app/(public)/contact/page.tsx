@@ -21,7 +21,8 @@ const SERVICE_OPTIONS = [
 ]
 
 const BUDGET_OPTIONS = [
-  { value: '2500-5000', label: '$2,500 - $5,000' },
+  { value: '1500-3000', label: '$1,500 - $3,000' },
+  { value: '3000-5000', label: '$3,000 - $5,000' },
   { value: '5000-10000', label: '$5,000 - $10,000' },
   { value: '10000-plus', label: '$10,000+' },
   { value: 'not-sure', label: 'Not sure' },

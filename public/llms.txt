@@ -7,8 +7,8 @@ Nova Mir builds websites and digital tools that help small businesses get found,
 ## Pages
 
 - [Home](https://www.novamir.dev/): Overview of services and approach
-- [Services](https://www.novamir.dev/services): Managed Website ($1,500+), Website + Lead System ($3,000+), Website + Operations System ($5,000+)
-- [Pricing](https://www.novamir.dev/pricing): Standard pricing and founding client program (3 slots at $1,500 flat)
+- [Services](https://www.novamir.dev/services): Managed Website ($1,800+), Website + Lead System ($3,000+), Website + Operations ($5,000+)
+- [Pricing](https://www.novamir.dev/pricing): Standard pricing and founding client program (3 slots at $2,000 flat)
 - [Portfolio](https://www.novamir.dev/portfolio): Past work
 - [Process](https://www.novamir.dev/process): How projects work — Discovery, Build, Launch
 - [About](https://www.novamir.dev/about): Founder story
