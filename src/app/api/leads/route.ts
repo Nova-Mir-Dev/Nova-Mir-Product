@@ -103,11 +103,6 @@ export async function POST(request: Request) {
       consent,
     } = parsed.data
 
-    // Uses anon (browser) client so the insert respects RLS.
-    // Requires a Supabase RLS policy allowing anon inserts on `leads`:
-    //   CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
-    //     TO anon WITH CHECK (true);
-    // See schema.sql for the existing admin-only policy.
     const supabase = createAnonClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
