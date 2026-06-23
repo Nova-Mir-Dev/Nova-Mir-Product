@@ -2,10 +2,8 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 
 const EXPECTED_FILES = [
-  '/nova-mir-simple.svg',
+  '/favicon.svg', '/logo-icon.svg', '/nova-mir-color.svg', '/nova-mir-solid.svg',
   '/og-image.svg',
-  '/favicon.ico',
-  '/manifest.webmanifest',
 ]
 
 function main() {

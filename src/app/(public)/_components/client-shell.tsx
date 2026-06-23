@@ -44,7 +44,7 @@ function Navbar() {
             }}
           >
             <img
-              src="/nova-mir-simple.svg"
+              src="/logo-icon.svg"
               alt=""
               width={24}
               height={24}

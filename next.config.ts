@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/favicon.ico',
-        destination: '/nova-mir-simple.svg',
+        destination: '/favicon.svg',
         permanent: true,
       },
     ]

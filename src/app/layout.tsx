@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description:
     'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
   icons: [
-    { rel: 'icon', type: 'image/svg+xml', url: '/nova-mir-simple.svg' },
+    { rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' },
   ],
   openGraph: {
     title: 'Nova Mir — Web Development for Small Businesses',
@@ -65,7 +65,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
-        <link rel="apple-touch-icon" href="/nova-mir-simple.svg" />
+        <link rel="apple-touch-icon" href="/logo-icon.svg" />
         <script
           dangerouslySetInnerHTML={{
             __html:
