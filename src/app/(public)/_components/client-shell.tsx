@@ -46,8 +46,8 @@ function Navbar() {
             <img
               src="/logo-icon.svg"
               alt=""
-              width={24}
-              height={24}
+              width={32}
+              height={32}
               style={{ display: 'block' }}
             />
             <Text weight="bold" element={{ size: 'lg' }}>
