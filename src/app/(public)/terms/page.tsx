@@ -36,7 +36,7 @@ const sections = [
   },
   {
     title: 'Governing Law',
-    body: 'These terms are governed by the laws of the Province of Ontario, Canada. Any disputes shall be resolved in the courts of Ontario.',
+    body: 'These terms are governed by the laws of the State of Oregon, United States. Any disputes shall be resolved in the courts of Oregon.',
   },
   {
     title: 'Contact Information',
@@ -86,21 +86,6 @@ export default function TermsPage() {
           ))}
         </Stack>
 
-        <div
-          style={{
-            paddingTop: '1rem',
-            borderTop: '1px solid var(--azimuth-color-border)',
-          }}
-        >
-          <Text
-            element={{ size: 'xs' }}
-            color="muted"
-            style={{ fontStyle: 'italic' }}
-          >
-            These terms are a starting point and may need to be reviewed by a
-            legal professional for your specific needs.
-          </Text>
-        </div>
       </Stack>
     </Container>
   )

@@ -36,7 +36,7 @@ describe('NAV_PAGES', () => {
 describe('APP_CONFIG', () => {
   it('has required fields', () => {
     expect(APP_CONFIG.title).toBe('Nova Mir')
-    expect(APP_CONFIG.email).toBe('hello@novamir.com')
+    expect(APP_CONFIG.email).toBe('hello@novamir.dev')
   })
 
   it('has all expected keys', () => {

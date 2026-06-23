@@ -81,21 +81,6 @@ export default function PrivacyPage() {
           ))}
         </Stack>
 
-        <div
-          style={{
-            paddingTop: '1rem',
-            borderTop: '1px solid var(--azimuth-color-border)',
-          }}
-        >
-          <Text
-            element={{ size: 'xs' }}
-            color="muted"
-            style={{ fontStyle: 'italic' }}
-          >
-            This privacy policy is a starting point and may need to be reviewed
-            by a legal professional for your specific needs.
-          </Text>
-        </div>
       </Stack>
     </Container>
   )

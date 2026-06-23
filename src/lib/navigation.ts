@@ -5,7 +5,7 @@ export interface NavPage {
 
 export const APP_CONFIG = {
   title: 'Nova Mir',
-  email: 'hello@novamir.com',
+  email: 'hello@novamir.dev',
   description: 'Web development studio building sites that bring in customers.',
 }
 
