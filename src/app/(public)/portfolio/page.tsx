@@ -9,13 +9,6 @@ const projects = [
     status: 'Live' as const,
     href: '/' as const,
   },
-  {
-    title: 'jcrose.dev',
-    description:
-      'Founder personal project — Next.js, dark mode, blog, project showcase',
-    status: 'Live' as const,
-    href: 'https://jcrose.dev' as const,
-  },
 ]
 
 export default function PortfolioPage() {

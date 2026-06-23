@@ -16,15 +16,14 @@ import {
 const SERVICE_OPTIONS = [
   { value: 'managed-website', label: 'Managed Website' },
   { value: 'website-lead', label: 'Website + Lead System' },
-  { value: 'website-ops', label: 'Website + Operations System' },
+  { value: 'full-growth', label: 'Full Growth System' },
   { value: 'not-sure', label: 'Not sure yet' },
 ]
 
 const BUDGET_OPTIONS = [
-  { value: 'under-1500', label: 'Under $1,500' },
-  { value: '1500-3000', label: '$1,500 - $3,000' },
-  { value: '3000-5000', label: '$3,000 - $5,000' },
-  { value: '5000-plus', label: '$5,000+' },
+  { value: '2500-5000', label: '$2,500 - $5,000' },
+  { value: '5000-10000', label: '$5,000 - $10,000' },
+  { value: '10000-plus', label: '$10,000+' },
   { value: 'not-sure', label: 'Not sure' },
 ]
 
@@ -58,7 +57,8 @@ export default function ContactPage() {
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!consent) {
       setError('You must consent to data storage before submitting.')
       return
@@ -163,6 +163,7 @@ export default function ContactPage() {
           </div>
         </Stack>
 
+        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <Card>
           <Stack spacing="md">
             <Input
@@ -244,16 +245,18 @@ export default function ContactPage() {
               <Text
                 element={{ size: 'sm' }}
                 style={{ color: 'var(--azimuth-color-danger)' }}
+                role="alert"
               >
                 {error}
               </Text>
             )}
 
-            <Button variant="primary" onClick={handleSubmit} disabled={loading}>
+            <Button variant="primary" type="submit" disabled={loading}>
               {loading ? 'Sending...' : 'Send Message'}
             </Button>
           </Stack>
         </Card>
+        </form>
       </Stack>
     </Container>
   )

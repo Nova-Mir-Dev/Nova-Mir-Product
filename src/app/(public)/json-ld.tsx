@@ -9,7 +9,7 @@ export function JsonLd() {
     email: 'hello@novamir.dev',
     description:
       'Web development for small businesses. Custom websites, lead systems, and operational tools.',
-    foundingDate: '2025',
+    foundingDate: '2026',
   }
 
   const website = {
@@ -18,11 +18,6 @@ export function JsonLd() {
     name: 'Nova Mir',
     url: 'https://novamir.dev',
     description: 'Web development for small businesses.',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://novamir.dev/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
   }
 
   const service = {
@@ -35,7 +30,7 @@ export function JsonLd() {
     },
     description:
       'Custom website design, lead systems, booking, payments, and operational tools for small businesses.',
-    areaServed: ['CA', 'US', 'UK', 'EU', 'AU', 'MX'],
+    areaServed: ['US', 'MX'],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Web Development Packages',

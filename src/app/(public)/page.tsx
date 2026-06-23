@@ -182,7 +182,9 @@ export default function Home() {
               >
                 <Card className={styles.portfolioCard}>
                   <div className={styles.portfolioThumb}>
-                    Project Screenshot
+                    <Text color="muted" element={{ size: 'sm' }}>
+                      Nova Mir
+                    </Text>
                   </div>
                   <Text weight="semibold">{project.title}</Text>
                   {project.description && (
@@ -197,18 +199,7 @@ export default function Home() {
                 </Card>
               </Link>
             ))}
-            {[...Array(2)].map((_, i) => (
-              <Card key={`ph-${i}`} className={styles.portfolioCard}>
-                <div className={styles.portfolioThumb}>
-                  <Text color="muted" element={{ size: 'sm' }}>
-                    Coming soon
-                  </Text>
-                </div>
-                <Text weight="semibold" color="muted">
-                  More coming soon
-                </Text>
-              </Card>
-            ))}
+
           </div>
           <div className={styles.sectionFooter}>
             <Button variant="secondary" asChild>
@@ -267,37 +258,36 @@ export default function Home() {
             weight="semibold"
             className={styles.sectionTitle}
           >
-            Trusted by businesses like yours
+            How we&rsquo;re different
           </Text>
           <div className={styles.testimonialGrid}>
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className={styles.testimonialCard}>
-                <div className={styles.testimonialBadge}>Coming soon</div>
-                <div className={styles.testimonialContent}>
-                  <div className={styles.testimonialQuote}>
-                    <Text color="muted" element={{ size: 'sm' }}>
-                      Real testimonials from our clients will appear here once
-                      we complete our first projects.
-                    </Text>
-                  </div>
-                  <div className={styles.testimonialAuthor}>
-                    <div className={styles.avatarPlaceholder} />
-                    <div>
-                      <Text
-                        weight="semibold"
-                        element={{ size: 'sm' }}
-                        color="muted"
-                      >
-                        Client Name
-                      </Text>
-                      <Text element={{ size: 'xs' }} color="muted">
-                        Business
-                      </Text>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
+            <Card className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <Text weight="semibold">No templates</Text>
+                <Text element={{ size: 'sm' }} color="secondary">
+                  Every site is built from scratch for your specific business
+                  needs. No cookie-cutter solutions.
+                </Text>
+              </div>
+            </Card>
+            <Card className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <Text weight="semibold">Transparent pricing</Text>
+                <Text element={{ size: 'sm' }} color="secondary">
+                  What you see is what you pay. No hidden fees, no surprise
+                  upsells, no account managers.
+                </Text>
+              </div>
+            </Card>
+            <Card className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <Text weight="semibold">Built to last</Text>
+                <Text element={{ size: 'sm' }} color="secondary">
+                  Modern stack, performance-optimized, and easy to maintain.
+                  Your site grows with your business.
+                </Text>
+              </div>
+            </Card>
           </div>
         </Container>
       </section>

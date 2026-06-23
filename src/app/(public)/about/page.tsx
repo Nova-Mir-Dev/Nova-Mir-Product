@@ -20,17 +20,10 @@ export default function AboutPage() {
         </div>
 
         <Text>
-          Nova Mir started because we saw too many small businesses getting
-          taken for a ride by agencies that charge enterprise prices for a basic
-          website. A friend&rsquo;s bakery paid $8,000 for a site that
-          couldn&rsquo;t even take orders. We built them a better one in a
-          weekend.
-        </Text>
-
-        <Text>
-          That weekend turned into a business. We build websites and the systems
-          that make them useful — no sales team, no account managers, no
-          overhead. Just direct, transparent work.
+          Nova Mir started with a simple belief — that good tools shouldn&rsquo;t
+          require a manual. We build websites and systems that handle the details
+          so you can focus on running your business. No bloat, no complexity,
+          just things that work.
         </Text>
 
         <div style={{ paddingTop: '1rem' }}>
