@@ -15,8 +15,8 @@ interface Project {
 interface Activity {
   id: string
   action: string
-  project_name: string
-  timestamp: string
+  project_name: string | null
+  created_at: string
 }
 
 interface Invoice {
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
       .from('activity_logs')
       .select('*')
       .eq('user_id', user.id)
-      .order('timestamp', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(10),
     supabase
       .from('portfolio_invoices')
@@ -291,7 +291,7 @@ export default async function DashboardPage() {
                   </Text>
                   <Text element={{ size: 'sm' }} color="secondary">
                     {activity.project_name} —{' '}
-                    {new Date(activity.timestamp).toLocaleString()}
+                    {new Date(activity.created_at).toLocaleString()}
                   </Text>
                 </Stack>
               </Card>

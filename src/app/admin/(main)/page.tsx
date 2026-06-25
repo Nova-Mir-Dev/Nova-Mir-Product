@@ -85,7 +85,7 @@ async function getDashboardData(): Promise<DashboardData> {
     supabase
       .from('activity_logs')
       .select('*')
-      .order('timestamp', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(10),
     supabase.from('portfolio_clients').select('status'),
     supabase
@@ -208,7 +208,7 @@ export default async function AdminDashboard() {
                         : ''}
                     </Text>
                     <Text element={{ size: 'xs' }} color="muted">
-                      {new Date(entry.timestamp).toLocaleString()}
+                      {new Date(entry.created_at).toLocaleString()}
                     </Text>
                   </Stack>
                 </Card>

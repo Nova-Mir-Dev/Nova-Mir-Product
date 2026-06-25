@@ -4,10 +4,10 @@ import { createClient } from '@/lib/supabase-server'
 interface AuditEntry {
   id: string
   action: string
-  client_name: string
-  performed_by: string
-  timestamp: string
-  details: string
+  client_name: string | null
+  performed_by: string | null
+  created_at: string
+  details: string | null
 }
 
 export default async function AuditLogPage({
@@ -26,10 +26,10 @@ export default async function AuditLogPage({
   let query = supabase
     .from('activity_logs')
     .select('*')
-    .order('timestamp', { ascending: false })
+    .order('created_at', { ascending: false })
 
-  if (params.from) query = query.gte('timestamp', params.from)
-  if (params.to) query = query.lte('timestamp', params.to)
+  if (params.from) query = query.gte('created_at', params.from)
+  if (params.to) query = query.lte('created_at', params.to)
 
   const { data: entries } = await query
 
@@ -113,7 +113,7 @@ export default async function AuditLogPage({
                   Client: {entry.client_name} — By: {entry.performed_by}
                 </Text>
                 <Text element={{ size: 'sm' }}>
-                  {new Date(entry.timestamp).toLocaleString()}
+                  {new Date(entry.created_at).toLocaleString()}
                 </Text>
                 <Text element={{ size: 'sm' }}>{entry.details}</Text>
               </Stack>

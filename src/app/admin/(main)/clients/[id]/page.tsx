@@ -69,7 +69,7 @@ export default async function ClientDetailRoute({
     .from('activity_logs')
     .select('*')
     .eq('client_name', c.name)
-    .order('timestamp', { ascending: false })
+    .order('created_at', { ascending: false })
 
   return (
     <ClientDetailPage

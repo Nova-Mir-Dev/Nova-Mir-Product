@@ -24,7 +24,7 @@ const FAQ_ITEMS = [
 interface Ticket {
   id: string
   subject: string
-  message: string
+  description: string
   status: string
   created_at: string
 }

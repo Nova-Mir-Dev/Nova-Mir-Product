@@ -9,7 +9,7 @@ const createLeadBodySchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(200),
   email: z.string().trim().email('Invalid email').max(254),
   phone: z.string().trim().max(50).optional().nullable().default(null),
-  company: z.string().trim().max(200).optional().nullable().default(null),
+  business_name: z.string().trim().max(200).optional().nullable().default(null),
   message: z.string().trim().max(10000).optional().nullable().default(null),
   source: z.string().trim().max(100).optional().nullable().default(null),
   notes: z.string().trim().max(5000).optional().nullable().default(null),
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
 
   if (q) {
     query = query.or(
-      `name.ilike.%${q}%,email.ilike.%${q}%,company.ilike.%${q}%`,
+      `name.ilike.%${q}%,email.ilike.%${q}%,business_name.ilike.%${q}%`,
     )
   }
 
@@ -184,7 +184,7 @@ export async function POST(request: Request) {
       name: body.name,
       email: body.email,
       phone: body.phone ?? null,
-      company: body.company ?? null,
+      business_name: body.business_name ?? null,
       message: body.message ?? null,
       source: body.source ?? 'admin',
       notes: body.notes ?? null,

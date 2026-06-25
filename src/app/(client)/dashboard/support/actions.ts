@@ -21,7 +21,7 @@ export async function createTicket(formData: FormData) {
   const { error } = await supabase.from('support_tickets').insert({
     user_id: user.id,
     subject: subject.trim(),
-    message: message.trim(),
+    description: message.trim(),
     status: 'open',
   })
 

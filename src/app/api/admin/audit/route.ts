@@ -39,10 +39,10 @@ export async function GET(request: Request) {
   let query = admin
     .from('activity_logs')
     .select('*')
-    .order('timestamp', { ascending: false })
+    .order('created_at', { ascending: false })
 
-  if (dateFrom) query = query.gte('timestamp', dateFrom)
-  if (dateTo) query = query.lte('timestamp', dateTo)
+  if (dateFrom) query = query.gte('created_at', dateFrom)
+  if (dateTo) query = query.lte('created_at', dateTo)
 
   const { data: entries, error: fetchError } = await query
 
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
     action: e.action,
     clientName: e.client_name,
     performedBy: e.performed_by,
-    timestamp: e.timestamp,
+    timestamp: e.created_at,
     details: e.details,
   }))
 

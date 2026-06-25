@@ -46,7 +46,7 @@ export interface SupportTicket {
   id: string
   user_id: string
   subject: string
-  message: string
+  description: string
   status: string
   created_at: string
 }
@@ -55,10 +55,10 @@ export interface ActivityEntry {
   id: string
   user_id: string
   action: string
-  client_name: string
-  performed_by: string
-  timestamp: string
-  details: string
+  client_name: string | null
+  performed_by: string | null
+  created_at: string
+  details: string | null
   project_name: string | null
 }
 
@@ -74,7 +74,7 @@ export interface Lead {
   name: string
   email: string
   phone: string | null
-  company: string | null
+  business_name: string | null
   message: string | null
   status: string
   source: string

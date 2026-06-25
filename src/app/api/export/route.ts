@@ -43,7 +43,7 @@ export async function GET(request: Request) {
   }
   const { format, entity } = parsed.data
 
-  const allowedEntities = ['users', 'leads', 'clients', 'projects', 'invoices'] as const
+  const allowedEntities = ['users', 'leads', 'clients', 'projects', 'portfolio_invoices'] as const
   if (!allowedEntities.includes(entity as typeof allowedEntities[number])) {
     return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 400 })
   }

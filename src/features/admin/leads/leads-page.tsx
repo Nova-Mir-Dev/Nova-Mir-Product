@@ -44,7 +44,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
       return (
         l.name.toLowerCase().includes(q) ||
         l.email.toLowerCase().includes(q) ||
-        (l.company ?? '').toLowerCase().includes(q)
+        (l.business_name ?? '').toLowerCase().includes(q)
       )
     })
   }, [leads, search, statusFilter])
@@ -71,7 +71,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
       searchable: true,
     },
     {
-      key: 'company',
+      key: 'business_name',
       title: 'Company',
       sortable: true,
       searchable: true,
@@ -172,7 +172,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
               <div>
                 <Text className={styles.detailLabel}>Company</Text>
                 <Text className={styles.detailValue}>
-                  {selectedLead.company || '-'}
+                  {selectedLead.business_name || '-'}
                 </Text>
               </div>
               <div>

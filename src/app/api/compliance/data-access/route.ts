@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   const { data: projects } = await supabase
     .from('projects')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('client_id', user.id)
   const { data: appointments } = await supabase
     .from('appointments')
     .select('*')

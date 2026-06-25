@@ -150,7 +150,7 @@ export default async function LeadsPage({
               <tr key={lead.id}>
                 <td>{lead.name}</td>
                 <td>{lead.email}</td>
-                <td>{lead.company || "-"}</td>
+                <td>{lead.business_name || "-"}</td>
                 <td>{lead.status}</td>
                 <td>{new Date(lead.created_at).toLocaleDateString()}</td>
               </tr>
@@ -170,7 +170,7 @@ import { createClient } from "@/lib/supabase-server";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
-  const body = (await request.json()) as { name: string; email: string; company?: string; message?: string };
+  const body = (await request.json()) as { name: string; email: string; business_name?: string; message?: string };
 
   if (!body.name?.trim() || !body.email?.trim()) {
     return NextResponse.json(
@@ -184,7 +184,7 @@ export async function POST(request: Request) {
     .insert({
       name: body.name.trim(),
       email: body.email.trim(),
-      company: body.company?.trim() || null,
+      business_name: body.businessName?.trim() || null,
       message: body.message?.trim() || null,
     })
     .select()

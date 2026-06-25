@@ -28,9 +28,9 @@ export const AuditPage = ({ entries, searchParams }: AuditPageProps) => {
 
   const columns: Column<ActivityEntry>[] = [
     {
-      key: 'timestamp',
+      key: 'created_at',
       title: 'Timestamp',
-      render: (_, row) => formatDate(row.timestamp),
+      render: (_, row) => formatDate(row.created_at),
     },
     { key: 'action', title: 'Action', render: (_, row) => row.action },
     {
