@@ -87,8 +87,10 @@ export type LeadStatus =
   | 'new'
   | 'contacted'
   | 'qualified'
-  | 'converted'
-  | 'closed'
+  | 'proposal'
+  | 'negotiation'
+  | 'won'
+  | 'lost'
 
 export type InvoiceStatus = 'paid' | 'pending' | 'overdue'
 export type ProjectStatus = 'pending' | 'active' | 'completed'

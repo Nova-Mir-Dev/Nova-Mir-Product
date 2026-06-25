@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Hosting**: Vercel
 - **Database**: PostgreSQL (Supabase)
 - **Auth**: Supabase SSR — session-based, middleware + inline checks on every protected route
@@ -11,10 +11,11 @@
 - **Rate Limiting**: Upstash Redis with in-memory fallback (`lib/rate-limit.ts`). Wired on every mutation endpoint.
 - **CSRF**: Origin header validation via middleware on all POST/PUT/PATCH/DELETE requests.
 - **Validation**: Zod schemas on all mutation endpoints (leads, appointments, bootstrap, admin routes, MFA, CRUD).
-- **Payments**: none
+- **Payments**: Stripe (server-side)
 - **Monitoring**: Sentry
-- **Email**: none
-- **File Storage**: none
+- **Email**: SMTP via Resend (transactional)
+- **File Storage**: Supabase Storage (documents)
+- **Notifications**: Slack (lead alerts, error notifications)
 - **Cache**: Upstash Redis (rate limiting via sliding window)
 - **Analytics**: Plausible
 
@@ -40,31 +41,94 @@
 │   │   ├── robots.ts       # robots.txt route
 │   │   ├── sitemap.ts      # sitemap.xml route
 │   │   ├── json-ld.tsx     # Structured data (Organization, WebSite, Service)
-│   │   ├── api/            # API routes
-│   │   │   ├── leads/route.ts          # GET (auth) + POST (public, rate-limited)
-│   │   │   ├── leads/[id]/route.ts     # PATCH (auth + rate-limited)
-│   │   │   ├── appointments/route.ts   # GET (auth) + POST (auth + rate-limited)
-│   │   │   ├── admin/api-keys/route.ts # GET + POST (auth + role check)
-│   │   │   ├── compliance/data-access  # DSAR access
-│   │   │   ├── compliance/data-deletion# DSAR deletion
-│   │   │   ├── compliance/data-correction # DSAR correction
-│   │   │   └── health/route.ts         # Public health check
-│   │   ├── page.tsx        # Home page
-│   │   ├── about/          # About page
-│   │   ├── contact/        # Contact form
-│   │   ├── services/       # Services page
-│   │   ├── portfolio/      # Portfolio
-│   │   ├── pricing/        # Pricing
-│   │   ├── process/        # How it works
-│   │   ├── privacy/        # Privacy policy
-│   │   ├── terms/          # Terms of service
-│   │   ├── intake/         # Project intake form (noindex)
-│   │   ├── setup/          # Setup wizard (admin, noindex)
-│   │   └── admin/          # Admin dashboard (auth, noindex)
-│   │       └── leads/      # Lead tracker (auth, noindex)
+│   │   ├── (public)/       # Public marketing pages
+│   │   │   ├── page.tsx            # Home page
+│   │   │   ├── about/page.tsx      # About page
+│   │   │   ├── contact/page.tsx    # Contact form
+│   │   │   ├── services/page.tsx   # Services page
+│   │   │   ├── portfolio/page.tsx  # Portfolio
+│   │   │   ├── pricing/page.tsx    # Pricing
+│   │   │   ├── process/page.tsx    # How it works
+│   │   │   ├── privacy/page.tsx    # Privacy policy
+│   │   │   ├── terms/page.tsx      # Terms of service
+│   │   │   ├── intake/page.tsx     # Project intake form
+│   │   │   └── do-not-sell/page.tsx # CCPA opt-out
+│   │   ├── admin/          # Admin dashboard (auth, noindex)
+│   │   │   ├── auth/login/page.tsx
+│   │   │   └── (main)/
+│   │   │       ├── page.tsx                  # Dashboard home
+│   │   │       ├── leads/page.tsx            # Lead tracker
+│   │   │       ├── clients/page.tsx          # Client list
+│   │   │       ├── clients/[id]/page.tsx     # Client detail
+│   │   │       ├── projects/page.tsx         # Project list
+│   │   │       ├── projects/[id]/page.tsx    # Project detail
+│   │   │       ├── billing/page.tsx          # Billing
+│   │   │       ├── revenue/page.tsx          # Revenue tracking
+│   │   │       ├── audit/page.tsx            # Audit log viewer
+│   │   │       ├── monitoring/page.tsx       # System monitoring
+│   │   │       ├── settings/page.tsx         # Admin settings
+│   │   │       ├── bootstrap/page.tsx        # Setup wizard
+│   │   │       ├── admins/page.tsx           # Admin user management
+│   │   │       ├── compliance/dsar/page.tsx  # DSAR management
+│   │   │       └── content/
+│   │   │           ├── hero-headlines/page.tsx
+│   │   │           └── portfolio/page.tsx
+│   │   ├── clients/        # Client portal (auth)
+│   │   │   └── auth/
+│   │   │       ├── login/page.tsx
+│   │   │       └── check-email/page.tsx
+│   │   ├── setup/page.tsx  # Initial setup (admin)
+│   │   ├── api/            # API routes (29 routes)
+│   │   │   ├── leads/route.ts
+│   │   │   ├── leads/[id]/route.ts
+│   │   │   ├── appointments/route.ts
+│   │   │   ├── admin/api-keys/route.ts
+│   │   │   ├── admin/audit/route.ts
+│   │   │   ├── admin/billing/route.ts
+│   │   │   ├── admin/leads/route.ts
+│   │   │   ├── admin/clients/route.ts
+│   │   │   ├── admin/clients/invite/route.ts
+│   │   │   ├── admin/bootstrap/route.ts
+│   │   │   ├── admin/compliance/dsar/route.ts
+│   │   │   ├── admin/content/hero-headlines/route.ts
+│   │   │   ├── admin/content/portfolio/route.ts
+│   │   │   ├── auth/me/route.ts
+│   │   │   ├── auth/mfa/enroll/route.ts
+│   │   │   ├── auth/mfa/verify/route.ts
+│   │   │   ├── clients/invoices/route.ts
+│   │   │   ├── clients/me/route.ts
+│   │   │   ├── compliance/data-access/route.ts
+│   │   │   ├── compliance/data-deletion/route.ts
+│   │   │   ├── compliance/data-correction/route.ts
+│   │   │   ├── compliance/opt-out/route.ts
+│   │   │   ├── content/hero-headlines/route.ts
+│   │   │   ├── crud/[entity]/route.ts
+│   │   │   ├── documents/route.ts
+│   │   │   ├── export/route.ts
+│   │   │   ├── health/route.ts
+│   │   │   ├── notifications/route.ts
+│   │   │   └── revalidate/route.ts
 │   ├── features/           # Feature modules
-│   │   ├── leads/schemas.ts      # Zod schemas for leads
-│   │   └── appointments/schemas.ts # Zod schemas for appointments
+│   │   ├── admin/                  # Admin feature group
+│   │   │   ├── audit/
+│   │   │   ├── billing/
+│   │   │   ├── bootstrap/
+│   │   │   ├── clients/
+│   │   │   ├── compliance/
+│   │   │   ├── components/
+│   │   │   ├── hero-headlines/
+│   │   │   ├── hooks/
+│   │   │   ├── leads/
+│   │   │   ├── monitoring/
+│   │   │   ├── portfolio/
+│   │   │   ├── projects/
+│   │   │   ├── revenue/
+│   │   │   └── settings/
+│   │   ├── appointments/          # Appointment scheduling
+│   │   ├── auth/                  # Authentication
+│   │   ├── bootstrapper/          # Project bootstrapper
+│   │   ├── compliance/            # GDPR/CCPA compliance
+│   │   └── leads/                 # Lead management
 │   └── lib/slack.ts        # Slack notification helper
 ```
 
@@ -100,5 +164,5 @@
 ## Data Model
 
 - **Database**: PostgreSQL on Supabase
-- **Tables**: `users`, `leads`, `appointments`, `api_keys`, `audit_logs`
+- **Tables**: 25 tables (see AGENTS.md for full list). Core: users, leads, projects, portfolio_invoices, support_tickets, appointments, documents, payments, activity_logs, revenue_entries, expense_entries
 - **Search**: none

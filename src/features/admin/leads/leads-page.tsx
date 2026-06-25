@@ -27,8 +27,10 @@ const statusOptions = [
   { value: 'new', label: 'New' },
   { value: 'contacted', label: 'Contacted' },
   { value: 'qualified', label: 'Qualified' },
-  { value: 'converted', label: 'Converted' },
-  { value: 'closed', label: 'Closed' },
+  { value: 'proposal', label: 'Proposal' },
+  { value: 'negotiation', label: 'Negotiation' },
+  { value: 'won', label: 'Won' },
+  { value: 'lost', label: 'Lost' },
 ]
 
 export function LeadsPage({ leads }: LeadsPageProps) {
@@ -109,7 +111,7 @@ export function LeadsPage({ leads }: LeadsPageProps) {
           >
             {selectedLeadId === row.id ? 'Close' : 'View'}
           </Button>
-          {row.status !== 'converted' && row.status !== 'closed' && (
+          {row.status !== 'won' && row.status !== 'lost' && (
             <form action={convertToClientAction}>
               <input type="hidden" name="id" value={row.id} />
               <Button variant="primary" size="sm" type="submit">

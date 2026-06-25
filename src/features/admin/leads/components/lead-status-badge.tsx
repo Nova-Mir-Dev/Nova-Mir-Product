@@ -12,8 +12,10 @@ const variantMap: Record<string, BadgeVariant> = {
   new: 'info',
   contacted: 'warning',
   qualified: 'accent',
-  converted: 'success',
-  closed: 'neutral',
+  proposal: 'accent',
+  negotiation: 'warning',
+  won: 'success',
+  lost: 'neutral',
 }
 
 export function LeadStatusBadge({ status }: { status: string }) {

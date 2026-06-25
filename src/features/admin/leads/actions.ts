@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { leadStatusSchema } from '@/features/leads/schemas'
 import { revalidatePath } from 'next/cache'
 
 export async function updateLeadAction(formData: FormData) {
@@ -28,7 +29,11 @@ export async function updateLeadAction(formData: FormData) {
   const updates: Record<string, string> = {
     updated_at: new Date().toISOString(),
   }
-  if (status) updates.status = status
+  if (status) {
+    const parsed = leadStatusSchema.safeParse(status)
+    if (!parsed.success) throw new Error('Invalid lead status')
+    updates.status = parsed.data
+  }
   if (notes !== null) updates.notes = notes
 
   const { error } = await admin.from('leads').update(updates).eq('id', id)
@@ -71,7 +76,7 @@ export async function convertToClientAction(formData: FormData) {
 
   const { error: updateError } = await admin
     .from('leads')
-    .update({ status: 'converted', updated_at: new Date().toISOString() })
+    .update({ status: 'won', updated_at: new Date().toISOString() })
     .eq('id', id)
   if (updateError) throw new Error('Failed to update lead status')
 
