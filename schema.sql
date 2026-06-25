@@ -12,6 +12,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "users_select_own" ON users FOR SELECT USING (id = auth.uid());
+CREATE POLICY "users_select_admin" ON users FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 CREATE POLICY "users_update_own" ON users FOR UPDATE
   USING (id = auth.uid())
   WITH CHECK (id = auth.uid());
@@ -98,6 +103,7 @@ CREATE TABLE IF NOT EXISTS documents (
   file_path TEXT NOT NULL,
   file_type TEXT,
   file_size INTEGER,
+  category TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -178,6 +184,11 @@ CREATE TABLE IF NOT EXISTS support_tickets (
 
 ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "support_tickets_select_own" ON support_tickets FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "support_tickets_select_admin" ON support_tickets FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 CREATE POLICY "support_tickets_insert_own" ON support_tickets FOR INSERT WITH CHECK (user_id = auth.uid());
 CREATE POLICY "support_tickets_update_own" ON support_tickets FOR UPDATE
   USING (user_id = auth.uid())
@@ -192,6 +203,8 @@ CREATE TABLE IF NOT EXISTS projects (
   name TEXT NOT NULL,
   description TEXT,
   status TEXT NOT NULL DEFAULT 'active',
+  deadline TIMESTAMPTZ,
+  progress INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -202,6 +215,11 @@ CREATE POLICY "projects_insert_own" ON projects FOR INSERT WITH CHECK (client_id
 CREATE POLICY "projects_update_own" ON projects FOR UPDATE
   USING (client_id = auth.uid())
   WITH CHECK (client_id = auth.uid());
+CREATE POLICY "projects_admin_select" ON projects FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Portfolio clients (admin-managed)
@@ -213,6 +231,8 @@ CREATE TABLE IF NOT EXISTS portfolio_clients (
   phone TEXT,
   company TEXT,
   notes TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  project_count INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -220,6 +240,11 @@ CREATE TABLE IF NOT EXISTS portfolio_clients (
 ALTER TABLE portfolio_clients ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "portfolio_clients_admin_only" ON portfolio_clients FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "portfolio_clients_admin_select" ON portfolio_clients FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Portfolio invoices (admin-managed)
@@ -227,10 +252,13 @@ CREATE POLICY "portfolio_clients_admin_only" ON portfolio_clients FOR ALL
 CREATE TABLE IF NOT EXISTS portfolio_invoices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id),
+  client_id UUID REFERENCES users(id),
   client_name TEXT NOT NULL,
   amount INTEGER NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending',
   due_date TIMESTAMPTZ,
+  invoice_number TEXT,
+  date TIMESTAMPTZ DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   paid_at TIMESTAMPTZ
 );
@@ -238,6 +266,11 @@ CREATE TABLE IF NOT EXISTS portfolio_invoices (
 ALTER TABLE portfolio_invoices ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "portfolio_invoices_admin_only" ON portfolio_invoices FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "portfolio_invoices_admin_select" ON portfolio_invoices FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Activity logs (admin-managed)
@@ -246,6 +279,9 @@ CREATE TABLE IF NOT EXISTS activity_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id),
   action TEXT NOT NULL,
+  client_name TEXT,
+  performed_by TEXT,
+  project_name TEXT,
   details JSONB,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -253,6 +289,56 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 ALTER TABLE activity_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "activity_logs_admin_only" ON activity_logs FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "activity_logs_admin_select" ON activity_logs FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- =============================================================================
+-- Revenue entries (admin-managed)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS revenue_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name TEXT,
+  description TEXT NOT NULL,
+  amount INTEGER NOT NULL,
+  category TEXT NOT NULL DEFAULT 'service' CHECK (category IN ('service', 'product', 'consulting', 'retainer', 'other')),
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE revenue_entries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "revenue_entries_admin_only" ON revenue_entries FOR ALL
+  USING (auth.role() = 'service_role');
+CREATE POLICY "revenue_entries_admin_select" ON revenue_entries FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- =============================================================================
+-- Expense entries (admin-managed)
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS expense_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vendor TEXT NOT NULL,
+  description TEXT NOT NULL,
+  amount INTEGER NOT NULL,
+  category TEXT NOT NULL DEFAULT 'software' CHECK (category IN ('software', 'hosting', 'contractor', 'travel', 'office', 'marketing', 'other')),
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  receipt_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE expense_entries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "expense_entries_admin_only" ON expense_entries FOR ALL
+  USING (auth.role() = 'service_role');
+CREATE POLICY "expense_entries_admin_select" ON expense_entries FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Lead intake
@@ -271,6 +357,8 @@ CREATE TABLE IF NOT EXISTS leads (
   current_website TEXT,
   status TEXT NOT NULL DEFAULT 'new',
   source TEXT DEFAULT 'website',
+  notes TEXT,
+  consent BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -283,6 +371,13 @@ ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 -- Admin access: full control via service_role (bypasses RLS)
 CREATE POLICY "leads_admin_only" ON leads FOR ALL
   USING (auth.role() = 'service_role');
+
+-- Admin SELECT via client (SSR pages)
+CREATE POLICY "leads_admin_select" ON leads FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- Public submissions: anon users can only INSERT (contact form)
 CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
@@ -298,12 +393,18 @@ CREATE TABLE IF NOT EXISTS line_items (
   description TEXT NOT NULL,
   quantity INTEGER NOT NULL DEFAULT 1,
   unit_price INTEGER NOT NULL,
+  amount INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 ALTER TABLE line_items ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "line_items_admin_only" ON line_items FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "line_items_admin_select" ON line_items FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- Client provisioning
 ALTER TABLE portfolio_clients ADD COLUMN IF NOT EXISTS phone TEXT;
@@ -383,6 +484,11 @@ CREATE POLICY "portfolio_projects_anon_select" ON portfolio_projects FOR SELECT
   USING (is_published = true);
 CREATE POLICY "portfolio_projects_admin_all" ON portfolio_projects FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "portfolio_projects_admin_select" ON portfolio_projects FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Public navigation links (managed content)
@@ -432,6 +538,11 @@ CREATE POLICY "hero_headlines_anon_select" ON hero_headlines FOR SELECT
   USING (is_published = true);
 CREATE POLICY "hero_headlines_admin_all" ON hero_headlines FOR ALL
   USING (auth.role() = 'service_role');
+CREATE POLICY "hero_headlines_admin_select" ON hero_headlines FOR SELECT
+  USING (
+    auth.role() = 'authenticated'
+    AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- =============================================================================
 -- Testimonials (deferred -- schema only, no active data yet)
