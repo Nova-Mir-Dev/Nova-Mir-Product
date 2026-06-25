@@ -98,6 +98,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 308)
   }
 
+  if (pathname === '/clients/billing') {
+    const url = new URL('/dashboard/billing', request.url)
+    url.search = request.nextUrl.search
+    return NextResponse.redirect(url, 308)
+  }
+
   if (host.endsWith('.vercel.app')) {
     const url = new URL('https://www.novamir.dev' + pathname)
     url.search = request.nextUrl.search

@@ -14,7 +14,7 @@ interface ClientUser {
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/dashboard', icon: '🏠' },
-  { label: 'Billing', path: '/clients/billing', icon: '💰' },
+  { label: 'Billing', path: '/dashboard/billing', icon: '💰' },
   { label: 'Support', path: 'mailto:support@novamir.dev', icon: '📧' },
 ]
 
