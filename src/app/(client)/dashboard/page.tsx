@@ -8,7 +8,7 @@ interface Project {
   id: string
   name: string
   status: string
-  deadline: string
+  deadline: string | null
   progress: number
 }
 
@@ -254,7 +254,7 @@ export default async function DashboardPage() {
                 </div>
                 <Text element={{ size: 'sm' }} color="secondary">
                   {project.progress}% complete — Deadline:{' '}
-                  {new Date(project.deadline).toLocaleDateString()}
+                  {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
                 </Text>
               </Stack>
             </Card>

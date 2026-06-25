@@ -16,7 +16,7 @@ describe('AboutPage', () => {
 
   it('renders founder greeting', () => {
     render(<AboutPage />)
-    expect(screen.getAllByText(/founder/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/nova mir/i).length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders philosophy section', () => {

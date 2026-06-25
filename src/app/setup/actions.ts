@@ -3,14 +3,42 @@
 import { writeFile } from 'fs/promises'
 import { join } from 'path'
 import { revalidatePath } from 'next/cache'
+import { createClient } from '@/lib/supabase-server'
 
 export async function saveEnvVars(
   envVars: Record<string, string>,
 ): Promise<{ success: boolean; path?: string; error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Unauthorized' }
+
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (profile?.role !== 'admin') return { success: false, error: 'Forbidden' }
+
+  const allowedKeys = new Set([
+    'NEXT_PUBLIC_SUPABASE_URL',
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+    'NEXT_PUBLIC_SITE_URL',
+    'NEXT_PUBLIC_SENTRY_DSN',
+    'SLACK_BOT_TOKEN',
+    'SLACK_SIGNING_SECRET',
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'SENTRY_AUTH_TOKEN',
+    'REVALIDATION_SECRET',
+    'STRIPE_SECRET_KEY',
+    'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+    'STRIPE_WEBHOOK_SECRET',
+    'CORS_ORIGINS',
+  ])
+
   try {
-    const entries = Object.entries(envVars).filter(
-      ([, value]) => value.trim().length > 0,
-    )
+    const entries = Object.entries(envVars)
+      .filter(([, value]) => value.trim().length > 0)
+      .filter(([key]) => allowedKeys.has(key))
     if (entries.length === 0) return { success: true, path: '.env.local' }
 
     const content =

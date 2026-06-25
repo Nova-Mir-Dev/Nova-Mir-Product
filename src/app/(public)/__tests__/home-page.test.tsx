@@ -32,7 +32,7 @@ describe('HomePage', () => {
   it('renders CTA section', () => {
     render(<HomePage />)
     expect(
-      screen.getAllByText('Ready to get started?').length,
+      screen.getAllByText('Think this could be a fit?').length,
     ).toBeGreaterThanOrEqual(1)
   })
 

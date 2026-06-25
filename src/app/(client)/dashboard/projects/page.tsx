@@ -7,7 +7,7 @@ interface Project {
   id: string
   name: string
   status: string
-  deadline: string
+  deadline: string | null
   description: string
 }
 
@@ -75,7 +75,7 @@ export default async function ProjectsPage() {
                   }}
                 >
                   <Text element={{ size: 'sm' }} color="secondary">
-                    Deadline: {new Date(project.deadline).toLocaleDateString()}
+                    Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
                   </Text>
                   <Link href={'/dashboard/projects/' + project.id}>
                     <Text>View Details</Text>

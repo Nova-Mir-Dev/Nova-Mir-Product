@@ -271,6 +271,11 @@ CREATE POLICY "portfolio_invoices_admin_select" ON portfolio_invoices FOR SELECT
     auth.role() = 'authenticated'
     AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
   );
+CREATE POLICY "portfolio_invoices_select_own" ON portfolio_invoices FOR SELECT
+  USING (
+    auth.uid() IS NOT NULL
+    AND (user_id = auth.uid() OR client_id = auth.uid())
+  );
 
 -- =============================================================================
 -- Activity logs (admin-managed)
@@ -293,6 +298,11 @@ CREATE POLICY "activity_logs_admin_select" ON activity_logs FOR SELECT
   USING (
     auth.role() = 'authenticated'
     AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
+  );
+CREATE POLICY "activity_logs_select_own" ON activity_logs FOR SELECT
+  USING (
+    auth.uid() IS NOT NULL
+    AND user_id = auth.uid()
   );
 
 -- =============================================================================

@@ -34,7 +34,7 @@ describe('PRICING_TIERS', () => {
     expect(names).toEqual([
       'Managed Website',
       'Website + Lead System',
-      'Full Growth System',
+      'Website + Operations',
     ])
   })
 })

@@ -53,7 +53,6 @@ export const metadata: Metadata = {
     description:
       'Nova Mir builds websites and operational tools for small businesses. Custom web development, lead systems, and process automation.',
   },
-  alternates: { canonical: 'https://www.novamir.dev' },
 }
 
 export default function RootLayout({

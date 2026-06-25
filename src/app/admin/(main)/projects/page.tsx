@@ -1,6 +1,7 @@
-import { Stack, Text } from 'azimuth-ui'
+import { Stack, Text, Button, Card, Input, TextArea } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
+import { createProject } from '@/features/admin/projects/actions'
 
 interface Project {
   id: string
@@ -32,6 +33,11 @@ export default async function ProjectsPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
+  const { data: clients } = await supabase
+    .from('portfolio_clients')
+    .select('id, name')
+    .order('name')
+
   const items = (projects ?? []) as Project[]
 
   return (
@@ -39,6 +45,40 @@ export default async function ProjectsPage() {
       <Text element={{ as: 'h1', size: 'h3' }} weight="semibold">
         Projects
       </Text>
+
+      <Card>
+        <form action={createProject}>
+          <Stack spacing="sm">
+            <Text weight="semibold">Create Project</Text>
+            <Input label={{ text: 'Project Name' }} name="name" required />
+            <div>
+              <Text element={{ size: 'sm' }}>Client</Text>
+              <select
+                name="clientId"
+                required
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--azimuth-color-border)',
+                }}
+              >
+                <option value="">Select a client</option>
+                {(clients ?? []).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <TextArea label={{ text: 'Description' }} name="description" />
+            <Input label={{ text: 'Deadline' }} name="deadline" type="date" />
+            <Button variant="primary" type="submit">
+              Create Project
+            </Button>
+          </Stack>
+        </form>
+      </Card>
 
       {items.length === 0 ? (
         <Text>No projects found.</Text>

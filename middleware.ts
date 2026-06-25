@@ -6,6 +6,7 @@ import { rateLimit } from '@/lib/rate-limit'
 const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/health', new Set(['GET', 'HEAD'])],
   ['/api/leads', new Set(['POST'])],
+  ['/api/content/hero-headlines', new Set(['GET'])],
 ])
 
 function addCorsHeaders(
@@ -135,20 +136,21 @@ export async function middleware(request: NextRequest) {
   }
 
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
-    if (origin && !isAllowedOrigin(origin)) {
-      return addCorsHeaders(
-        NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
-        origin,
-        isApiRoute,
-      )
-    }
-    const referer = request.headers.get('referer')
-    if (
-      !origin &&
-      (!process.env.NEXT_PUBLIC_SITE_URL ||
-        !referer?.startsWith(process.env.NEXT_PUBLIC_SITE_URL))
-    ) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${host}`
+    if (origin) {
+      const isSameOrigin = origin === `https://${host}` || origin === `http://${host}`
+      if (!isSameOrigin && !isAllowedOrigin(origin)) {
+        return addCorsHeaders(
+          NextResponse.json({ error: 'Forbidden' }, { status: 403 }),
+          origin,
+          isApiRoute,
+        )
+      }
+    } else {
+      const referer = request.headers.get('referer')
+      if (!referer?.startsWith(siteUrl)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
     }
   }
 

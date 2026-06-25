@@ -44,11 +44,9 @@ export default async function ProjectDetailPage({
             Status: {project.status}
           </Text>
           {project.description && <Text>{project.description}</Text>}
-          {project.deadline && (
-            <Text element={{ size: 'sm' }} color="secondary">
-              Deadline: {new Date(project.deadline).toLocaleDateString()}
-            </Text>
-          )}
+          <Text element={{ size: 'sm' }} color="secondary">
+            Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
+          </Text>
         </Stack>
       </Card>
     </Stack>

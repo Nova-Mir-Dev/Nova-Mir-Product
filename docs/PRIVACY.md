@@ -46,7 +46,7 @@ We retain your personal data for **90 days** after your last interaction, or as 
 
 ## GDPR Compliance
 
-- **Data Protection Officer**: Contact our DPO at dpo@nova-mir-product.com
+- **Data Protection Officer**: Contact our DPO at dpo@novamir.dev
 - **Supervisory Authority**: You have the right to lodge a complaint with your local data protection supervisory authority within the EU/EEA
 - **Article 30 Records**: We maintain a record of processing activities as required under Article 30 of the GDPR
 - **Cross-Border Transfers**: Personal data transferred outside the EEA is protected by Standard Contractual Clauses (SCCs) and supplementary measures where required
@@ -55,7 +55,7 @@ We retain your personal data for **90 days** after your last interaction, or as 
 ## CCPA/CPRA Disclosures
 
 - **Categories of Personal Information Collected**: Identifiers (name, email), commercial information, internet activity, and inferences drawn from the above
-- **Do Not Sell or Share My Personal Information**: We do not sell personal information. You may exercise your right to opt out of sharing at any time via our [Do Not Sell or Share My Personal Information](https://nova-mir-product.com/do-not-sell) page
+- **Do Not Sell or Share My Personal Information**: We do not sell personal information. You may exercise your right to opt out of sharing at any time via our [Do Not Sell or Share My Personal Information](https://www.novamir.dev/do-not-sell) page
 - **Authorized Agent**: You may designate an authorized agent to submit requests on your behalf. We will require written proof of authorization before processing such requests
 - **Non-Discrimination**: We will not discriminate against you for exercising your rights under the CCPA/CPRA
 
@@ -64,4 +64,4 @@ We retain your personal data for **90 days** after your last interaction, or as 
 - **Office of the Privacy Commissioner (OPC)**: If you are not satisfied with our response to a privacy concern, you may contact the Office of the Privacy Commissioner of Canada at [www.priv.gc.ca](https://www.priv.gc.ca) or 1-800-282-1376
 - **Challenging Compliance**: You have the right to challenge our compliance with PIPEDA and to file a complaint with the OPC
 
-To exercise your rights, contact us at privacy@nova-mir-product.com.
+To exercise your rights, contact us at privacy@novamir.dev.

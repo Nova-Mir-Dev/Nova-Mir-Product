@@ -155,11 +155,29 @@ export async function POST(request: Request) {
     )
   }
 
+  let userId = null
+  if (body.clientId) {
+    const { data: clientRecord } = await admin
+      .from('portfolio_clients')
+      .select('user_id')
+      .eq('id', body.clientId)
+      .single()
+    userId = clientRecord?.user_id ?? null
+  } else {
+    const { data: userRecord } = await admin
+      .from('users')
+      .select('id')
+      .eq('name', body.clientName)
+      .maybeSingle()
+    userId = userRecord?.id ?? null
+  }
+
   const { data: invoice, error: createError } = await admin
     .from('portfolio_invoices')
     .insert({
       client_name: body.clientName,
       client_id: body.clientId || null,
+      user_id: userId,
       amount: totalAmount,
       status: 'pending',
       invoice_number: invoiceNumber,

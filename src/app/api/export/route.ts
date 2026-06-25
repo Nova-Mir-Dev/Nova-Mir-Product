@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
+import * as Sentry from '@sentry/nextjs'
 import { z } from 'zod'
 
 const exportParamsSchema = z.object({
@@ -48,21 +49,49 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 400 })
   }
 
+  const columnMap: Record<string, string> = {
+    users: 'id, email, name, role, created_at',
+    leads: 'id, name, email, business_name, phone, service_interest, budget_range, message, timeline, referral_source, current_website, status, source, notes, consent, created_at',
+    clients: 'id, name, email, phone, company, status, project_count, created_at',
+    projects: 'id, client_id, name, description, status, deadline, progress, created_at',
+    portfolio_invoices: 'id, client_name, amount, status, due_date, invoice_number, date, created_at, paid_at',
+  }
+
+  const columns = columnMap[entity] || 'id, created_at'
   const { data: raw, error: fetchError } = await supabase
     .from(entity)
-    .select('*')
+    .select(columns)
     .limit(10000)
 
   if (fetchError) {
-    return NextResponse.json({ error: fetchError.message }, { status: 500 })
+    Sentry.captureException(fetchError)
+    return NextResponse.json({ error: 'Export failed' }, { status: 500 })
   }
 
-  const data = raw as Array<Record<string, unknown>>
+  const data = raw as unknown as Array<Record<string, unknown>>
+
+  function csvEscape(value: unknown): string {
+    const str = String(value ?? '')
+    if (str.includes(',') || str.includes('"') || str.includes('\n') || str.startsWith('=') || str.startsWith('+') || str.startsWith('-') || str.startsWith('@')) {
+      return '"' + str.replace(/"/g, '""') + '"'
+    }
+    return str
+  }
 
   if (format === 'csv') {
-    const headers = Object.keys(data[0] || {}).join(',')
-    const rows = data.map((row) => Object.values(row).join(',')).join('\n')
-    return new NextResponse(`${headers}\n${rows}`, {
+    if (data.length === 0) {
+      return new NextResponse('', {
+        headers: {
+          'Content-Type': 'text/csv',
+          'Content-Disposition': `attachment; filename="${entity}.csv"`,
+        },
+      })
+    }
+    const headers = Object.keys(data[0]!).map(csvEscape).join(',')
+    const rows = data.map((row) =>
+      Object.values(row).map(csvEscape).join(','),
+    ).join('\n')
+    return new NextResponse(headers + '\n' + rows + '\n', {
       headers: {
         'Content-Type': 'text/csv',
         'Content-Disposition': `attachment; filename="${entity}.csv"`,
