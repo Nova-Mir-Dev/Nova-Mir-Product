@@ -254,7 +254,9 @@ export default async function DashboardPage() {
                 </div>
                 <Text element={{ size: 'sm' }} color="secondary">
                   {project.progress}% complete — Deadline:{' '}
-                  {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
+                  {project.deadline
+                    ? new Date(project.deadline).toLocaleDateString()
+                    : 'No deadline'}
                 </Text>
               </Stack>
             </Card>

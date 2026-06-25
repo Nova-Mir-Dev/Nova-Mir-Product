@@ -154,11 +154,21 @@ export interface MockClient {
       error: { message?: string } | null
     }>
     mfa: {
-      enroll: (...args: unknown[]) => Promise<{ data?: unknown; error?: unknown }>
-      challenge: (...args: unknown[]) => Promise<{ data?: unknown; error?: unknown }>
-      verify: (...args: unknown[]) => Promise<{ data?: unknown; error?: unknown }>
-      listFactors: (...args: unknown[]) => Promise<{ data?: unknown; error?: unknown }>
-      unenroll: (...args: unknown[]) => Promise<{ data?: unknown; error?: unknown }>
+      enroll: (
+        ...args: unknown[]
+      ) => Promise<{ data?: unknown; error?: unknown }>
+      challenge: (
+        ...args: unknown[]
+      ) => Promise<{ data?: unknown; error?: unknown }>
+      verify: (
+        ...args: unknown[]
+      ) => Promise<{ data?: unknown; error?: unknown }>
+      listFactors: (
+        ...args: unknown[]
+      ) => Promise<{ data?: unknown; error?: unknown }>
+      unenroll: (
+        ...args: unknown[]
+      ) => Promise<{ data?: unknown; error?: unknown }>
     }
   }
   from: (table: string) => ReturnType<typeof buildQuery>
@@ -184,7 +194,11 @@ export function createMockClient(opts: MockClientOptions = {}): MockClient {
             opts.mfa?.enroll ?? {
               data: {
                 id: 'factor-1',
-                totp: { qr_code: 'qr-code', secret: 'secret', uri: 'otpauth://...' },
+                totp: {
+                  qr_code: 'qr-code',
+                  secret: 'secret',
+                  uri: 'otpauth://...',
+                },
               },
               error: null,
             }

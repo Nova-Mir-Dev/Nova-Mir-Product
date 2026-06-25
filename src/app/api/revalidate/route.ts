@@ -1,7 +1,12 @@
 import { revalidateTag } from 'next/cache'
 import { NextResponse } from 'next/server'
 
-const VALID_TAGS = ['pricing', 'portfolio', 'nav-links', 'hero-headlines'] as const
+const VALID_TAGS = [
+  'pricing',
+  'portfolio',
+  'nav-links',
+  'hero-headlines',
+] as const
 
 export async function POST(request: Request) {
   try {

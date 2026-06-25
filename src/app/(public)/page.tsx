@@ -199,7 +199,6 @@ export default function Home() {
                 </Card>
               </Link>
             ))}
-
           </div>
           <div className={styles.sectionFooter}>
             <Button variant="secondary" asChild>

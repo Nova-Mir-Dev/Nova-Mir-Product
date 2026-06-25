@@ -41,10 +41,12 @@ describe('GET /api/clients/invoices', () => {
   })
 
   it('200 returns invoices for the user', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_invoices: { select: { data: [validInvoice] } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: { portfolio_invoices: { select: { data: [validInvoice] } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(200)
@@ -53,20 +55,28 @@ describe('GET /api/clients/invoices', () => {
   })
 
   it('500 when DB returns an error', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_invoices: { select: { data: null, error: { message: 'db' } } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: {
+          portfolio_invoices: {
+            select: { data: null, error: { message: 'db' } },
+          },
+        },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(500)
   })
 
   it('500 when invoices do not match schema', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_invoices: { select: { data: [{ id: 'inv-1' }] } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: { portfolio_invoices: { select: { data: [{ id: 'inv-1' }] } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(500)

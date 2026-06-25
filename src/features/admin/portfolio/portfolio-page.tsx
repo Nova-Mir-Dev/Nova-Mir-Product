@@ -70,7 +70,10 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
 
-  const { page, setPage, totalPages, pageData } = useClientPagination(projects, 20)
+  const { page, setPage, totalPages, pageData } = useClientPagination(
+    projects,
+    20,
+  )
 
   const resetForm = () => {
     setForm(emptyForm)
@@ -104,7 +107,9 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
         })
         if (!res.ok) throw new Error('Failed to update')
         const updated = await res.json()
-        setProjects((prev) => prev.map((p) => (p.id === editingId ? updated : p)))
+        setProjects((prev) =>
+          prev.map((p) => (p.id === editingId ? updated : p)),
+        )
       } else {
         const res = await fetch('/api/admin/content/portfolio', {
           method: 'POST',
@@ -123,20 +128,27 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
     }
   }, [editingId, form])
 
-  const handleDelete = useCallback(async (id: string) => {
-    if (!confirm('Delete this project? This cannot be undone.')) return
-    try {
-      const res = await fetch(`/api/admin/content/portfolio?id=${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Failed to delete')
-      setProjects((prev) => prev.filter((p) => p.id !== id))
-      if (editingId === id) resetForm()
-    } catch {
-      alert('Failed to delete. Please try again.')
-    }
-  }, [editingId])
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (!confirm('Delete this project? This cannot be undone.')) return
+      try {
+        const res = await fetch(`/api/admin/content/portfolio?id=${id}`, {
+          method: 'DELETE',
+        })
+        if (!res.ok) throw new Error('Failed to delete')
+        setProjects((prev) => prev.filter((p) => p.id !== id))
+        if (editingId === id) resetForm()
+      } catch {
+        alert('Failed to delete. Please try again.')
+      }
+    },
+    [editingId],
+  )
 
   const statusBadge = (status: string) => (
-    <Badge variant={status === 'published' ? 'success' : 'warning'}>{status}</Badge>
+    <Badge variant={status === 'published' ? 'success' : 'warning'}>
+      {status}
+    </Badge>
   )
 
   const columns: Column<PortfolioProject>[] = [
@@ -169,10 +181,20 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
       title: '',
       render: (_, row) => (
         <Stack direction="horizontal" spacing="xs">
-          <Button variant="tertiary" size="sm" type="button" onClick={() => handleEdit(row)}>
+          <Button
+            variant="tertiary"
+            size="sm"
+            type="button"
+            onClick={() => handleEdit(row)}
+          >
             Edit
           </Button>
-          <Button variant="tertiary" size="sm" type="button" onClick={() => handleDelete(row.id)}>
+          <Button
+            variant="tertiary"
+            size="sm"
+            type="button"
+            onClick={() => handleDelete(row.id)}
+          >
             Delete
           </Button>
         </Stack>
@@ -182,11 +204,22 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
 
   return (
     <Stack spacing="md">
-      <Stack direction="horizontal" spacing="md" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Stack
+        direction="horizontal"
+        spacing="md"
+        style={{ justifyContent: 'space-between', alignItems: 'center' }}
+      >
         <Text element={{ as: 'h1', size: 'h3' }} weight="semibold">
           Portfolio Projects
         </Text>
-        <Button variant="primary" type="button" onClick={() => { resetForm(); setCreating(true) }}>
+        <Button
+          variant="primary"
+          type="button"
+          onClick={() => {
+            resetForm()
+            setCreating(true)
+          }}
+        >
           Add Project
         </Button>
       </Stack>
@@ -194,38 +227,59 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
       {(creating || editingId) && (
         <Card>
           <Stack spacing="sm">
-            <Text weight="semibold">{editingId ? 'Edit Project' : 'New Project'}</Text>
+            <Text weight="semibold">
+              {editingId ? 'Edit Project' : 'New Project'}
+            </Text>
             <Input
               label={{ text: 'Title' }}
               name="title"
-              value={{ value: form.title, onChange: (e) => {
-                const v = e.target.value
-                setForm((f) => ({
-                  ...f,
-                  title: v,
-                  slug: editingId ? f.slug : slugify(v),
-                }))
-              }}}
+              value={{
+                value: form.title,
+                onChange: (e) => {
+                  const v = e.target.value
+                  setForm((f) => ({
+                    ...f,
+                    title: v,
+                    slug: editingId ? f.slug : slugify(v),
+                  }))
+                },
+              }}
             />
             <Input
               label={{ text: 'Slug' }}
               name="slug"
-              value={{ value: form.slug, onChange: (e) => setForm((f) => ({ ...f, slug: e.target.value })) }}
+              value={{
+                value: form.slug,
+                onChange: (e) =>
+                  setForm((f) => ({ ...f, slug: e.target.value })),
+              }}
             />
             <Input
               label={{ text: 'Description' }}
               name="description"
-              value={{ value: form.description, onChange: (e) => setForm((f) => ({ ...f, description: e.target.value })) }}
+              value={{
+                value: form.description,
+                onChange: (e) =>
+                  setForm((f) => ({ ...f, description: e.target.value })),
+              }}
             />
             <Input
               label={{ text: 'Href' }}
               name="href"
-              value={{ value: form.href, onChange: (e) => setForm((f) => ({ ...f, href: e.target.value })) }}
+              value={{
+                value: form.href,
+                onChange: (e) =>
+                  setForm((f) => ({ ...f, href: e.target.value })),
+              }}
             />
             <Input
               label={{ text: 'Thumbnail URL' }}
               name="thumbnail_url"
-              value={{ value: form.thumbnail_url, onChange: (e) => setForm((f) => ({ ...f, thumbnail_url: e.target.value })) }}
+              value={{
+                value: form.thumbnail_url,
+                onChange: (e) =>
+                  setForm((f) => ({ ...f, thumbnail_url: e.target.value })),
+              }}
             />
             <Stack direction="horizontal" spacing="md">
               <Select
@@ -236,28 +290,51 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
                 ]}
                 value={form.status}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setForm((f) => ({ ...f, status: e.target.value as 'draft' | 'published' }))
+                  setForm((f) => ({
+                    ...f,
+                    status: e.target.value as 'draft' | 'published',
+                  }))
                 }
               />
               <Input
                 label={{ text: 'Sort Order' }}
                 name="sort_order"
                 type="number"
-                value={{ value: String(form.sort_order), onChange: (e) => setForm((f) => ({ ...f, sort_order: Number(e.target.value) })) }}
+                value={{
+                  value: String(form.sort_order),
+                  onChange: (e) =>
+                    setForm((f) => ({
+                      ...f,
+                      sort_order: Number(e.target.value),
+                    })),
+                }}
               />
             </Stack>
-            <Stack direction="horizontal" spacing="md" style={{ alignItems: 'center' }}>
+            <Stack
+              direction="horizontal"
+              spacing="md"
+              style={{ alignItems: 'center' }}
+            >
               <label>
                 <input
                   type="checkbox"
                   checked={form.is_published}
-                  onChange={(e) => setForm((f) => ({ ...f, is_published: e.target.checked }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, is_published: e.target.checked }))
+                  }
                 />
-                <Text element={{ size: 'sm' }} style={{ marginLeft: '0.5rem' }}>Published</Text>
+                <Text element={{ size: 'sm' }} style={{ marginLeft: '0.5rem' }}>
+                  Published
+                </Text>
               </label>
             </Stack>
             <Stack direction="horizontal" spacing="xs">
-              <Button variant="primary" type="button" onClick={handleSave} disabled={saving}>
+              <Button
+                variant="primary"
+                type="button"
+                onClick={handleSave}
+                disabled={saving}
+              >
                 {saving ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="tertiary" type="button" onClick={resetForm}>
@@ -277,10 +354,17 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
         <>
           <DataTable
             data={{ columns, data: pageData }}
-            pagination={{ virtual: { enabled: true, threshold: 50, maxHeight: 600 } }}
+            pagination={{
+              virtual: { enabled: true, threshold: 50, maxHeight: 600 },
+            }}
           />
           {totalPages > 1 && (
-            <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} showFirstLast />
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              showFirstLast
+            />
           )}
         </>
       )}

@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { revalidatePath } from 'next/cache'
 import { rateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
@@ -106,7 +107,10 @@ export async function POST(request: Request) {
   const parsed = createInvoiceBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Billing POST validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
@@ -193,6 +197,14 @@ export async function POST(request: Request) {
       { status: 500 },
     )
 
+  void logAudit({
+    action: 'billing.invoice.create',
+    entity: 'invoice',
+    entityId: invoice.id,
+    metadata: { status: invoice.status, total_cents: totalAmount },
+    userId: check.user.id,
+  })
+
   if (lineItemsData && lineItemsData.length > 0) {
     const { error: liError } = await admin.from('line_items').insert(
       lineItemsData.map((li) => ({
@@ -241,7 +253,10 @@ export async function PATCH(request: Request) {
   const parsed = updateInvoiceBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Billing PATCH validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }

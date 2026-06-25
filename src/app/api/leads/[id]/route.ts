@@ -4,6 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { rateLimit } from '@/lib/rate-limit'
 import { updateLeadStatusSchema } from '@/features/leads/schemas'
+import { logAudit } from '@/lib/audit-log'
 
 export async function PATCH(
   request: Request,
@@ -65,7 +66,10 @@ export async function PATCH(
     const parsed = updateLeadStatusSchema.safeParse(body)
     if (!parsed.success) {
       Sentry.captureMessage('Lead status update validation failed', {
-        extra: { issues: parsed.error.issues },
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
       })
       return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
     }
@@ -87,6 +91,14 @@ export async function PATCH(
         { status: 500 },
       )
     }
+
+    void logAudit({
+      action: 'lead.status.update',
+      entity: 'lead',
+      entityId: id,
+      metadata: { fields_changed: ['status'] },
+      userId: user.id,
+    })
 
     return NextResponse.json({ data })
   } catch (err) {

@@ -95,6 +95,7 @@ Content that is frequently updated or grows over time MUST live in database tabl
 - Process steps
 
 Content that is SEO-critical, architectural, or changes < 1x/year stays in code:
+
 - Page metadata / OG descriptions
 - Admin navigation links
 - Legal pages (privacy, terms)

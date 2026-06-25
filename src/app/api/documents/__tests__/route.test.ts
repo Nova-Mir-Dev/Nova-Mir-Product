@@ -8,8 +8,15 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
-vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
+vi.mock('@sentry/nextjs', () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -44,30 +51,54 @@ describe('POST /api/documents', () => {
   it('401 unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/documents', { method: 'POST', body: { title: 'T', filePath: '/x.pdf' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/documents', {
+        method: 'POST',
+        body: { title: 'T', filePath: '/x.pdf' },
+      }),
+    )
     expect(res.status).toBe(401)
   })
 
   it('429 rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/documents', { method: 'POST', body: { title: 'T', filePath: '/x.pdf' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/documents', {
+        method: 'POST',
+        body: { title: 'T', filePath: '/x.pdf' },
+      }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('400 validation failure', async () => {
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/documents', { method: 'POST', body: { title: '', filePath: '/x.pdf' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/documents', {
+        method: 'POST',
+        body: { title: '', filePath: '/x.pdf' },
+      }),
+    )
     expect(res.status).toBe(400)
   })
 
   it('201 returns document metadata on success', async () => {
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/documents', { method: 'POST', body: { title: 'My Doc', filePath: 'safe-file.pdf' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/documents', {
+        method: 'POST',
+        body: { title: 'My Doc', filePath: 'safe-file.pdf' },
+      }),
+    )
     expect(res.status).toBe(201)
     const body = await res.json()
     expect(body.title).toBe('My Doc')

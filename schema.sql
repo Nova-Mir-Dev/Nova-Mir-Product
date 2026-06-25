@@ -390,9 +390,10 @@ CREATE POLICY "leads_admin_select" ON leads FOR SELECT
   );
 
 -- Public submissions: anon users can only INSERT (contact form)
+-- Defense-in-depth: requires consent=true even if the API layer is bypassed.
 CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
   TO anon
-  WITH CHECK (true);
+  WITH CHECK (consent = true);
 
 -- =============================================================================
 -- Line items (for invoices)

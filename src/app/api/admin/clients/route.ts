@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { rateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
 
@@ -78,7 +79,10 @@ export async function POST(request: Request) {
   const parsed = createClientBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Admin clients validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
@@ -96,6 +100,14 @@ export async function POST(request: Request) {
       { error: 'Failed to create client' },
       { status: 500 },
     )
+
+  void logAudit({
+    action: 'client.create',
+    entity: 'client',
+    entityId: client.id,
+    metadata: { has_password: false },
+    userId: user.id,
+  })
 
   const mapped = {
     id: client.id,

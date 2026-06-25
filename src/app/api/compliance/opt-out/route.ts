@@ -16,7 +16,10 @@ export async function POST(request: Request) {
         null,
     })
     if (error) {
-      return NextResponse.json({ error: 'Failed to record opt-out' }, { status: 500 })
+      return NextResponse.json(
+        { error: 'Failed to record opt-out' },
+        { status: 500 },
+      )
     }
     return NextResponse.json({ success: true }, { status: 200 })
   } catch {

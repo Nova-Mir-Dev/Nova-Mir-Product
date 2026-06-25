@@ -89,17 +89,17 @@ Standard error codes:
 
 Status mapping:
 
-| Status | Code | Use |
-| --- | --- | --- |
-| `400` | `VALIDATION_ERROR` | Invalid body or query params |
-| `401` | `UNAUTHORIZED` | Missing or invalid API key |
-| `403` | `FORBIDDEN` | Valid key lacks required scope |
-| `404` | `NOT_FOUND` | Requested entity does not exist for that bridge |
-| `409` | `CONFLICT` | Duplicate or incompatible resource state |
-| `409` | `IDEMPOTENCY_CONFLICT` | Same key reused with different payload |
-| `429` | `RATE_LIMITED` | More than 100 requests per minute |
-| `503` | `UPSTREAM_UNAVAILABLE` | Target portal cannot complete request |
-| `500` | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                   | Use                                             |
+| ------ | ---------------------- | ----------------------------------------------- |
+| `400`  | `VALIDATION_ERROR`     | Invalid body or query params                    |
+| `401`  | `UNAUTHORIZED`         | Missing or invalid API key                      |
+| `403`  | `FORBIDDEN`            | Valid key lacks required scope                  |
+| `404`  | `NOT_FOUND`            | Requested entity does not exist for that bridge |
+| `409`  | `CONFLICT`             | Duplicate or incompatible resource state        |
+| `409`  | `IDEMPOTENCY_CONFLICT` | Same key reused with different payload          |
+| `429`  | `RATE_LIMITED`         | More than 100 requests per minute               |
+| `503`  | `UPSTREAM_UNAVAILABLE` | Target portal cannot complete request           |
+| `500`  | `INTERNAL_ERROR`       | Unexpected server error                         |
 
 Rate-limited responses include:
 

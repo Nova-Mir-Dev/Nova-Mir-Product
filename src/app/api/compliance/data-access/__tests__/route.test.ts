@@ -8,8 +8,15 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
-vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
+vi.mock('@sentry/nextjs', () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -26,16 +33,28 @@ async function setClient(client: MockClient) {
 describe('GET /api/compliance/data-access', () => {
   it('429 when rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/compliance/data-access', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/compliance/data-access', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('401 when unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/compliance/data-access', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/compliance/data-access', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(401)
   })
 
@@ -43,7 +62,17 @@ describe('GET /api/compliance/data-access', () => {
     const client = createMockClient({
       user: clientUser,
       tables: {
-        users: { select: { data: { id: 'u1', email: 'c@x.com', name: 'C', role: 'viewer', created_at: '2024-01-01' } } },
+        users: {
+          select: {
+            data: {
+              id: 'u1',
+              email: 'c@x.com',
+              name: 'C',
+              role: 'viewer',
+              created_at: '2024-01-01',
+            },
+          },
+        },
         sessions: { select: { data: [] } },
         projects: { select: { data: [] } },
         appointments: { select: { data: [] } },
@@ -59,7 +88,11 @@ describe('GET /api/compliance/data-access', () => {
     })
     await setClient(client)
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/compliance/data-access', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/compliance/data-access', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body.personalData).toBeDefined()
@@ -72,7 +105,11 @@ describe('GET /api/compliance/data-access', () => {
     const { createClient } = await import('@/lib/supabase-server')
     vi.mocked(createClient).mockRejectedValueOnce(new Error('boom'))
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/compliance/data-access', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/compliance/data-access', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(500)
   })
 })

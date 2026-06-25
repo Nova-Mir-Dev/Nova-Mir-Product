@@ -47,11 +47,7 @@ export default function PrivacyPage() {
     >
       <Stack spacing="2xl">
         <div>
-          <Text
-            element={{ as: 'h1', size: 'h1' }}
-            weight="bold"
-            align="center"
-          >
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
             Privacy Policy
           </Text>
           <Text
@@ -80,7 +76,6 @@ export default function PrivacyPage() {
             </div>
           ))}
         </Stack>
-
       </Stack>
     </Container>
   )

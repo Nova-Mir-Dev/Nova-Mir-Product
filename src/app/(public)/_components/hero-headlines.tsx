@@ -35,9 +35,7 @@ export function HeroContent({ fallback }: { fallback: Headline }) {
       <h1 className={styles.heroTitle} data-hero-variant={headline.id}>
         {headline.headline}
       </h1>
-      <p className={styles.heroSubtitle}>
-        {headline.subtitle}
-      </p>
+      <p className={styles.heroSubtitle}>{headline.subtitle}</p>
       <div className={styles.heroActions}>
         <Button variant="primary" size="lg" asChild>
           <Link href={headline.cta_href}>{headline.cta_label}</Link>

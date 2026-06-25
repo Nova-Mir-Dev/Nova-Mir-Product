@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 import * as Sentry from '@sentry/nextjs'
+import { logAudit } from '@/lib/audit-log'
 
 export async function GET(request: Request) {
   try {
@@ -31,11 +32,15 @@ export async function GET(request: Request) {
       .eq('user_id', user.id)
     const { data: projects } = await supabase
       .from('projects')
-      .select('id, name, description, status, deadline, progress, created_at, updated_at')
+      .select(
+        'id, name, description, status, deadline, progress, created_at, updated_at',
+      )
       .eq('client_id', user.id)
     const { data: appointments } = await supabase
       .from('appointments')
-      .select('id, title, description, start_time, end_time, status, created_at')
+      .select(
+        'id, title, description, start_time, end_time, status, created_at',
+      )
       .eq('user_id', user.id)
     const { data: payments } = await supabase
       .from('payments')
@@ -51,7 +56,9 @@ export async function GET(request: Request) {
       .eq('user_id', user.id)
     const { data: supportTickets } = await supabase
       .from('support_tickets')
-      .select('id, subject, description, status, priority, created_at, updated_at')
+      .select(
+        'id, subject, description, status, priority, created_at, updated_at',
+      )
       .eq('user_id', user.id)
     const { data: leads } = await supabase
       .from('leads')
@@ -60,7 +67,9 @@ export async function GET(request: Request) {
     const { data: portfolioClients } = await supabase
       .from('portfolio_clients')
       .select('id, name, email, phone, company, status, created_at')
-      .or(`email.eq.${user.email},name.eq.${user.user_metadata?.full_name ?? ''}`)
+      .or(
+        `email.eq.${user.email},name.eq.${user.user_metadata?.full_name ?? ''}`,
+      )
     const { data: signatures } = await supabase
       .from('signatures')
       .select('id, document_id, signed_at, valid_until, created_at')
@@ -69,6 +78,15 @@ export async function GET(request: Request) {
       .from('activity_logs')
       .select('id, action, resource, resource_id, ip_address, created_at')
       .eq('user_id', user.id)
+
+    const requestId = crypto.randomUUID()
+    void logAudit({
+      action: 'compliance.dsar.access',
+      entity: 'dsar',
+      entityId: requestId,
+      metadata: { entity: 'user', requested_by: user.id },
+      userId: user.id,
+    })
 
     return NextResponse.json({
       exportedAt: new Date().toISOString(),
@@ -114,6 +132,9 @@ export async function GET(request: Request) {
     })
   } catch (err) {
     Sentry.captureException(err)
-    return NextResponse.json({ error: 'Failed to export data' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to export data' },
+      { status: 500 },
+    )
   }
 }

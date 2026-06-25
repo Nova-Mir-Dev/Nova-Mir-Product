@@ -60,15 +60,15 @@ The launch blocker is not currently three local schemas fighting each other. It 
 
 Known mismatches:
 
-| Area | Schema | App expectation |
-| --- | --- | --- |
-| Invoices | `portfolio_invoices` has `user_id`, `client_name`, `amount`, `status`, `due_date`, `paid_at` | Code/types reference `client_id`, `date`, `invoice_number` |
-| Line items | `line_items` has `quantity`, `unit_price` | Code references `amount` |
-| Revenue | No `revenue_entries` or `expense_entries` tables | Admin revenue page queries both |
-| Clients | `portfolio_clients` has contact fields only | Types reference `status`, `project_count` |
-| Leads | Schema uses `business_name`, `service_interest`, `budget_range` | Admin types reference `company`, `notes` |
-| Projects | `projects` has no `deadline` or `progress` | Admin types reference both |
-| Support tickets | Schema has `description` | Admin types reference `message` |
+| Area            | Schema                                                                                       | App expectation                                            |
+| --------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Invoices        | `portfolio_invoices` has `user_id`, `client_name`, `amount`, `status`, `due_date`, `paid_at` | Code/types reference `client_id`, `date`, `invoice_number` |
+| Line items      | `line_items` has `quantity`, `unit_price`                                                    | Code references `amount`                                   |
+| Revenue         | No `revenue_entries` or `expense_entries` tables                                             | Admin revenue page queries both                            |
+| Clients         | `portfolio_clients` has contact fields only                                                  | Types reference `status`, `project_count`                  |
+| Leads           | Schema uses `business_name`, `service_interest`, `budget_range`                              | Admin types reference `company`, `notes`                   |
+| Projects        | `projects` has no `deadline` or `progress`                                                   | Admin types reference both                                 |
+| Support tickets | Schema has `description`                                                                     | Admin types reference `message`                            |
 
 RLS is also inconsistent with app access patterns:
 

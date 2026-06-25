@@ -44,7 +44,10 @@ export async function POST(request: Request) {
   const parsed = markReadBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Notifications validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }

@@ -47,15 +47,17 @@ export default function DoNotSellPage() {
           Do Not Sell My Personal Information
         </Text>
         <Text element={{ size: 'sm' }} color="secondary">
-          Under the California Consumer Privacy Act (CCPA), you have the right to
-          opt out of the sale of your personal information. Nova Mir does not
+          Under the California Consumer Privacy Act (CCPA), you have the right
+          to opt out of the sale of your personal information. Nova Mir does not
           sell personal information, but we respect your preference.
         </Text>
         <Input
           label={{ text: 'Email address', required: true }}
           value={{ value: email, onChange: (e) => setEmail(e.target.value) }}
         />
-        {error && <Text style={{ color: 'var(--azimuth-color-danger)' }}>{error}</Text>}
+        {error && (
+          <Text style={{ color: 'var(--azimuth-color-danger)' }}>{error}</Text>
+        )}
         <Button variant="primary" onClick={handleSubmit} disabled={loading}>
           {loading ? 'Submitting...' : 'Opt Out'}
         </Button>

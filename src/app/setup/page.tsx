@@ -546,7 +546,10 @@ export default function SetupPage() {
                   ok: !!envVars['NEXT_PUBLIC_AXIOM_DATASET'],
                 },
                 { label: 'SMS provider', ok: !!envVars['TWILIO_ACCOUNT_SID'] },
-                { label: 'Rate limiting', ok: !!envVars['UPSTASH_REDIS_REST_URL'] },
+                {
+                  label: 'Rate limiting',
+                  ok: !!envVars['UPSTASH_REDIS_REST_URL'],
+                },
               ].map((item) => (
                 <div
                   key={item.label}

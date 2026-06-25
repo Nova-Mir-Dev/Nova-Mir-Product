@@ -11,7 +11,11 @@ function read(path: string): string | null {
   }
 }
 
-function findFiles(dir: string, pattern: RegExp, results: string[] = []): string[] {
+function findFiles(
+  dir: string,
+  pattern: RegExp,
+  results: string[] = [],
+): string[] {
   try {
     const entries = readdirSync(join(ROOT, dir))
     for (const entry of entries) {
@@ -29,8 +33,6 @@ function findFiles(dir: string, pattern: RegExp, results: string[] = []): string
   return results
 }
 
-
-
 interface ContentType {
   name: string
   table: string
@@ -39,12 +41,42 @@ interface ContentType {
 }
 
 const CONTENT_TYPES: ContentType[] = [
-  { name: 'Pricing tiers', table: 'pricing_tiers', source: 'src/lib/pricing.ts', status: 'missing' },
-  { name: 'Portfolio projects', table: 'portfolio_projects', source: 'page.tsx, portfolio/page.tsx', status: 'missing' },
-  { name: 'Public nav links', table: 'public_nav_links', source: 'src/lib/navigation.ts, client-shell.tsx', status: 'missing' },
-  { name: 'Hero headlines', table: 'hero_headlines', source: 'page.tsx (hero section)', status: 'missing' },
-  { name: 'Testimonials', table: 'testimonials', source: 'page.tsx (placeholders)', status: 'missing' },
-  { name: 'Process steps', table: 'process_steps', source: 'page.tsx, process/page.tsx, about/page.tsx', status: 'missing' },
+  {
+    name: 'Pricing tiers',
+    table: 'pricing_tiers',
+    source: 'src/lib/pricing.ts',
+    status: 'missing',
+  },
+  {
+    name: 'Portfolio projects',
+    table: 'portfolio_projects',
+    source: 'page.tsx, portfolio/page.tsx',
+    status: 'missing',
+  },
+  {
+    name: 'Public nav links',
+    table: 'public_nav_links',
+    source: 'src/lib/navigation.ts, client-shell.tsx',
+    status: 'missing',
+  },
+  {
+    name: 'Hero headlines',
+    table: 'hero_headlines',
+    source: 'page.tsx (hero section)',
+    status: 'missing',
+  },
+  {
+    name: 'Testimonials',
+    table: 'testimonials',
+    source: 'page.tsx (placeholders)',
+    status: 'missing',
+  },
+  {
+    name: 'Process steps',
+    table: 'process_steps',
+    source: 'page.tsx, process/page.tsx, about/page.tsx',
+    status: 'missing',
+  },
 ]
 
 function auditContentTables(schema: string | null): ContentType[] {
@@ -69,7 +101,10 @@ interface AntiPattern {
   detail: string
 }
 
-function auditAntiPatterns(schema: string | null, seed: string | null): AntiPattern[] {
+function auditAntiPatterns(
+  schema: string | null,
+  seed: string | null,
+): AntiPattern[] {
   const results: AntiPattern[] = []
 
   // Check for generic JSONB content table
@@ -121,21 +156,96 @@ interface UserDataTable {
 }
 
 const USER_DATA_TABLES: UserDataTable[] = [
-  { name: 'users', has_user_id: true, id_field: 'id', covered_access: false, covered_deletion: false },
-  { name: 'sessions', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'projects', has_user_id: true, id_field: 'client_id', covered_access: false, covered_deletion: false },
-  { name: 'appointments', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'payments', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'documents', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'api_keys', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'support_tickets', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'signatures', has_user_id: true, id_field: 'signer_id', covered_access: false, covered_deletion: false },
-  { name: 'activity_logs', has_user_id: true, id_field: 'user_id', covered_access: false, covered_deletion: false },
-  { name: 'leads', has_user_id: false, id_field: 'email', covered_access: false, covered_deletion: false },
-  { name: 'portfolio_clients', has_user_id: false, id_field: 'email', covered_access: false, covered_deletion: false },
+  {
+    name: 'users',
+    has_user_id: true,
+    id_field: 'id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'sessions',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'projects',
+    has_user_id: true,
+    id_field: 'client_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'appointments',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'payments',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'documents',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'api_keys',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'support_tickets',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'signatures',
+    has_user_id: true,
+    id_field: 'signer_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'activity_logs',
+    has_user_id: true,
+    id_field: 'user_id',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'leads',
+    has_user_id: false,
+    id_field: 'email',
+    covered_access: false,
+    covered_deletion: false,
+  },
+  {
+    name: 'portfolio_clients',
+    has_user_id: false,
+    id_field: 'email',
+    covered_access: false,
+    covered_deletion: false,
+  },
 ]
 
-function auditDSAR(accessRoute: string | null, deletionRoute: string | null): UserDataTable[] {
+function auditDSAR(
+  accessRoute: string | null,
+  deletionRoute: string | null,
+): UserDataTable[] {
   for (const tbl of USER_DATA_TABLES) {
     if (accessRoute && accessRoute.includes(`'${tbl.name}'`)) {
       tbl.covered_access = true
@@ -165,13 +275,25 @@ function findOrphanedComponents(): OrphanedComponent[] {
   for (const dir of ['src/app', 'src/features']) {
     const files = findFiles(dir, /\.(tsx|ts)$/)
     for (const f of files) {
-      if (f.includes('/__tests__/') || f.endsWith('.test.tsx') || f.endsWith('.spec.tsx')) continue
-      allSrcFiles.push({ path: f, content: readFileSync(join(ROOT, f), 'utf-8') })
+      if (
+        f.includes('/__tests__/') ||
+        f.endsWith('.test.tsx') ||
+        f.endsWith('.spec.tsx')
+      )
+        continue
+      allSrcFiles.push({
+        path: f,
+        content: readFileSync(join(ROOT, f), 'utf-8'),
+      })
     }
   }
 
   for (const file of featureFiles) {
-    if (file.includes('/__tests__/') || file.endsWith('.test.tsx') || file.endsWith('.spec.tsx')) {
+    if (
+      file.includes('/__tests__/') ||
+      file.endsWith('.test.tsx') ||
+      file.endsWith('.spec.tsx')
+    ) {
       continue
     }
 
@@ -205,7 +327,12 @@ function findOrphanedComponents(): OrphanedComponent[] {
 // 5. Report
 // ---------------------------------------------------------------------------
 
-function report(contentTypes: ContentType[], antiPatterns: AntiPattern[], dsarTables: UserDataTable[], orphans: OrphanedComponent[]) {
+function report(
+  contentTypes: ContentType[],
+  antiPatterns: AntiPattern[],
+  dsarTables: UserDataTable[],
+  orphans: OrphanedComponent[],
+) {
   const header = '═'.repeat(55)
   console.log('')
   console.log(header)
@@ -218,7 +345,10 @@ function report(contentTypes: ContentType[], antiPatterns: AntiPattern[], dsarTa
   console.log('')
   for (const ct of contentTypes) {
     const icon = ct.status === 'present' ? '✓' : '✗'
-    const status = ct.status === 'present' ? 'present in schema.sql' : 'MISSING from schema.sql'
+    const status =
+      ct.status === 'present'
+        ? 'present in schema.sql'
+        : 'MISSING from schema.sql'
     console.log(`  ${icon} ${ct.table} — ${status}`)
   }
 
@@ -240,9 +370,13 @@ function report(contentTypes: ContentType[], antiPatterns: AntiPattern[], dsarTa
     const icon = tbl.covered_access && tbl.covered_deletion ? '✓' : '✗'
     const accessStatus = tbl.covered_access ? 'COVERED' : 'MISSING'
     const deletionStatus = tbl.covered_deletion ? 'COVERED' : 'MISSING'
-    const idField = tbl.has_user_id ? ` (via ${tbl.id_field})` : ` (via ${tbl.id_field}, no user_id)`
+    const idField = tbl.has_user_id
+      ? ` (via ${tbl.id_field})`
+      : ` (via ${tbl.id_field}, no user_id)`
     console.log(`  ${icon} ${tbl.name}${idField}`)
-    console.log(`       data-access: ${accessStatus}, data-deletion: ${deletionStatus}`)
+    console.log(
+      `       data-access: ${accessStatus}, data-deletion: ${deletionStatus}`,
+    )
   }
 
   // Orphaned components
@@ -259,12 +393,16 @@ function report(contentTypes: ContentType[], antiPatterns: AntiPattern[], dsarTa
   }
 
   // Summary
-  const contentPresent = contentTypes.filter(c => c.status === 'present').length
+  const contentPresent = contentTypes.filter(
+    (c) => c.status === 'present',
+  ).length
   const contentTotal = contentTypes.length
-  const dsarAccessCovered = dsarTables.filter(t => t.covered_access).length
-  const dsarDeletionCovered = dsarTables.filter(t => t.covered_deletion).length
+  const dsarAccessCovered = dsarTables.filter((t) => t.covered_access).length
+  const dsarDeletionCovered = dsarTables.filter(
+    (t) => t.covered_deletion,
+  ).length
   const dsarTotal = dsarTables.length
-  const antiPatternFails = antiPatterns.filter(a => !a.pass).length
+  const antiPatternFails = antiPatterns.filter((a) => !a.pass).length
 
   console.log('')
   console.log('SUMMARY:')
@@ -278,8 +416,13 @@ function report(contentTypes: ContentType[], antiPatterns: AntiPattern[], dsarTa
 
   // Determine exit code
   const allContentPresent = contentPresent === contentTotal
-  const allDSARCovered = dsarAccessCovered === dsarTotal && dsarDeletionCovered === dsarTotal
-  const noIssues = allContentPresent && allDSARCovered && antiPatternFails === 0 && orphans.length === 0
+  const allDSARCovered =
+    dsarAccessCovered === dsarTotal && dsarDeletionCovered === dsarTotal
+  const noIssues =
+    allContentPresent &&
+    allDSARCovered &&
+    antiPatternFails === 0 &&
+    orphans.length === 0
 
   return noIssues ? 0 : 1
 }

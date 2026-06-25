@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { sanitizeFilename } from '@/lib/sanitize'
+import { logAudit } from '@/lib/audit-log'
 import { rateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
 
@@ -41,15 +42,25 @@ export async function POST(request: Request) {
   const parsed = createDocumentBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Documents validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
   const body = parsed.data
   const safePath = sanitizeFilename(body.filePath || `doc_${Date.now()}.pdf`)
+  const docId = crypto.randomUUID()
+  void logAudit({
+    action: 'document.upload',
+    entity: 'document',
+    entityId: docId,
+    userId: user.id,
+  })
   return NextResponse.json(
     {
-      id: crypto.randomUUID(),
+      id: docId,
       title: body.title,
       filePath: safePath,
       userId: user.id,

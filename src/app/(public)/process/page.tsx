@@ -30,11 +30,7 @@ export default function ProcessPage() {
       style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
-        <Text
-          element={{ as: 'h1', size: 'h1' }}
-          weight="bold"
-          align="center"
-        >
+        <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
           How It Works
         </Text>
 

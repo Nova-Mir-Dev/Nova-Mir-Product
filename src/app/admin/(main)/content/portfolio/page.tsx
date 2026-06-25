@@ -17,10 +17,16 @@ interface PortfolioProject {
 
 export default async function AdminContentPortfolioRoute() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
   if (profile?.role !== 'admin') return <div>Forbidden</div>
 
   const { data: projects } = await supabase

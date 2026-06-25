@@ -42,10 +42,12 @@ describe('GET /api/clients/me', () => {
   })
 
   it('404 when client profile not found', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_clients: { select: { data: null, error: null } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: { portfolio_clients: { select: { data: null, error: null } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(404)
@@ -53,20 +55,24 @@ describe('GET /api/clients/me', () => {
   })
 
   it('500 when DB error', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_clients: { select: { error: { message: 'db' } } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: { portfolio_clients: { select: { error: { message: 'db' } } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(500)
   })
 
   it('200 returns client profile on success', async () => {
-    await setClient(createMockClient({
-      user: clientUser,
-      tables: { portfolio_clients: { select: { data: validClient } } },
-    }))
+    await setClient(
+      createMockClient({
+        user: clientUser,
+        tables: { portfolio_clients: { select: { data: validClient } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET()
     expect(res.status).toBe(200)

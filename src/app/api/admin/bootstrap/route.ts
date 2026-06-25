@@ -138,7 +138,10 @@ export async function POST(request: Request) {
   const parsed = BootstrapSchema.safeParse(raw)
   if (!parsed.success) {
     Sentry.captureMessage('Bootstrap validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }

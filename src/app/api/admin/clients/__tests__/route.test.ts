@@ -20,7 +20,9 @@ vi.mock('@/lib/supabase-admin', () => ({
 }))
 
 vi.mock('@/lib/rate-limit', () => ({
-  rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
 }))
 
 vi.mock('@sentry/nextjs', () => ({
@@ -55,52 +57,104 @@ describe('POST /api/admin/clients', () => {
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: validPayload }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: validPayload,
+      }),
+    )
     expect(res.status).toBe(401)
   })
 
   it('returns 403 when role is not admin', async () => {
-    const server = createMockClient({ user: clientUser, tables: { users: { select: { data: clientProfile } } } })
+    const server = createMockClient({
+      user: clientUser,
+      tables: { users: { select: { data: clientProfile } } },
+    })
     const admin = createMockClient()
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: validPayload }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: validPayload,
+      }),
+    )
     expect(res.status).toBe(403)
   })
 
   it('returns 429 when rate limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient()
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: validPayload }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: validPayload,
+      }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('returns 400 when validation fails', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient()
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: { name: '', email: 'bad' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: { name: '', email: 'bad' },
+      }),
+    )
     expect(res.status).toBe(400)
   })
 
   it('returns 201 with created client on success', async () => {
-    const created = { id: 'c-1', name: 'Acme Co', email: 'acme@example.com', project_count: 0, status: 'active' }
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const created = {
+      id: 'c-1',
+      name: 'Acme Co',
+      email: 'acme@example.com',
+      project_count: 0,
+      status: 'active',
+    }
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient({
-      tables: { portfolio_clients: { insert: { data: created }, select: { data: [] } } as TableOps },
+      tables: {
+        portfolio_clients: {
+          insert: { data: created },
+          select: { data: [] },
+        } as TableOps,
+      },
     })
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: validPayload }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: validPayload,
+      }),
+    )
     expect(res.status).toBe(201)
     const body = await res.json()
     expect(body.id).toBe('c-1')
@@ -108,14 +162,26 @@ describe('POST /api/admin/clients', () => {
   })
 
   it('returns 500 when insert fails', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient({
-      tables: { portfolio_clients: { insert: { data: null, error: { message: 'db', code: '23505' } } } as TableOps },
+      tables: {
+        portfolio_clients: {
+          insert: { data: null, error: { message: 'db', code: '23505' } },
+        } as TableOps,
+      },
     })
     await setClients(server, admin)
 
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/admin/clients', { method: 'POST', body: validPayload }))
+    const res = await POST(
+      buildRequest('http://localhost/api/admin/clients', {
+        method: 'POST',
+        body: validPayload,
+      }),
+    )
     expect(res.status).toBe(500)
   })
 })
@@ -131,7 +197,10 @@ describe('GET /api/admin/clients', () => {
   })
 
   it('returns 403 forbidden role', async () => {
-    const server = createMockClient({ user: clientUser, tables: { users: { select: { data: clientProfile } } } })
+    const server = createMockClient({
+      user: clientUser,
+      tables: { users: { select: { data: clientProfile } } },
+    })
     await setClients(server, createMockClient())
 
     const { GET } = await import('../route')
@@ -140,9 +209,26 @@ describe('GET /api/admin/clients', () => {
   })
 
   it('returns client list on success', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient({
-      tables: { portfolio_clients: { select: { data: [{ id: 'c1', name: 'A', email: 'a@x.com', project_count: 2, status: 'active' }] } } },
+      tables: {
+        portfolio_clients: {
+          select: {
+            data: [
+              {
+                id: 'c1',
+                name: 'A',
+                email: 'a@x.com',
+                project_count: 2,
+                status: 'active',
+              },
+            ],
+          },
+        },
+      },
     })
     await setClients(server, admin)
 
@@ -155,9 +241,14 @@ describe('GET /api/admin/clients', () => {
   })
 
   it('returns 500 when fetch fails', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient({
-      tables: { portfolio_clients: { select: { data: null, error: { message: 'db' } } } },
+      tables: {
+        portfolio_clients: { select: { data: null, error: { message: 'db' } } },
+      },
     })
     await setClients(server, admin)
 

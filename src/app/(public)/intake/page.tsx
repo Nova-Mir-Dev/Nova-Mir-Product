@@ -265,17 +265,13 @@ export default function IntakePage() {
     >
       <Stack spacing="lg">
         <Stack spacing="sm">
-          <Text
-            element={{ as: 'h1', size: 'h1' }}
-            weight="bold"
-            align="center"
-          >
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
             Tell Me About Your Project
           </Text>
           <div style={{ textAlign: 'center' }}>
             <Text element={{ size: 'base' }} color="secondary" align="center">
-              The more I know, the better I can help. I&rsquo;ll follow up within
-              1-2 business days.
+              The more I know, the better I can help. I&rsquo;ll follow up
+              within 1-2 business days.
             </Text>
           </div>
         </Stack>

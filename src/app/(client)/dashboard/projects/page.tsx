@@ -75,7 +75,10 @@ export default async function ProjectsPage() {
                   }}
                 >
                   <Text element={{ size: 'sm' }} color="secondary">
-                    Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
+                    Deadline:{' '}
+                    {project.deadline
+                      ? new Date(project.deadline).toLocaleDateString()
+                      : 'No deadline'}
                   </Text>
                   <Link href={'/dashboard/projects/' + project.id}>
                     <Text>View Details</Text>

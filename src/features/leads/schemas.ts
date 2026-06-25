@@ -26,8 +26,20 @@ export const createLeadSchema = z.object({
     .default(null),
   budgetRange: z.string().trim().max(100).optional().nullable().default(null),
   timeline: z.string().trim().max(100).optional().nullable().default(null),
-  referralSource: z.string().trim().max(200).optional().nullable().default(null),
-  currentWebsite: z.string().trim().max(500).optional().nullable().default(null),
+  referralSource: z
+    .string()
+    .trim()
+    .max(200)
+    .optional()
+    .nullable()
+    .default(null),
+  currentWebsite: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .nullable()
+    .default(null),
   message: z.string().trim().min(1, 'Message is required').max(10000),
   consent: z.literal(true, {
     message: 'You must consent to data storage before submitting.',

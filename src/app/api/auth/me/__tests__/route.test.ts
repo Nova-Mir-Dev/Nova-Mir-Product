@@ -9,7 +9,10 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }))
+vi.mock('@sentry/nextjs', () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -43,7 +46,9 @@ describe('GET /api/auth/me', () => {
   it('401 when profile missing', async () => {
     const client = createMockClient({
       user: adminUser,
-      tables: { users: { select: { data: null, error: { code: 'PGRST116' } } } },
+      tables: {
+        users: { select: { data: null, error: { code: 'PGRST116' } } },
+      },
     })
     await setClient(client)
     const { GET } = await import('../route')
@@ -76,7 +81,10 @@ describe('GET /api/auth/me', () => {
   })
 
   it('buildRequest helper accepts method override', () => {
-    const req = buildRequest('http://localhost/x', { method: 'PUT', body: { a: 1 } })
+    const req = buildRequest('http://localhost/x', {
+      method: 'PUT',
+      body: { a: 1 },
+    })
     expect(req.method).toBe('PUT')
     expect(req.headers.get('content-type')).toBe('application/json')
   })

@@ -10,20 +10,16 @@ export default function AboutPage() {
     >
       <Stack spacing="lg">
         <div style={{ paddingTop: '2rem' }}>
-          <Text
-            element={{ as: 'h1', size: 'h1' }}
-            weight="bold"
-            align="center"
-          >
+          <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
             Hi, we&rsquo;re Nova Mir
           </Text>
         </div>
 
         <Text>
-          Nova Mir started with a simple belief — that good tools shouldn&rsquo;t
-          require a manual. We build websites and systems that handle the details
-          so you can focus on running your business. No bloat, no complexity,
-          just things that work.
+          Nova Mir started with a simple belief — that good tools
+          shouldn&rsquo;t require a manual. We build websites and systems that
+          handle the details so you can focus on running your business. No
+          bloat, no complexity, just things that work.
         </Text>
 
         <div style={{ paddingTop: '1rem' }}>
@@ -120,7 +116,8 @@ export default function AboutPage() {
           >
             <Text weight="semibold">3. Launch</Text>
             <Text element={{ size: 'sm' }} color="secondary">
-              We deploy, set up analytics, and hand off with clear documentation.
+              We deploy, set up analytics, and hand off with clear
+              documentation.
             </Text>
           </div>
         </Stack>

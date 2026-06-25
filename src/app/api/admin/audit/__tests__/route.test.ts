@@ -12,8 +12,15 @@ import {
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
 vi.mock('@/lib/supabase-admin', () => ({ createServiceClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
-vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
+vi.mock('@sentry/nextjs', () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -34,30 +41,49 @@ describe('GET /api/admin/audit', () => {
   it('401 unauthenticated', async () => {
     await setClients(createMockClient({ user: unauthUser }), createMockClient())
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit', { method: 'GET' }),
+    )
     expect(res.status).toBe(401)
   })
 
   it('403 forbidden', async () => {
-    const server = createMockClient({ user: clientUser, tables: { users: { select: { data: clientProfile } } } })
+    const server = createMockClient({
+      user: clientUser,
+      tables: { users: { select: { data: clientProfile } } },
+    })
     await setClients(server, createMockClient())
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit', { method: 'GET' }),
+    )
     expect(res.status).toBe(403)
   })
 
   it('429 rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     await setClients(server, createMockClient())
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit', { method: 'GET' }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('200 returns mapped entries', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
     const admin = createMockClient({
       tables: {
         activity_logs: {
@@ -78,7 +104,11 @@ describe('GET /api/admin/audit', () => {
     })
     await setClients(server, admin)
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit?action=login', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit?action=login', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body[0].action).toBe('LOGIN')
@@ -86,22 +116,40 @@ describe('GET /api/admin/audit', () => {
   })
 
   it('200 returns empty list when no entries match filter', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
-    const admin = createMockClient({ tables: { activity_logs: { select: { data: [] } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
+    const admin = createMockClient({
+      tables: { activity_logs: { select: { data: [] } } },
+    })
     await setClients(server, admin)
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit?action=zombie', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit?action=zombie', {
+        method: 'GET',
+      }),
+    )
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body).toEqual([])
   })
 
   it('500 when fetch fails', async () => {
-    const server = createMockClient({ user: adminUser, tables: { users: { select: { data: adminProfile } } } })
-    const admin = createMockClient({ tables: { activity_logs: { select: { data: null, error: { message: 'db' } } } } })
+    const server = createMockClient({
+      user: adminUser,
+      tables: { users: { select: { data: adminProfile } } },
+    })
+    const admin = createMockClient({
+      tables: {
+        activity_logs: { select: { data: null, error: { message: 'db' } } },
+      },
+    })
     await setClients(server, admin)
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/admin/audit', { method: 'GET' }))
+    const res = await GET(
+      buildRequest('http://localhost/api/admin/audit', { method: 'GET' }),
+    )
     expect(res.status).toBe(500)
   })
 })

@@ -106,7 +106,10 @@ export async function PATCH(request: Request) {
   const parsed = updateLeadBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Admin leads PATCH validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }
@@ -171,7 +174,10 @@ export async function POST(request: Request) {
   const parsed = createLeadBodySchema.safeParse(await request.json())
   if (!parsed.success) {
     Sentry.captureMessage('Admin leads POST validation failed', {
-      extra: { issues: parsed.error.issues },
+      extra: {
+        issueCount: parsed.error.issues.length,
+        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+      },
     })
     return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
   }

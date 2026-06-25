@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 import { enrollMfa } from '@/features/auth/mfa'
+import { logAudit } from '@/lib/audit-log'
 import { z } from 'zod'
 
 const enrollBodySchema = z.object({
@@ -35,6 +36,15 @@ export async function POST(request: Request) {
   const result = await enrollMfa()
   if ('error' in result)
     return NextResponse.json({ error: 'Enrollment failed' }, { status: 400 })
+
+  void logAudit({
+    action: 'auth.mfa.enroll',
+    entity: 'user',
+    entityId: user.id,
+    metadata: { factor_type: parsed.data.factorType ?? 'totp' },
+    userId: user.id,
+  })
+
   return NextResponse.json({
     id: result.id,
     qr: result.qr,

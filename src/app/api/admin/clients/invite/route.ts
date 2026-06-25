@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { unauthorized, forbidden, internalError } from '@/lib/api-error'
 import { rateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
@@ -74,6 +75,16 @@ export async function POST(request: Request) {
         { status: 500 },
       )
     }
+
+    const emailDomain = email.split('@')[1] ?? ''
+
+    void logAudit({
+      action: 'client.invite',
+      entity: 'client',
+      entityId: authUser.user.id,
+      metadata: { email_domain: emailDomain },
+      userId: user.id,
+    })
 
     return NextResponse.json(
       {

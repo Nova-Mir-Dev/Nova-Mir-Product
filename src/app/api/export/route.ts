@@ -44,17 +44,30 @@ export async function GET(request: Request) {
   }
   const { format, entity } = parsed.data
 
-  const allowedEntities = ['users', 'leads', 'clients', 'projects', 'portfolio_invoices'] as const
-  if (!allowedEntities.includes(entity as typeof allowedEntities[number])) {
-    return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 400 })
+  const allowedEntities = [
+    'users',
+    'leads',
+    'clients',
+    'projects',
+    'portfolio_invoices',
+  ] as const
+  if (!allowedEntities.includes(entity as (typeof allowedEntities)[number])) {
+    return NextResponse.json(
+      { error: `Unknown entity: ${entity}` },
+      { status: 400 },
+    )
   }
 
   const columnMap: Record<string, string> = {
     users: 'id, email, name, role, created_at',
-    leads: 'id, name, email, business_name, phone, service_interest, budget_range, message, timeline, referral_source, current_website, status, source, notes, consent, created_at',
-    clients: 'id, name, email, phone, company, status, project_count, created_at',
-    projects: 'id, client_id, name, description, status, deadline, progress, created_at',
-    portfolio_invoices: 'id, client_name, amount, status, due_date, invoice_number, date, created_at, paid_at',
+    leads:
+      'id, name, email, business_name, phone, service_interest, budget_range, message, timeline, referral_source, current_website, status, source, notes, consent, created_at',
+    clients:
+      'id, name, email, phone, company, status, project_count, created_at',
+    projects:
+      'id, client_id, name, description, status, deadline, progress, created_at',
+    portfolio_invoices:
+      'id, client_name, amount, status, due_date, invoice_number, date, created_at, paid_at',
   }
 
   const columns = columnMap[entity] || 'id, created_at'
@@ -70,7 +83,7 @@ export async function GET(request: Request) {
 
   const data = raw as unknown as Array<Record<string, unknown>>
 
-function csvEscape(value: unknown): string {
+  function csvEscape(value: unknown): string {
     let str: string
     if (value == null) {
       str = ''
@@ -83,7 +96,15 @@ function csvEscape(value: unknown): string {
     } else {
       str = ''
     }
-    if (str.includes(',') || str.includes('"') || str.includes('\n') || str.startsWith('=') || str.startsWith('+') || str.startsWith('-') || str.startsWith('@')) {
+    if (
+      str.includes(',') ||
+      str.includes('"') ||
+      str.includes('\n') ||
+      str.startsWith('=') ||
+      str.startsWith('+') ||
+      str.startsWith('-') ||
+      str.startsWith('@')
+    ) {
       return '"' + str.replace(/"/g, '""') + '"'
     }
     return str
@@ -99,9 +120,9 @@ function csvEscape(value: unknown): string {
       })
     }
     const headers = Object.keys(data[0]!).map(csvEscape).join(',')
-    const rows = data.map((row) =>
-      Object.values(row).map(csvEscape).join(','),
-    ).join('\n')
+    const rows = data
+      .map((row) => Object.values(row).map(csvEscape).join(','))
+      .join('\n')
     return new NextResponse(headers + '\n' + rows + '\n', {
       headers: {
         'Content-Type': 'text/csv',

@@ -8,7 +8,11 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -22,7 +26,9 @@ async function setClient(client: MockClient) {
   vi.mocked(createClient).mockResolvedValue(client)
 }
 
-const entityParams = (entity: string) => ({ params: Promise.resolve({ entity }) })
+const entityParams = (entity: string) => ({
+  params: Promise.resolve({ entity }),
+})
 
 describe('GET /api/crud/[entity]', () => {
   it('400 when entity is invalid', async () => {
@@ -38,14 +44,22 @@ describe('GET /api/crud/[entity]', () => {
   it('401 unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/crud/users', { method: 'GET' }), entityParams('users'))
+    const res = await GET(
+      buildRequest('http://localhost/api/crud/users', { method: 'GET' }),
+      entityParams('users'),
+    )
     expect(res.status).toBe(401)
   })
 
   it('200 scaffold response for allowed entity', async () => {
     await setClient(createMockClient({ user: clientUser }))
     const { GET } = await import('../route')
-    const res = await GET(buildRequest('http://localhost/api/crud/users?limit=5', { method: 'GET' }), entityParams('users'))
+    const res = await GET(
+      buildRequest('http://localhost/api/crud/users?limit=5', {
+        method: 'GET',
+      }),
+      entityParams('users'),
+    )
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body.entity).toBe('users')
@@ -57,7 +71,10 @@ describe('POST /api/crud/[entity]', () => {
   it('400 when entity is invalid', async () => {
     const { POST } = await import('../route')
     const res = await POST(
-      buildRequest('http://localhost/api/crud/bogus', { method: 'POST', body: {} }),
+      buildRequest('http://localhost/api/crud/bogus', {
+        method: 'POST',
+        body: {},
+      }),
       entityParams('bogus'),
     )
     expect(res.status).toBe(400)
@@ -66,23 +83,45 @@ describe('POST /api/crud/[entity]', () => {
   it('401 unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/crud/projects', { method: 'POST', body: {} }), entityParams('projects'))
+    const res = await POST(
+      buildRequest('http://localhost/api/crud/projects', {
+        method: 'POST',
+        body: {},
+      }),
+      entityParams('projects'),
+    )
     expect(res.status).toBe(401)
   })
 
   it('429 rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/crud/tasks', { method: 'POST', body: {} }), entityParams('tasks'))
+    const res = await POST(
+      buildRequest('http://localhost/api/crud/tasks', {
+        method: 'POST',
+        body: {},
+      }),
+      entityParams('tasks'),
+    )
     expect(res.status).toBe(429)
   })
 
   it('201 scaffold response on success', async () => {
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/crud/tasks', { method: 'POST', body: { foo: 'bar' } }), entityParams('tasks'))
+    const res = await POST(
+      buildRequest('http://localhost/api/crud/tasks', {
+        method: 'POST',
+        body: { foo: 'bar' },
+      }),
+      entityParams('tasks'),
+    )
     expect(res.status).toBe(201)
     const body = await res.json()
     expect(body.entity).toBe('tasks')

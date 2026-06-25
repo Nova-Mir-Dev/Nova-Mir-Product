@@ -13,11 +13,7 @@ export default function ServicesPage() {
       style={{ margin: '2rem auto', padding: '0 1rem' }}
     >
       <Stack spacing="lg">
-        <Text
-          element={{ as: 'h1', size: 'h1' }}
-          weight="bold"
-          align="center"
-        >
+        <Text element={{ as: 'h1', size: 'h1' }} weight="bold" align="center">
           Services &amp; Pricing
         </Text>
 
@@ -72,7 +68,8 @@ export default function ServicesPage() {
                   weight="bold"
                   style={{ color: 'var(--azimuth-color-primary)' }}
                 >
-                  ${tier.startingPrice.toLocaleString()}{i === 1 ? '' : '+'}
+                  ${tier.startingPrice.toLocaleString()}
+                  {i === 1 ? '' : '+'}
                 </Text>
                 {i === 1 && (
                   <Text

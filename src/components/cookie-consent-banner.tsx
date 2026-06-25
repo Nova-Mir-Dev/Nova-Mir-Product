@@ -1,7 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { hasCookieConsent, hasDeclinedConsent, setCookieConsent } from '@/lib/cookie-consent'
+import {
+  hasCookieConsent,
+  hasDeclinedConsent,
+  setCookieConsent,
+} from '@/lib/cookie-consent'
 
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false)

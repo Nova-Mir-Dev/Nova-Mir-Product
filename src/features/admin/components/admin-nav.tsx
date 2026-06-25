@@ -24,10 +24,14 @@ const navItems: NavItem[] = [
   { label: 'Audit Log', path: '/admin/audit' },
   { label: 'DSAR', path: '/admin/compliance/dsar' },
   { label: 'Settings', path: '/admin/settings' },
-  { label: 'Content', path: '/admin/content', items: [
-    { label: 'Portfolio', path: '/admin/content/portfolio' },
-    { label: 'Hero Headlines', path: '/admin/content/hero-headlines' },
-  ]},
+  {
+    label: 'Content',
+    path: '/admin/content',
+    items: [
+      { label: 'Portfolio', path: '/admin/content/portfolio' },
+      { label: 'Hero Headlines', path: '/admin/content/hero-headlines' },
+    ],
+  },
 ]
 
 export default function AdminNav() {
@@ -56,7 +60,9 @@ export default function AdminNav() {
                           <Link
                             href={sub.path}
                             className={styles.link}
-                            aria-current={pathname === sub.path ? 'page' : undefined}
+                            aria-current={
+                              pathname === sub.path ? 'page' : undefined
+                            }
                           >
                             <Text>{sub.label}</Text>
                           </Link>

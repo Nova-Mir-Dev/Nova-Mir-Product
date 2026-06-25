@@ -4,12 +4,15 @@ import { writeFile } from 'fs/promises'
 import { join } from 'path'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
+import { logAudit } from '@/lib/audit-log'
 
 export async function saveEnvVars(
   envVars: Record<string, string>,
 ): Promise<{ success: boolean; path?: string; error?: string }> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return { success: false, error: 'Unauthorized' }
 
   const { data: profile } = await supabase
@@ -55,6 +58,18 @@ export async function saveEnvVars(
     await writeFile(join(process.cwd(), '.env.production'), deployContent)
 
     revalidatePath('/setup')
+
+    void logAudit({
+      action: 'admin.env.update',
+      entity: 'env',
+      entityId: 'env-vars',
+      metadata: {
+        keys_updated: entries.map(([key]) => key),
+        count: entries.length,
+      },
+      userId: user.id,
+    })
+
     return { success: true, path: '.env.local' }
   } catch (err) {
     return { success: false, error: String(err) }

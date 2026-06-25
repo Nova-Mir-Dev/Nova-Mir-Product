@@ -71,26 +71,27 @@
   .link span {
     display: none;
   }
-.navSectionLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--azimuth-color-text-muted);
-  padding: var(--azimuth-spacing-sm) var(--azimuth-spacing-sm) var(--azimuth-spacing-xs);
-}
+  .navSectionLabel {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--azimuth-color-text-muted);
+    padding: var(--azimuth-spacing-sm) var(--azimuth-spacing-sm)
+      var(--azimuth-spacing-xs);
+  }
 
-.navSublist {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0 var(--azimuth-spacing-sm);
-}
+  .navSublist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 var(--azimuth-spacing-sm);
+  }
 
-.navSubItem {
-  margin-bottom: var(--azimuth-spacing-xs);
-}
+  .navSubItem {
+    margin-bottom: var(--azimuth-spacing-xs);
+  }
 
-.backToSite {
+  .backToSite {
     display: none;
   }
   .title {

@@ -8,7 +8,11 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
 vi.mock('@/features/auth/mfa', () => ({
   enrollMfa: vi.fn(),
   verifyMfa: vi.fn(),
@@ -29,38 +33,72 @@ async function setClient(client: MockClient) {
 describe('POST /api/auth/mfa/enroll', () => {
   it('400 when body invalid (wrong factorType)', async () => {
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: { factorType: 'invalid' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: { factorType: 'invalid' },
+      }),
+    )
     expect(res.status).toBe(400)
   })
 
   it('400 when factorType is invalid enum value', async () => {
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: { factorType: 'invalid' } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: { factorType: 'invalid' },
+      }),
+    )
     expect(res.status).toBe(400)
   })
 
   it('401 when unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(401)
   })
 
   it('429 when rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
     await setClient(createMockClient({ user: adminUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('200 with id and qr on success', async () => {
     await setClient(createMockClient({ user: adminUser }))
     const { enrollMfa } = await import('@/features/auth/mfa')
-    vi.mocked(enrollMfa).mockResolvedValueOnce({ id: 'factor-1', qr: 'qr-code', secret: 's', uri: 'otpauth://...' })
+    vi.mocked(enrollMfa).mockResolvedValueOnce({
+      id: 'factor-1',
+      qr: 'qr-code',
+      secret: 's',
+      uri: 'otpauth://...',
+    })
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body.id).toBe('factor-1')
@@ -72,7 +110,12 @@ describe('POST /api/auth/mfa/enroll', () => {
     const { enrollMfa } = await import('@/features/auth/mfa')
     vi.mocked(enrollMfa).mockResolvedValueOnce({ error: 'Enrollment failed' })
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/auth/mfa/enroll', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/auth/mfa/enroll', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(400)
   })
 })

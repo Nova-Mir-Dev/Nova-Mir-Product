@@ -15,7 +15,10 @@ export async function GET() {
     .order('sort_order')
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch headlines' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch headlines' },
+      { status: 500 },
+    )
   }
 
   return NextResponse.json(data ?? [])

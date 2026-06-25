@@ -24,10 +24,7 @@ export async function checkIdempotency<T>(
   return null
 }
 
-export async function markIdempotent<T>(
-  key: string,
-  data: T,
-): Promise<void> {
+export async function markIdempotent<T>(key: string, data: T): Promise<void> {
   const supabase = createServiceClient()
   await supabase.from('audit_logs').insert({
     action: 'idempotency_mark',

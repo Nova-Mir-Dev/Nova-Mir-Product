@@ -138,7 +138,8 @@ export async function middleware(request: NextRequest) {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${host}`
     if (origin) {
-      const isSameOrigin = origin === `https://${host}` || origin === `http://${host}`
+      const isSameOrigin =
+        origin === `https://${host}` || origin === `http://${host}`
       if (!isSameOrigin && !isAllowedOrigin(origin)) {
         return addCorsHeaders(
           NextResponse.json({ error: 'Forbidden' }, { status: 403 }),

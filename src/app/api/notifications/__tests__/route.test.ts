@@ -8,13 +8,20 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
-vi.mock('@/lib/rate-limit', () => ({ rateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }) }))
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ allowed: true, remaining: 99, reset: 0 }),
+}))
 vi.mock('@/lib/in-app-notifications', () => ({
   getNotifications: vi.fn(() => [{ id: 'n1', read_at: null }]),
   markAsRead: vi.fn(() => Promise.resolve()),
   markAllAsRead: vi.fn(() => Promise.resolve()),
 }))
-vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }))
+vi.mock('@sentry/nextjs', () => ({
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+}))
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -50,23 +57,42 @@ describe('POST /api/notifications', () => {
   it('401 unauthenticated', async () => {
     await setClient(createMockClient({ user: unauthUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/notifications', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/notifications', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(401)
   })
 
   it('429 rate-limited', async () => {
     const { rateLimit } = await import('@/lib/rate-limit')
-    vi.mocked(rateLimit).mockResolvedValueOnce({ allowed: false, remaining: 0, reset: 0 })
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      allowed: false,
+      remaining: 0,
+      reset: 0,
+    })
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/notifications', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/notifications', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(429)
   })
 
   it('400 validation failure when notificationIds has empty string', async () => {
     await setClient(createMockClient({ user: clientUser }))
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/notifications', { method: 'POST', body: { notificationIds: [''] } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/notifications', {
+        method: 'POST',
+        body: { notificationIds: [''] },
+      }),
+    )
     expect(res.status).toBe(400)
   })
 
@@ -74,7 +100,12 @@ describe('POST /api/notifications', () => {
     await setClient(createMockClient({ user: clientUser }))
     const { markAsRead } = await import('@/lib/in-app-notifications')
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/notifications', { method: 'POST', body: { notificationIds: ['n1', 'n2'] } }))
+    const res = await POST(
+      buildRequest('http://localhost/api/notifications', {
+        method: 'POST',
+        body: { notificationIds: ['n1', 'n2'] },
+      }),
+    )
     expect(res.status).toBe(200)
     expect(markAsRead).toHaveBeenCalledTimes(2)
   })
@@ -83,7 +114,12 @@ describe('POST /api/notifications', () => {
     await setClient(createMockClient({ user: clientUser }))
     const { markAllAsRead } = await import('@/lib/in-app-notifications')
     const { POST } = await import('../route')
-    const res = await POST(buildRequest('http://localhost/api/notifications', { method: 'POST', body: {} }))
+    const res = await POST(
+      buildRequest('http://localhost/api/notifications', {
+        method: 'POST',
+        body: {},
+      }),
+    )
     expect(res.status).toBe(200)
     expect(markAllAsRead).toHaveBeenCalledTimes(1)
   })

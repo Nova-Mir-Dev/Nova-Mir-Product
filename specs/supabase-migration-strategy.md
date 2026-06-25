@@ -18,9 +18,11 @@
 ## Workflow
 
 ### Before Production
+
 Edit schema.sql directly + apply via Supabase SQL Editor. No migration files needed.
 
 ### After Production (Current State)
+
 Changes must go through migration files in `supabase/migrations/`:
 
 1. Create `supabase/migrations/YYYYMMDD_description.sql`
@@ -30,6 +32,7 @@ Changes must go through migration files in `supabase/migrations/`:
 5. Update schema.sql to match the new state (for future reference)
 
 ### CI/CD Integration (Future)
+
 Set up `supabase db push` in CI:
 
 ```bash
@@ -84,9 +87,11 @@ ALTER TABLE new_table ENABLE ROW LEVEL SECURITY;
 ## Current Migrations
 
 ### 20260625_reconcile_schema_app.sql
+
 Applied: 2026-06-25
 Purpose: Added missing columns to existing tables, created revenue_entries and expense_entries tables, added missing RLS policies.
 Changes:
+
 - Added user_id column to portfolio_clients
 - Added client_id, date, invoice_number to portfolio_invoices
 - Added amount to line_items

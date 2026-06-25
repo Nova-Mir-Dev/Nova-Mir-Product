@@ -40,7 +40,14 @@ describe('orchestrator: end-to-end generation', () => {
     const pkg = JSON.parse(read('package.json')) as {
       scripts: Record<string, string>
     }
-    for (const script of ['dev', 'build', 'start', 'typecheck', 'lint', 'test']) {
+    for (const script of [
+      'dev',
+      'build',
+      'start',
+      'typecheck',
+      'lint',
+      'test',
+    ]) {
       expect(
         pkg.scripts[script],
         `package.json missing script: ${script}`,
@@ -52,10 +59,9 @@ describe('orchestrator: end-to-end generation', () => {
     const { read } = runGenerator()
     const schema = read('schema.sql')
     for (const table of ['users', 'audit_logs', 'api_keys', 'appointments']) {
-      expect(
-        schema,
-        `schema.sql missing CREATE TABLE for ${table}`,
-      ).toContain(`CREATE TABLE IF NOT EXISTS ${table}`)
+      expect(schema, `schema.sql missing CREATE TABLE for ${table}`).toContain(
+        `CREATE TABLE IF NOT EXISTS ${table}`,
+      )
     }
   })
 
