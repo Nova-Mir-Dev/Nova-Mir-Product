@@ -92,6 +92,12 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get('host') || ''
   const isApiRoute = pathname.startsWith('/api/')
 
+  if (pathname === '/clients/dashboard') {
+    const url = new URL('/dashboard', request.url)
+    url.search = request.nextUrl.search
+    return NextResponse.redirect(url, 308)
+  }
+
   if (host.endsWith('.vercel.app')) {
     const url = new URL('https://www.novamir.dev' + pathname)
     url.search = request.nextUrl.search
@@ -158,7 +164,7 @@ export async function middleware(request: NextRequest) {
       }
       if (role === 'client') {
         return addCorsHeaders(
-          NextResponse.redirect(new URL('/clients/dashboard', request.url)),
+          NextResponse.redirect(new URL('/dashboard', request.url)),
           origin,
         )
       }
@@ -174,7 +180,7 @@ export async function middleware(request: NextRequest) {
       }
       if (role === 'client') {
         return addCorsHeaders(
-          NextResponse.redirect(new URL('/clients/dashboard', request.url)),
+          NextResponse.redirect(new URL('/dashboard', request.url)),
           origin,
         )
       }
