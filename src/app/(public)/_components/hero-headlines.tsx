@@ -25,9 +25,7 @@ export function HeroContent({ fallback }: { fallback: Headline }) {
           setHeadline(pick)
         }
       })
-      .catch(() => {
-        // fallback already set
-      })
+      .catch(() => {})
   }, [])
 
   return (
