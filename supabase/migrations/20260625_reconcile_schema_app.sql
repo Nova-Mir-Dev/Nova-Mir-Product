@@ -133,3 +133,11 @@ CREATE POLICY IF NOT EXISTS "portfolio_projects_admin_select" ON portfolio_proje
     auth.role() = 'authenticated'
     AND EXISTS (SELECT 1 FROM users WHERE id = auth.uid() AND role = 'admin')
   );
+
+-- =============================================================================
+-- leads_anon_insert: tighten to require consent=true (GDPR defense-in-depth)
+-- =============================================================================
+DROP POLICY IF EXISTS "leads_anon_insert" ON leads;
+CREATE POLICY "leads_anon_insert" ON leads FOR INSERT
+  TO anon
+  WITH CHECK (consent = true);
