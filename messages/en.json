@@ -1,0 +1,37 @@
+{
+  "Nav": {
+    "home": "Home",
+    "services": "Services",
+    "process": "Process",
+    "pricing": "Pricing",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "Hero": {
+    "secondaryCta": "See How It Works"
+  },
+  "Process": {
+    "sectionTitle": "How It Works",
+    "sectionSubtitle": "Three steps. No surprises.",
+    "step1Title": "Discovery",
+    "step1Description": "We learn your business, audience, and goals before writing a line of code.",
+    "step2Title": "Build",
+    "step2Description": "We design and develop your site with regular check-ins so nothing surprises you.",
+    "step3Title": "Launch",
+    "step3Description": "We deploy, set up analytics, and hand off everything with clear documentation."
+  },
+  "Pricing": {
+    "sectionTitle": "Pricing",
+    "sectionSubtitle": "Transparent pricing. No surprises.",
+    "tier1OneLiner": "Custom site that builds credibility.",
+    "tier2OneLiner": "Site + lead capture + automated follow-up.",
+    "tier3OneLiner": "Full system with booking and dashboards.",
+    "popularBadge": "Most Popular",
+    "ctaButton": "Start a Project"
+  },
+  "Footer": {
+    "tagline": "Nova Mir builds websites and operational tools for small businesses.",
+    "rights": "All rights reserved."
+  }
+}

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Sora, Onest } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeRoot } from '@/components/theme-root'
 import { ThemeScript } from './(public)/_components/theme-script'
 import { CookieConsentBanner } from '@/components/cookie-consent-banner'
@@ -55,13 +57,15 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
         <link rel="apple-touch-icon" href="/logo-icon.svg" />
@@ -77,10 +81,12 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeScript />
-        <ThemeRoot>
-          {children}
-          <CookieConsentBanner />
-        </ThemeRoot>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeRoot>
+            {children}
+            <CookieConsentBanner />
+          </ThemeRoot>
+        </NextIntlClientProvider>
         <JsonLd />
       </body>
     </html>

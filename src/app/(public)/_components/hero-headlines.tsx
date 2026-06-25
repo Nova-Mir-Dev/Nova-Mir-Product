@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Button } from 'azimuth-ui'
 import styles from '../landing.module.css'
 
@@ -14,6 +15,7 @@ interface Headline {
 }
 
 export function HeroContent({ fallback }: { fallback: Headline }) {
+  const t = useTranslations('Hero')
   const [headline, setHeadline] = useState<Headline>(fallback)
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export function HeroContent({ fallback }: { fallback: Headline }) {
           <Link href={headline.cta_href}>{headline.cta_label}</Link>
         </Button>
         <Button variant="secondary" size="lg" asChild>
-          <Link href="/process">See How It Works</Link>
+          <Link href="/process">{t('secondaryCta')}</Link>
         </Button>
       </div>
     </>

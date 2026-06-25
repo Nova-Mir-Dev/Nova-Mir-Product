@@ -1,4 +1,7 @@
+import createNextIntlPlugin from 'next-intl/plugin'
 import type { NextConfig } from 'next'
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -69,12 +72,14 @@ const nextConfig: NextConfig = {
 
 import { withSentryConfig } from '@sentry/nextjs'
 
-export default withSentryConfig(nextConfig, {
-  org: 'nova-mir',
-  project: 'nova-mir-product',
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  tunnelRoute: '/monitoring',
-  disableLogger: true,
-  automaticVercelMonitors: true,
-})
+export default withNextIntl(
+  withSentryConfig(nextConfig, {
+    org: 'nova-mir',
+    project: 'nova-mir-product',
+    silent: !process.env.CI,
+    widenClientFileUpload: true,
+    tunnelRoute: '/monitoring',
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  }),
+)

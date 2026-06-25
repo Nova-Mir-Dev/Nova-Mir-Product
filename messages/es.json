@@ -1,0 +1,37 @@
+{
+  "Nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "process": "Proceso",
+    "pricing": "Precios",
+    "portfolio": "Portafolio",
+    "blog": "Blog",
+    "contact": "Contacto"
+  },
+  "Hero": {
+    "secondaryCta": "Cómo Funciona"
+  },
+  "Process": {
+    "sectionTitle": "Cómo Funciona",
+    "sectionSubtitle": "Tres pasos. Sin sorpresas.",
+    "step1Title": "Descubrimiento",
+    "step1Description": "Conocemos tu negocio, audiencia y objetivos antes de escribir una línea de código.",
+    "step2Title": "Construcción",
+    "step2Description": "Diseñamos y desarrollamos tu sitio con revisiones regulares para que no haya sorpresas.",
+    "step3Title": "Lanzamiento",
+    "step3Description": "Desplegamos, configuramos analíticas y te entregamos todo con documentación clara."
+  },
+  "Pricing": {
+    "sectionTitle": "Precios",
+    "sectionSubtitle": "Precios transparentes. Sin sorpresas.",
+    "tier1OneLiner": "Sitio personalizado que genera credibilidad.",
+    "tier2OneLiner": "Sitio + captura de leads + seguimiento automatizado.",
+    "tier3OneLiner": "Sistema completo con reservas y paneles.",
+    "popularBadge": "Más Popular",
+    "ctaButton": "Iniciar un Proyecto"
+  },
+  "Footer": {
+    "tagline": "Nova Mir crea sitios web y herramientas operativas para pequeños negocios.",
+    "rights": "Todos los derechos reservados."
+  }
+}
