@@ -27,3 +27,4 @@ supabase/.temp/
 .beads/proxieddb/
 .vercel
 .env*.local
+.gstack/
