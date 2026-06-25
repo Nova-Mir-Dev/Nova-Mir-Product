@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Container, Text } from 'azimuth-ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { APP_CONFIG, NAV_PAGES } from '@/lib/navigation'
@@ -43,7 +44,7 @@ function Navbar() {
               gap: '0.5rem',
             }}
           >
-            <img
+            <Image
               src="/logo-icon.svg"
               alt=""
               width={32}

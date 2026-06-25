@@ -70,8 +70,19 @@ export async function GET(request: Request) {
 
   const data = raw as unknown as Array<Record<string, unknown>>
 
-  function csvEscape(value: unknown): string {
-    const str = String(value ?? '')
+function csvEscape(value: unknown): string {
+    let str: string
+    if (value == null) {
+      str = ''
+    } else if (typeof value === 'object') {
+      str = JSON.stringify(value)
+    } else if (typeof value === 'string') {
+      str = value
+    } else if (typeof value === 'number' || typeof value === 'boolean') {
+      str = value.toString()
+    } else {
+      str = ''
+    }
     if (str.includes(',') || str.includes('"') || str.includes('\n') || str.startsWith('=') || str.startsWith('+') || str.startsWith('-') || str.startsWith('@')) {
       return '"' + str.replace(/"/g, '""') + '"'
     }

@@ -155,7 +155,7 @@ export async function POST(request: Request) {
     )
   }
 
-  let userId = null
+  let userId: string | null
   if (body.clientId) {
     const { data: clientRecord } = await admin
       .from('portfolio_clients')

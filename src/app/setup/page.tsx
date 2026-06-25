@@ -220,14 +220,14 @@ const SERVICES: ServiceDef[] = [
       'Go to console.upstash.com → Create Database → Global. Copy the REST URL and token.',
     fields: [
       {
-        key: 'UPSTASH_REDIS_URL',
+        key: 'UPSTASH_REDIS_REST_URL',
         label: 'REST URL',
         instruction:
           'Found in Upstash Console → Redis Database → Details → REST API → REST URL.',
         docLink: 'https://console.upstash.com/redis',
       },
       {
-        key: 'UPSTASH_REDIS_TOKEN',
+        key: 'UPSTASH_REDIS_REST_TOKEN',
         label: 'REST Token',
         instruction:
           'Found in Upstash Console → Redis Database → Details → REST API → REST Token.',
@@ -546,7 +546,7 @@ export default function SetupPage() {
                   ok: !!envVars['NEXT_PUBLIC_AXIOM_DATASET'],
                 },
                 { label: 'SMS provider', ok: !!envVars['TWILIO_ACCOUNT_SID'] },
-                { label: 'Rate limiting', ok: !!envVars['UPSTASH_REDIS_URL'] },
+                { label: 'Rate limiting', ok: !!envVars['UPSTASH_REDIS_REST_URL'] },
               ].map((item) => (
                 <div
                   key={item.label}
