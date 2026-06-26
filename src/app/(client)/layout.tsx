@@ -50,9 +50,12 @@ export default function ClientLayout({
     <div className={styles.container}>
       <nav className={styles.sidebar}>
         <Stack spacing="sm" className={styles.sidebarInner}>
-          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Client Portal
-          </Text>
+          <Link href="/" className={styles.brand}>
+            <img src="/logo-icon.svg" alt="" className={styles.logo} />
+            <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
+              Nova Mir
+            </Text>
+          </Link>
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.path !== 'mailto:support@novamir.dev' &&

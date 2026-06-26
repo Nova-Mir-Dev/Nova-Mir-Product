@@ -3,18 +3,11 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { createProject } from '@/features/admin/projects/actions'
+import { ProjectsPage, ProjectsPageSkeleton } from '@/features/admin/projects/projects-page'
+import { Suspense } from 'react'
+import type { Project } from '@/features/admin/types'
 
-interface Project {
-  id: string
-  client_id: string
-  name: string
-  description: string
-  status: string
-  deadline: string
-  progress: number
-}
-
-export default async function ProjectsPage() {
+export default async function ProjectsPageRoute() {
   const supabase = await createClient()
   const {
     data: { user },
@@ -39,7 +32,7 @@ export default async function ProjectsPage() {
     .select('id, name')
     .order('name')
 
-  const items = (projects ?? []) as Project[]
+  const items = (projects ?? []) as unknown as Project[]
 
   return (
     <Stack spacing="md">
@@ -65,7 +58,7 @@ export default async function ProjectsPage() {
                 }}
               >
                 <option value="">Select a client</option>
-                {(clients ?? []).map((c) => (
+                {(clients ?? []).map((c: { id: string; name: string }) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -81,36 +74,9 @@ export default async function ProjectsPage() {
         </form>
       </Card>
 
-      {items.length === 0 ? (
-        <Text>No projects found.</Text>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Client ID</th>
-              <th>Status</th>
-              <th>Deadline</th>
-              <th>Progress</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((project) => (
-              <tr key={project.id}>
-                <td>{project.name}</td>
-                <td>{project.client_id}</td>
-                <td>{project.status}</td>
-                <td>
-                  {project.deadline
-                    ? new Date(project.deadline).toLocaleDateString()
-                    : '—'}
-                </td>
-                <td>{project.progress}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <Suspense fallback={<ProjectsPageSkeleton />}>
+        <ProjectsPage projects={items} />
+      </Suspense>
     </Stack>
   )
 }

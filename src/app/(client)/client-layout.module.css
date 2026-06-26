@@ -33,6 +33,19 @@
   color: var(--azimuth-color-text, #1a1a2e);
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-sm);
+  text-decoration: none;
+  margin-bottom: var(--azimuth-spacing-sm);
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+}
+
 .navItemActive {
   background-color: var(--azimuth-color-primary, #4338ca);
   color: var(--azimuth-color-white, #fff);

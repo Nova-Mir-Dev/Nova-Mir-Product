@@ -1,14 +1,7 @@
-import { Button, Card, Input, Stack, Text } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
-
-interface AuditEntry {
-  id: string
-  action: string
-  client_name: string | null
-  performed_by: string | null
-  created_at: string
-  details: string | null
-}
+import { AuditPage, AuditPageSkeleton } from '@/features/admin/audit/audit-page'
+import type { ActivityEntry } from '@/features/admin/types'
+import { Suspense } from 'react'
 
 export default async function AuditLogPage({
   searchParams,
@@ -33,7 +26,7 @@ export default async function AuditLogPage({
 
   const { data: entries } = await query
 
-  let filtered = (entries ?? []) as AuditEntry[]
+  let filtered = (entries ?? []) as unknown as ActivityEntry[]
 
   const actionFilter = params.action?.toLowerCase()
   if (actionFilter) {
@@ -50,77 +43,16 @@ export default async function AuditLogPage({
   }
 
   return (
-    <Stack spacing="md">
-      <Text element={{ as: 'h1', size: 'h3' }} weight="semibold">
-        Audit Log
-      </Text>
-
-      <form
-        method="GET"
-        style={{
-          display: 'flex',
-          gap: 'var(--azimuth-spacing-sm)',
-          flexWrap: 'wrap',
+    <Suspense fallback={<AuditPageSkeleton />}>
+      <AuditPage
+        entries={filtered}
+        searchParams={{
+          action: params.action,
+          client: params.client,
+          from: params.from,
+          to: params.to,
         }}
-      >
-        <Input
-          label={{ text: 'Action' }}
-          name="action"
-          defaultValue={params.action || ''}
-          placeholder="Filter by action..."
-        />
-        <Input
-          label={{ text: 'Client' }}
-          name="client"
-          defaultValue={params.client || ''}
-          placeholder="Filter by client..."
-        />
-        <Input
-          label={{ text: 'From' }}
-          name="from"
-          defaultValue={params.from || ''}
-          type="date"
-        />
-        <Input
-          label={{ text: 'To' }}
-          name="to"
-          defaultValue={params.to || ''}
-          type="date"
-        />
-        <Button variant="primary" type="submit">
-          Filter
-        </Button>
-        {(params.action || params.client || params.from || params.to) && (
-          <a href="/admin/audit">
-            <Button variant="tertiary" type="button">
-              Clear
-            </Button>
-          </a>
-        )}
-      </form>
-
-      {filtered.length === 0 ? (
-        <Text>No audit entries found.</Text>
-      ) : (
-        <Stack spacing="sm">
-          {filtered.map((entry) => (
-            <Card key={entry.id}>
-              <Stack spacing="xs">
-                <Text element={{ size: 'sm' }} weight="semibold">
-                  {entry.action}
-                </Text>
-                <Text element={{ size: 'sm' }}>
-                  Client: {entry.client_name} — By: {entry.performed_by}
-                </Text>
-                <Text element={{ size: 'sm' }}>
-                  {new Date(entry.created_at).toLocaleString()}
-                </Text>
-                <Text element={{ size: 'sm' }}>{entry.details}</Text>
-              </Stack>
-            </Card>
-          ))}
-        </Stack>
-      )}
-    </Stack>
+      />
+    </Suspense>
   )
 }
