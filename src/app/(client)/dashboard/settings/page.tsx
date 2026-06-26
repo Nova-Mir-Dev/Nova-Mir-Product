@@ -19,14 +19,15 @@ export default async function SettingsPage() {
     .single()
 
   const factorsResult = await listMfaFactors()
-  const factors: { id: string; type: string; created_at: string }[] =
+  const factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[] =
     factorsResult && 'all' in factorsResult
       ? factorsResult.all
           .filter((f: { status: string }) => f.status === 'verified')
-          .map((f: { factor_type: string; id: string; created_at: string }) => ({
+          .map((f: { factor_type: string; id: string; created_at: string; friendly_name?: string | null }) => ({
             id: f.id,
             type: f.factor_type,
             created_at: f.created_at,
+            friendly_name: f.friendly_name,
           }))
       : []
 

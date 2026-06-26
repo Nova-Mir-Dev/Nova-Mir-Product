@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Button, Card, Input, Text, Stack } from 'azimuth-ui'
+import { Button, Input, Text, Stack } from 'azimuth-ui'
 import styles from './mfa-panel.module.css'
+import { removeMfa } from './mfa'
 
 interface MfaFactor {
   id: string
   type: string
   created_at: string
+  friendly_name?: string | null
 }
 
 function PasskeyIcon() {
@@ -26,12 +28,14 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
   const [secret, setSecret] = useState('')
   const [factorId, setFactorId] = useState('')
   const [verifyCode, setVerifyCode] = useState('')
+  const [friendlyName, setFriendlyName] = useState('')
+  const [removing, setRemoving] = useState<string | null>(null)
 
   async function startTotpEnroll() {
     setEnrolling('totp')
     const res = await fetch('/api/auth/mfa/enroll', {
       method: 'POST',
-      body: JSON.stringify({ factorType: 'totp' }),
+      body: JSON.stringify({ factorType: 'totp', friendlyName: friendlyName || undefined }),
     })
     const data = await res.json()
     if (data.qr) {
@@ -45,7 +49,7 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
     setEnrolling('webauthn')
     const res = await fetch('/api/auth/mfa/enroll', {
       method: 'POST',
-      body: JSON.stringify({ factorType: 'webauthn' }),
+      body: JSON.stringify({ factorType: 'webauthn', friendlyName: friendlyName || undefined }),
     })
     const data = await res.json()
     if (data.webauthn) {
@@ -88,87 +92,115 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
     window.location.reload()
   }
 
+  async function handleRemove(id: string) {
+    setRemoving(id)
+    await removeMfa(id)
+    window.location.reload()
+  }
+
+  function resetEnroll() {
+    setEnrolling(null)
+    setQrCode('')
+    setSecret('')
+    setFactorId('')
+    setVerifyCode('')
+    setFriendlyName('')
+  }
+
   return (
-    <Card>
-      <Stack spacing="md">
-        <Text element={{ as: 'h2', size: 'h4' }} weight="semibold">
-          Two-Factor Authentication
-        </Text>
-        {factors.length > 0 ? (
-          <Stack spacing="xs">
-            {factors.map((f) => (
-              <div key={f.id}>
-                <Text element={{ size: 'sm' }}>
-                  {f.type === 'webauthn' ? 'Passkey' : f.type.toUpperCase()} — enabled{' '}
-                  {new Date(f.created_at).toLocaleDateString()}
+    <Stack spacing="md">
+      {factors.length > 0 ? (
+        <Stack spacing="xs">
+          {factors.map((f) => (
+            <div key={f.id} className={styles.factorRow}>
+              <div style={{ flex: 1 }}>
+                <Text element={{ size: 'sm' }} weight="semibold">
+                  {f.friendly_name || (f.type === 'webauthn' ? 'Passkey' : f.type.toUpperCase())}
+                </Text>
+                <Text element={{ size: 'xs' }} color="secondary">
+                  Added {new Date(f.created_at).toLocaleDateString()}
                 </Text>
               </div>
-            ))}
-          </Stack>
-        ) : (
-          <Text element={{ size: 'sm' }} color="secondary">
-            No 2FA methods configured.
-          </Text>
-        )}
-        {enrolling === 'totp' ? (
-          <Stack spacing="sm">
-            <Text element={{ size: 'sm' }} weight="semibold">
-              Option 1: Scan QR Code
-            </Text>
-            <Text element={{ size: 'xs' }}>
-              Scan with your authenticator app (Google Authenticator, 1Password, etc.)
-            </Text>
-            {qrCode && (
-              <Image
-                src={qrCode}
-                alt="TOTP QR Code"
-                width={200}
-                height={200}
-                className={styles.qrCode}
-                unoptimized
-              />
-            )}
-            <Text element={{ size: 'sm' }} weight="semibold">
-              Option 2: Enter Setup Key
-            </Text>
-            <Text element={{ size: 'xs' }}>
-              Can&apos;t scan the QR? Enter this key manually in your authenticator app:
-            </Text>
-            <Text className={styles.secretKey}>{secret}</Text>
-            <Input
-              label={{ text: 'Verification Code' }}
-              value={{
-                value: verifyCode,
-                onChange: (e) => setVerifyCode(e.target.value),
-              }}
-              placeholder="6-digit code from authenticator"
-            />
-            <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}>
-              <Button variant="primary" onClick={completeTotpEnroll}>
-                Verify & Enable
-              </Button>
-              <Button variant="tertiary" onClick={() => setEnrolling(null)}>
-                Cancel
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleRemove(f.id)}
+                disabled={removing === f.id}
+              >
+                {removing === f.id ? 'Removing...' : 'Remove'}
               </Button>
             </div>
-          </Stack>
-        ) : enrolling === 'webauthn' ? (
-          <Stack spacing="sm">
-            <Text>Setting up passkey...</Text>
-          </Stack>
-        ) : (
-          <Stack spacing="sm">
-            <Button variant="primary" onClick={startTotpEnroll}>
-              Set up Authenticator App
+          ))}
+        </Stack>
+      ) : (
+        <Text element={{ size: 'sm' }} color="secondary">
+          No 2FA methods configured.
+        </Text>
+      )}
+      {enrolling === 'totp' ? (
+        <Stack spacing="sm">
+          <Text element={{ size: 'sm' }} weight="semibold">
+            Option 1: Scan QR Code
+          </Text>
+          <Text element={{ size: 'xs' }}>
+            Scan with your authenticator app (Google Authenticator, 1Password, etc.)
+          </Text>
+          {qrCode && (
+            <Image
+              src={qrCode}
+              alt="TOTP QR Code"
+              width={200}
+              height={200}
+              className={styles.qrCode}
+              unoptimized
+            />
+          )}
+          <Text element={{ size: 'sm' }} weight="semibold">
+            Option 2: Enter Setup Key
+          </Text>
+          <Text element={{ size: 'xs' }}>
+            Can&apos;t scan the QR? Enter this key manually in your authenticator app:
+          </Text>
+          <Text className={styles.secretKey}>{secret}</Text>
+          <Input
+            label={{ text: 'Verification Code' }}
+            value={{
+              value: verifyCode,
+              onChange: (e) => setVerifyCode(e.target.value),
+            }}
+            placeholder="6-digit code from authenticator"
+          />
+          <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}>
+            <Button variant="primary" onClick={completeTotpEnroll}>
+              Verify & Enable
             </Button>
-            <Button variant="tertiary" onClick={startWebauthnEnroll}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <PasskeyIcon /> Add Passkey
-              </span>
+            <Button variant="tertiary" onClick={resetEnroll}>
+              Cancel
             </Button>
-          </Stack>
-        )}
-      </Stack>
-    </Card>
+          </div>
+        </Stack>
+      ) : enrolling === 'webauthn' ? (
+        <Stack spacing="sm">
+          <Text>Setting up passkey...</Text>
+        </Stack>
+      ) : (
+        <Stack spacing="sm">
+          <Input
+            label={{ text: 'Device name (optional)' }}
+            name="friendlyName"
+            value={{ value: friendlyName, onChange: (e) => setFriendlyName(e.target.value) }}
+            placeholder="e.g. My iPhone, Work Laptop"
+          />
+          <Button variant="primary" onClick={startTotpEnroll}>
+            Set up Authenticator App
+          </Button>
+          <Button variant="tertiary" onClick={startWebauthnEnroll}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <PasskeyIcon /> Add Passkey
+            </span>
+          </Button>
+        </Stack>
+      )}
+    </Stack>
   )
 }

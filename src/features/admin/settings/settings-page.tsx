@@ -33,7 +33,7 @@ export interface ApiKeyItem {
 export interface SettingsPageProps {
   user: { email: string; name: string | null }
   apiKeys?: ApiKeyItem[]
-  factors: { id: string; type: string; created_at: string }[]
+  factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[]
 }
 
 export const SettingsPage = ({ user, apiKeys = [], factors }: SettingsPageProps) => {
@@ -154,7 +154,7 @@ const ProfileTab = ({
 const SecurityTab = ({
   factors,
 }: {
-  factors: { id: string; type: string; created_at: string }[]
+  factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[]
 }) => (
   <Stack spacing="md">
     <MfaPanel factors={factors} />

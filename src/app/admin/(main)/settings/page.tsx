@@ -33,6 +33,7 @@ export default async function SettingsRoute() {
     id: f.id,
     type: f.factor_type,
     created_at: f.created_at,
+    friendly_name: (f as { friendly_name?: string | null }).friendly_name,
   }))
 
   return (

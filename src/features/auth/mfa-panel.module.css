@@ -11,3 +11,16 @@
   word-break: break-all;
   user-select: all;
 }
+
+.factorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--azimuth-space-sm);
+  padding: var(--azimuth-space-xs) 0;
+  border-bottom: 1px solid var(--azimuth-color-border);
+}
+
+.factorRow:last-child {
+  border-bottom: none;
+}
