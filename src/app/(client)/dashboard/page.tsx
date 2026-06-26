@@ -112,7 +112,7 @@ export default async function DashboardPage() {
             color: 'var(--azimuth-color-primary, #4338ca)',
           }}
         >
-          Tier 1
+          Active Client
         </span>
       </div>
 

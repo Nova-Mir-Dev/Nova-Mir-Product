@@ -50,7 +50,7 @@ export default async function BillingPage() {
               Current Plan
             </Text>
             <Text element={{ as: 'p', size: 'h4' }} weight="bold">
-              Professional
+              Active
             </Text>
             <Text element={{ size: 'sm' }} color="secondary">
               Monthly subscription
@@ -180,9 +180,14 @@ export default async function BillingPage() {
                       </span>
                     </td>
                     <td style={{ padding: '8px' }}>
-                      <Button variant="tertiary" size="sm" type="button">
-                        PDF
-                      </Button>
+                      <form
+                        action={`/api/invoices/${inv.id}/download`}
+                        method="GET"
+                      >
+                        <Button variant="tertiary" size="sm" type="submit">
+                          PDF
+                        </Button>
+                      </form>
                     </td>
                   </tr>
                 ))}
