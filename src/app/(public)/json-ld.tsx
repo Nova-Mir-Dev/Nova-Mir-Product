@@ -1,6 +1,23 @@
+import { getPublishedPricing } from '@/lib/content'
 import { PRICING_TIERS } from '@/lib/pricing'
+import type { PricingTierRow } from '@/types/content'
+import type { PricingTier } from '@/lib/pricing'
 
-export function JsonLd() {
+function safeJson(obj: unknown): string {
+  return JSON.stringify(obj).replace(/<\//g, '\\u003C/')
+}
+
+function getPrice(tier: PricingTierRow | PricingTier): number {
+  return 'starting_price' in tier
+    ? tier.starting_price
+    : tier.startingPrice
+}
+
+export async function JsonLd() {
+  const dbTiers = await getPublishedPricing()
+  const tiers: (PricingTierRow | PricingTier)[] =
+    dbTiers && dbTiers.length > 0 ? dbTiers : PRICING_TIERS
+
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -34,10 +51,10 @@ export function JsonLd() {
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Web Development Packages',
-      itemListElement: PRICING_TIERS.map((tier) => ({
+      itemListElement: tiers.map((tier) => ({
         '@type': 'Offer',
         itemOffered: { '@type': 'Service', name: tier.name },
-        price: String(tier.startingPrice).replace(/[$,]/g, ''),
+        price: String(getPrice(tier)).replace(/[$,]/g, ''),
         priceCurrency: 'USD',
       })),
     },
@@ -47,15 +64,15 @@ export function JsonLd() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(organization) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(website) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(service) }}
       />
     </>
   )

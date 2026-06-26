@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Container, Text } from 'azimuth-ui'
+import { Container, Text, Button } from 'azimuth-ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { APP_CONFIG, NAV_PAGES } from '@/lib/navigation'
 
@@ -56,115 +56,90 @@ function Navbar() {
             </Text>
           </Link>
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{
-              display: 'none',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '0.5rem',
-            }}
-            className="nav-toggle"
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              {menuOpen ? (
-                <path d="M6 6l12 12M6 18L18 6" />
-              ) : (
-                <path d="M3 12h18M3 6h18M3 18h18" />
-              )}
-            </svg>
-          </button>
+          <div className="nav-links">
+            {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
+              <a
+                key={page.path}
+                href={page.path}
+                className="nav-link"
+              >
+                {page.label}
+              </a>
+            ))}
+          </div>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '1.5rem',
-              alignItems: 'center',
-            }}
-            className="nav-links"
-          >
-            <div
-              style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}
-            >
-              {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
-                <a
-                  key={page.path}
-                  href={page.path}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'var(--azimuth-color-text-secondary)',
-                    fontSize: '0.875rem',
-                    transition: 'color 150ms ease',
-                  }}
-                  onMouseOver={(e) =>
-                    (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                  }
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.color =
-                      'var(--azimuth-color-text-secondary)')
-                  }
-                  onFocus={(e) =>
-                    (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-                  }
-                  onBlur={(e) =>
-                    (e.currentTarget.style.color =
-                      'var(--azimuth-color-text-secondary)')
-                  }
-                >
-                  {page.label}
-                </a>
-              ))}
-            </div>
-            <a
-              href="/dashboard"
-              style={{
-                textDecoration: 'none',
-                color: 'var(--azimuth-color-text-secondary)',
-                fontSize: '0.875rem',
-                transition: 'color 150ms ease',
-              }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.style.color =
-                  'var(--azimuth-color-text-secondary)')
-              }
-              onFocus={(e) =>
-                (e.currentTarget.style.color = 'var(--azimuth-color-text)')
-              }
-              onBlur={(e) =>
-                (e.currentTarget.style.color =
-                  'var(--azimuth-color-text-secondary)')
-              }
-            >
-              Clients
-            </a>
+          <div className="nav-actions">
             <ThemeToggle />
+            <Button variant="secondary" size="sm" asChild>
+              <Link href="/dashboard">Client Login</Link>
+            </Button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="nav-toggle"
+              aria-label="Toggle navigation"
+              aria-expanded={menuOpen}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                {menuOpen ? (
+                  <path d="M6 6l12 12M6 18L18 6" />
+                ) : (
+                  <path d="M3 12h18M3 6h18M3 18h18" />
+                )}
+              </svg>
+            </button>
           </div>
         </nav>
       </Container>
 
       <style>{`
+        .nav-links {
+          display: flex;
+          gap: 1.5rem;
+          align-items: center;
+        }
+        .nav-link {
+          text-decoration: none;
+          color: var(--azimuth-color-text-secondary);
+          font-size: 0.875rem;
+          transition: color 150ms ease;
+        }
+        .nav-link:hover,
+        .nav-link:focus {
+          color: var(--azimuth-color-text);
+        }
+        .nav-actions {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+        }
+        .nav-toggle {
+          display: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+        }
+
         @media (max-width: 640px) {
+          nav { flex-wrap: wrap; }
           .nav-toggle { display: block !important; }
           .nav-links {
+            order: 3;
+            width: 100%;
             display: ${menuOpen ? 'flex' : 'none'} !important;
             flex-direction: column;
-            padding: 1rem;
+            padding: 1rem 0 0;
             gap: 0.75rem;
             border-top: 1px solid var(--azimuth-color-border);
+            margin-top: 0.75rem;
           }
         }
       `}</style>

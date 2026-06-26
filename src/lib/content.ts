@@ -2,23 +2,33 @@ import 'server-only'
 import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 import { createClient } from '@supabase/supabase-js'
+import type {
+  NavLinkRow,
+  PortfolioProjectRow,
+  PricingTierRow,
+  ProcessStepRow,
+} from '@/types/content'
 
-function createAnonClientForContent() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false } },
-  )
+type SupabaseClient = ReturnType<typeof createClient>
+
+let contentClient: SupabaseClient | null = null
+function getContentClient(): SupabaseClient {
+  if (!contentClient) {
+    contentClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false } },
+    )
+  }
+  return contentClient
 }
-
-type SupabaseClient = ReturnType<typeof createAnonClientForContent>
 
 function createContentFetcher<T>(
   tag: string,
   fetcher: (supabase: SupabaseClient) => Promise<T | null>,
 ) {
   return cache(async () => {
-    const supabase = createAnonClientForContent()
+    const supabase = getContentClient()
     return unstable_cache(async () => fetcher(supabase), [tag], {
       tags: [tag],
       revalidate: 60,
@@ -26,36 +36,37 @@ function createContentFetcher<T>(
   })
 }
 
-export const getPublishedPricing = createContentFetcher(
+export const getPublishedPricing = createContentFetcher<PricingTierRow[]>(
   'pricing',
   async (supabase) => {
     const { data } = await supabase
       .from('pricing_tiers')
-      .select('*')
+      .select(
+        'name, starting_price, description, features, slug, is_featured, sort_order',
+      )
       .eq('is_published', true)
       .order('sort_order')
     return data
   },
 )
 
-export const getPublishedPortfolio = createContentFetcher(
-  'portfolio',
-  async (supabase) => {
-    const { data } = await supabase
-      .from('portfolio_projects')
-      .select('*')
-      .eq('is_published', true)
-      .order('sort_order')
-    return data
-  },
-)
+export const getPublishedPortfolio = createContentFetcher<
+  PortfolioProjectRow[]
+>('portfolio', async (supabase) => {
+  const { data } = await supabase
+    .from('portfolio_projects')
+    .select('title, description, href, thumbnail_url, status, sort_order')
+    .eq('is_published', true)
+    .order('sort_order')
+  return data
+})
 
-export const getPublishedNavLinks = createContentFetcher(
+export const getPublishedNavLinks = createContentFetcher<NavLinkRow[]>(
   'nav-links',
   async (supabase) => {
     const { data } = await supabase
       .from('public_nav_links')
-      .select('*')
+      .select('label, path, section, parent_id, sort_order')
       .eq('is_published', true)
       .order('section')
       .order('sort_order')
@@ -63,12 +74,12 @@ export const getPublishedNavLinks = createContentFetcher(
   },
 )
 
-export const getPublishedHeadlines = createContentFetcher(
-  'hero-headlines',
+export const getPublishedProcessSteps = createContentFetcher<ProcessStepRow[]>(
+  'process-steps',
   async (supabase) => {
     const { data } = await supabase
-      .from('hero_headlines')
-      .select('*')
+      .from('process_steps')
+      .select('step_number, title, description, page, sort_order')
       .eq('is_published', true)
       .order('sort_order')
     return data

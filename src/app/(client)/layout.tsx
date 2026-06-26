@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Stack, Text } from 'azimuth-ui'
+import { Stack, Text, Button } from 'azimuth-ui'
 import styles from './client-layout.module.css'
 
 interface ClientUser {
@@ -78,9 +78,9 @@ export default function ClientLayout({
           })}
         </Stack>
         <div className={styles.sidebarFooter}>
-          <Link href="/" className={styles.backLink}>
-            <Text>Back to Site</Text>
-          </Link>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href="/">Back to Site</Link>
+          </Button>
         </div>
       </nav>
 

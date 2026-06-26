@@ -6,10 +6,15 @@ const projects = [
   {
     title: 'Nova Mir Website',
     description: 'Custom web development studio site',
-    status: 'Live' as const,
+    status: 'published' as const,
     href: '/' as const,
   },
 ]
+
+function displayStatus(status: string): string {
+  if (status === 'published') return 'Live'
+  return status
+}
 
 export default function PortfolioPage() {
   return (
@@ -42,7 +47,7 @@ export default function PortfolioPage() {
                     {project.description}
                   </Text>
                   <Badge variant="primary" size="sm">
-                    {project.status}
+                    {displayStatus(project.status)}
                   </Badge>
                 </Stack>
               </Card>
