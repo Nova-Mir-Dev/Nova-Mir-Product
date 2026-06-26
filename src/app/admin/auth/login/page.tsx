@@ -17,7 +17,7 @@ function AdminLoginContent() {
           <h1 className={styles.brandName}>Nova Mir</h1>
           <div className={styles.brandSubtitle}>Admin Portal</div>
         </div>
-        <AdminLoginForm redirect={redirect || undefined} />
+        <AdminLoginForm redirectTo={redirect || undefined} />
       </Card>
     </div>
   )

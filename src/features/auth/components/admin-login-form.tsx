@@ -1,12 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase'
+import { loginAction } from '../actions'
 import { Button, Input, Text, Stack } from 'azimuth-ui'
 
-export function AdminLoginForm({ redirect }: { redirect?: string }) {
-  const router = useRouter()
+export function AdminLoginForm({ redirectTo }: { redirectTo?: string }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -17,19 +15,12 @@ export function AdminLoginForm({ redirect }: { redirect?: string }) {
     setError('')
     setLoading(true)
 
-    const supabase = createClient()
-    const { error: err } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const result = await loginAction(email, password, redirectTo)
 
-    if (err) {
-      setError(err.message)
+    if (result?.error) {
+      setError(result.error)
       setLoading(false)
-      return
     }
-
-    router.push(redirect || '/admin')
   }
 
   return (
