@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Stack, Text } from 'azimuth-ui'
+import { Text } from 'azimuth-ui'
 import styles from './admin-nav.module.css'
 
 interface NavItem {
@@ -36,20 +37,75 @@ const navItems: NavItem[] = [
 
 export default function AdminNav() {
   const pathname = usePathname()
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setMobileOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   return (
-    <nav className={styles.nav} aria-label="Admin navigation">
-      <div className={styles.navInner}>
-        <Stack spacing="sm">
-          <Link href="/" className={styles.brand}>
-            <img src="/logo-icon.svg" alt="" className={styles.logo} />
-            <Text
-              element={{ as: 'h2', size: 'h5' }}
-              weight="semibold"
+    <>
+      <button
+        className={styles.menuButton}
+        onClick={() => setMobileOpen(true)}
+        aria-label="Open navigation menu"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      {mobileOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <nav
+        className={`${styles.nav} ${mobileOpen ? styles.navOpen : ''}`}
+        aria-label="Admin navigation"
+      >
+        <div className={styles.navInner}>
+          <div className={styles.navHeader}>
+            <Link href="/" className={styles.brand}>
+              <img src="/logo-icon.svg" alt="" className={styles.logo} />
+              <Text
+                element={{ as: 'h2', size: 'h5' }}
+                weight="semibold"
+              >
+                Nova Mir | Admin
+              </Text>
+            </Link>
+            <button
+              className={styles.closeButton}
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close navigation menu"
             >
-              Nova Mir | Admin
-            </Text>
-          </Link>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
           <ul className={styles.navList}>
             {navItems.map((item) => (
               <li key={item.path} className={styles.navItem}>
@@ -89,8 +145,8 @@ export default function AdminNav() {
               <Text>← Back to Site</Text>
             </Link>
           </div>
-        </Stack>
-      </div>
-    </nav>
+        </div>
+      </nav>
+    </>
   )
 }
