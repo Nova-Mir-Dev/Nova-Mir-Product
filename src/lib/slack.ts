@@ -70,3 +70,66 @@ export async function notifyNewLead(lead: {
     ],
   })
 }
+
+export async function notifyNewTicket(ticket: {
+  id: string
+  subject: string
+  description: string
+  priority: string
+  clientName: string
+  clientEmail: string
+}) {
+  if (!process.env.SLACK_BOT_TOKEN || !process.env.SLACK_SIGNING_SECRET) {
+    return
+  }
+
+  const app = await getApp()
+
+  const priorityEmoji =
+    ticket.priority === 'urgent'
+      ? ':rotating_light:'
+      : ticket.priority === 'high'
+        ? ':warning:'
+        : ':inbox_tray:'
+
+  await app.client.chat.postMessage({
+    channel: process.env.SLACK_TICKETS_CHANNEL || '#support-tickets',
+    text: `Support ticket: ${ticket.subject} from ${ticket.clientName}`,
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: `Support Ticket ${priorityEmoji} [${ticket.priority.toUpperCase()}]`,
+        },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*Subject:* ${ticket.subject}` },
+          { type: 'mrkdwn', text: `*Priority:* ${ticket.priority}` },
+          { type: 'mrkdwn', text: `*Client:* ${ticket.clientName}` },
+          { type: 'mrkdwn', text: `*Email:* ${ticket.clientEmail}` },
+        ],
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*Description:*\n${ticket.description}`,
+        },
+      },
+      {
+        type: 'actions',
+        elements: [
+          {
+            type: 'button',
+            text: { type: 'plain_text', text: 'View in Admin' },
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/admin/clients?search=${encodeURIComponent(ticket.clientEmail)}`,
+            action_id: 'view_ticket',
+          },
+        ],
+      },
+    ],
+  })
+}
