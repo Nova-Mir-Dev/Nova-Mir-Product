@@ -189,9 +189,6 @@
     margin-bottom: var(--azimuth-space-xs);
   }
 
-  .backToSite {
-    display: none;
-  }
   .title {
     display: none;
   }

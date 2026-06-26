@@ -86,11 +86,6 @@ export default function AdminNav() {
               </li>
             ))}
           </ul>
-          <div className={styles.backToSite}>
-            <Link href="/" className={styles.link}>
-              <Text>← Back to Site</Text>
-            </Link>
-          </div>
         </Stack>
       </div>
     </nav>
