@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const factorType = parsed.data.factorType ?? 'totp'
     const result = await enrollMfa(factorType)
     if ('error' in result)
-      return NextResponse.json({ error: 'Enrollment failed' }, { status: 400 })
+      return NextResponse.json({ error: result.error }, { status: 400 })
 
     void logAudit({
       action: 'auth.mfa.enroll',
