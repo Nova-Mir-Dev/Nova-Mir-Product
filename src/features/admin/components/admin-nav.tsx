@@ -3,18 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Stack, Text } from 'azimuth-ui'
-import { UserMenu } from './user-menu'
 import styles from './admin-nav.module.css'
 
 interface NavItem {
   label: string
   path: string
   items?: NavItem[]
-}
-
-interface AdminUser {
-  name: string | null
-  email: string | null
 }
 
 const navItems: NavItem[] = [
@@ -41,7 +35,7 @@ const navItems: NavItem[] = [
   },
 ]
 
-export default function AdminNav({ user }: { user?: AdminUser | null }) {
+export default function AdminNav() {
   const pathname = usePathname()
 
   return (
@@ -92,10 +86,11 @@ export default function AdminNav({ user }: { user?: AdminUser | null }) {
               </li>
             ))}
           </ul>
-          <Link href="/" className={styles.link}>
-            <Text>← Back to Site</Text>
-          </Link>
-          {user && <UserMenu name={user.name} email={user.email} />}
+          <div className={styles.backToSite}>
+            <Link href="/" className={styles.link}>
+              <Text>← Back to Site</Text>
+            </Link>
+          </div>
         </Stack>
       </div>
     </nav>

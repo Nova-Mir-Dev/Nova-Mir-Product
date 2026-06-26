@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import AdminNav from '@/features/admin/components/admin-nav'
+import { UserMenu } from '@/features/admin/components/user-menu'
+import { ThemeToggle } from '@/components/theme-toggle'
 import styles from './admin-layout.module.css'
 
 export default async function AdminMainLayout({
@@ -26,12 +28,22 @@ export default async function AdminMainLayout({
 
   return (
     <div className={styles.container}>
-      <AdminNav
-        user={{ name: (profile as { name?: string })?.name ?? null, email: user.email ?? null }}
-      />
-      <main id="main-content" className={styles.main}>
-        {children}
-      </main>
+      <AdminNav />
+      <div className={styles.content}>
+        <header className={styles.topbar}>
+          <div />
+          <div className={styles.topbarRight}>
+            <ThemeToggle />
+            <UserMenu
+              name={(profile as { name?: string })?.name ?? null}
+              email={user.email ?? null}
+            />
+          </div>
+        </header>
+        <main id="main-content" className={styles.main}>
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
