@@ -69,9 +69,6 @@
 
 .userMenu {
   position: relative;
-  margin-top: auto;
-  padding-top: var(--azimuth-space-md);
-  border-top: 1px solid var(--azimuth-color-border);
 }
 
 .userMenuTrigger {
@@ -115,10 +112,10 @@
 
 .userMenuDropdown {
   position: absolute;
-  bottom: 100%;
-  left: 0;
+  top: 100%;
   right: 0;
-  margin-bottom: var(--azimuth-space-xs);
+  margin-top: var(--azimuth-space-xs);
+  min-width: 160px;
   background-color: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius-md);
