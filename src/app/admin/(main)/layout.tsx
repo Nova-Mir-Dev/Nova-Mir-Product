@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import AdminNav from '@/features/admin/components/admin-nav'
 import styles from './admin-layout.module.css'
 
@@ -14,7 +15,8 @@ export default async function AdminMainLayout({
   } = await supabase.auth.getUser()
   if (!user) redirect('/admin/auth/login')
 
-  const { data: profile } = await supabase
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('role')
     .eq('id', user.id)
