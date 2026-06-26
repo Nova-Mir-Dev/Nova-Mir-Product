@@ -18,7 +18,7 @@ export default async function AdminMainLayout({
   const admin = createServiceClient()
   const { data: profile } = await admin
     .from('users')
-    .select('role')
+    .select('role, name')
     .eq('id', user.id)
     .single()
 
@@ -26,7 +26,9 @@ export default async function AdminMainLayout({
 
   return (
     <div className={styles.container}>
-      <AdminNav />
+      <AdminNav
+        user={{ name: (profile as { name?: string })?.name ?? null, email: user.email ?? null }}
+      />
       <main id="main-content" className={styles.main}>
         {children}
       </main>
