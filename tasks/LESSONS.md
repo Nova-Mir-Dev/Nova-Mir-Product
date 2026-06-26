@@ -1,5 +1,11 @@
 # Lessons
 
+## 2026-06-26: Auth flow — client-side login sets non-httpOnly cookies
+
+- Non-obvious bug: `createBrowserClient().auth.signInWithPassword()` on the client sets session cookies via `document.cookie` with `httpOnly: false`. The middleware then can't see the tokens (or worse, JS can read them). Root cause: auth login was implemented as a client-side operation, but the server (middleware) needs httpOnly cookies for security. Fix: move login to a `'use server'` action using `createServerClient` from `@supabase/ssr`, which sets httpOnly `Set-Cookie` response headers.
+- Security auditor should have caught this: ASVS V2/V3 checks "Cookies: httpOnly, secure, SameSite" and quality contract rule 12 requires "Secure cookies: httpOnly, secure, SameSite on auth cookies." Prevention: run a security audit on any auth flow before shipping, and always default to server-side login for admin portals.
+- Service role in middleware: the role lookup in middleware was failing because RLS blocked `SELECT role FROM users` even for the authenticated user's own row. Using `createClient(supabaseUrl, SUPABASE_SERVICE_ROLE_KEY)` to bypass RLS is the standard fix, but it's safe because the query only runs after `getUser()` validates the session, and the user ID comes from the validated token, not user input.
+
 ## 2026-06-25: API tests, i18n scaffolding, Sentry PII, audit logging, full audit
 
 - Non-obvious bug: Upstash env var naming — rate-limit.ts reads `UPSTASH_REDIS_REST_URL` (library convention) but `.env.example`/README/setup used `UPSTASH_REDIS_URL`. Root cause: env var names drifted between code and documentation. Prevention: add env var cross-reference check to audit skill — verify all vars consumed in code appear in `.env.example` and vice versa.
