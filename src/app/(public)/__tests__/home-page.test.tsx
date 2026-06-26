@@ -1,53 +1,58 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import HomePage from '../page'
 import en from '../../../../messages/en.json'
 
-function renderWithI18n(ui: React.ReactElement) {
+vi.mock('@/lib/content', () => ({
+  getPublishedPricing: vi.fn().mockResolvedValue(null),
+}))
+
+async function renderHome() {
+  const page = await HomePage()
   return render(
     <NextIntlClientProvider locale="en" messages={en}>
-      {ui}
+      {page}
     </NextIntlClientProvider>,
   )
 }
 
 describe('HomePage', () => {
-  it('renders without crashing', () => {
-    const { container } = renderWithI18n(<HomePage />)
+  it('renders without crashing', async () => {
+    const { container } = await renderHome()
     expect(container).toBeDefined()
   })
 
-  it('renders a heading', () => {
-    renderWithI18n(<HomePage />)
+  it('renders a heading', async () => {
+    await renderHome()
     const headings = screen.getAllByRole('heading')
     expect(headings.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders Services section', () => {
-    renderWithI18n(<HomePage />)
+  it('renders Services section', async () => {
+    await renderHome()
     expect(screen.getAllByText('Services').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders How It Works section', () => {
-    renderWithI18n(<HomePage />)
+  it('renders How It Works section', async () => {
+    await renderHome()
     expect(screen.getAllByText('How It Works').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders Pricing section', () => {
-    renderWithI18n(<HomePage />)
+  it('renders Pricing section', async () => {
+    await renderHome()
     expect(screen.getAllByText('Pricing').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders CTA section', () => {
-    renderWithI18n(<HomePage />)
+  it('renders CTA section', async () => {
+    await renderHome()
     expect(
       screen.getAllByText('Think this could be a fit?').length,
     ).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders Get Started button', () => {
-    renderWithI18n(<HomePage />)
+  it('renders Get Started button', async () => {
+    await renderHome()
     const buttons = screen.getAllByText('Get Started')
     expect(buttons.length).toBeGreaterThanOrEqual(1)
   })

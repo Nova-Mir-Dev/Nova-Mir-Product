@@ -27,10 +27,11 @@ const navItems: NavItem[] = [
   {
     label: 'Content',
     path: '/admin/content',
-    items: [
-      { label: 'Portfolio', path: '/admin/content/portfolio' },
-      { label: 'Hero Headlines', path: '/admin/content/hero-headlines' },
-    ],
+        items: [
+          { label: 'Portfolio', path: '/admin/content/portfolio' },
+          { label: 'Hero Headlines', path: '/admin/content/hero-headlines' },
+          { label: 'Pricing', path: '/admin/content/pricing' },
+        ],
   },
 ]
 

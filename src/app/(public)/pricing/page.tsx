@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { Container, Text, Button, Card, Stack, Divider } from 'azimuth-ui'
 import {
   PRICING_TIERS,
@@ -6,7 +7,42 @@ import {
   getMaintenanceRetainer,
 } from '@/lib/pricing'
 
+interface DisplayTier {
+  name: string
+  startingPrice: number
+  description: string
+  features: string[]
+  isFeatured: boolean
+}
+
+function fallbackTiers(): DisplayTier[] {
+  return PRICING_TIERS.map((t, i) => ({
+    name: t.name,
+    startingPrice: t.startingPrice,
+    description: t.description,
+    features: t.features,
+    isFeatured: i === 1,
+  }))
+}
+
 export default function PricingPage() {
+  const [tiers, setTiers] = useState<DisplayTier[]>(fallbackTiers)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/content/pricing')
+      .then((r) => (r.ok ? r.json() : fallbackTiers()))
+      .then((data) => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
+          setTiers(data)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
     <Container
       maxWidth={960}
@@ -31,86 +67,90 @@ export default function PricingPage() {
             gap: '1.5rem',
           }}
         >
-          {PRICING_TIERS.map((tier, i) => (
-            <Card
-              key={tier.name}
-              style={{
-                flex: '1 1 260px',
-                border:
-                  i === 1
-                    ? '2px solid var(--azimuth-color-primary)'
-                    : '1px solid var(--azimuth-color-border)',
-                position: 'relative',
-              }}
-              footer={
-                <Button
-                  variant={i === 1 ? 'primary' : 'secondary'}
-                  onClick={() => (window.location.href = '/contact')}
-                >
-                  Get a Quote
-                </Button>
-              }
-            >
-              <Stack spacing="md" style={{ flex: 1 }}>
-                {i === 1 && (
-                  <Text
-                    element={{ size: 'xs' }}
-                    weight="semibold"
-                    style={{
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      color: 'var(--azimuth-color-primary)',
-                    }}
-                  >
-                    Most Popular
-                  </Text>
-                )}
-
-                <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
-                  {tier.name}
-                </Text>
-
-                <Text
-                  element={{ size: 'h4' }}
-                  weight="bold"
-                  style={{ color: 'var(--azimuth-color-primary)' }}
-                >
-                  ${tier.startingPrice.toLocaleString()}
-                  {i === 1 ? '' : '+'}
-                </Text>
-                {i === 1 && (
-                  <Text
-                    element={{ size: 'xs' }}
-                    color="secondary"
-                    style={{ marginTop: '-0.25rem' }}
-                  >
-                    Founding rate — limited to 3 slots
-                  </Text>
-                )}
-
-                <Divider margin="sm" />
-
-                <div
+          {tiers.map((tier) => {
+              const featured = tier.isFeatured
+              return (
+                <Card
+                  key={tier.name}
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    marginTop: 'auto',
+                    flex: '1 1 260px',
+                    border: featured
+                      ? '2px solid var(--azimuth-color-primary)'
+                      : '1px solid var(--azimuth-color-border)',
+                    position: 'relative',
                   }}
-                >
-                  {tier.features.map((feature) => (
-                    <Text
-                      key={feature}
-                      element={{ size: 'sm' }}
-                      style={{ color: 'var(--azimuth-color-text-secondary)' }}
+                  footer={
+                    <Button
+                      variant={featured ? 'primary' : 'secondary'}
+                      onClick={() => (window.location.href = '/contact')}
                     >
-                      {feature}
+                      Get a Quote
+                    </Button>
+                  }
+                >
+                  <Stack spacing="md" style={{ flex: 1 }}>
+                    {featured && (
+                      <Text
+                        element={{ size: 'xs' }}
+                        weight="semibold"
+                        style={{
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          color: 'var(--azimuth-color-primary)',
+                        }}
+                      >
+                        Most Popular
+                      </Text>
+                    )}
+
+                    <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
+                      {tier.name}
                     </Text>
-                  ))}
-                </div>
-              </Stack>
-            </Card>
-          ))}
+
+                    <Text
+                      element={{ size: 'h4' }}
+                      weight="bold"
+                      style={{ color: 'var(--azimuth-color-primary)' }}
+                    >
+                      ${tier.startingPrice.toLocaleString()}
+                      {featured ? '' : '+'}
+                    </Text>
+                    {featured && (
+                      <Text
+                        element={{ size: 'xs' }}
+                        color="secondary"
+                        style={{ marginTop: '-0.25rem' }}
+                      >
+                        Founding rate — limited to 3 slots
+                      </Text>
+                    )}
+
+                    <Divider margin="sm" />
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                        marginTop: 'auto',
+                      }}
+                    >
+                      {tier.features.map((feature) => (
+                        <Text
+                          key={feature}
+                          element={{ size: 'sm' }}
+                          style={{
+                            color: 'var(--azimuth-color-text-secondary)',
+                          }}
+                        >
+                          {feature}
+                        </Text>
+                      ))}
+                    </div>
+                  </Stack>
+                </Card>
+              )
+            })}
         </div>
 
         <Card

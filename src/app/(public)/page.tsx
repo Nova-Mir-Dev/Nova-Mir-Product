@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
 import { PRICING_TIERS } from '@/lib/pricing'
+import { getPublishedPricing } from '@/lib/content'
 import { HeroContent } from './_components/hero-headlines'
 import styles from './landing.module.css'
 
@@ -8,23 +9,24 @@ function formatPrice(price: number): string {
   return '$' + price.toLocaleString()
 }
 
-const TIER_DATA = PRICING_TIERS.map((tier, i) => ({
-  name: tier.name,
-  priceRange: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : i === 1 ? '' : '+'}`,
-  popular: i === 1,
-  features: tier.features,
-}))
+function pricingData(tiers: { name: string; startingPrice: number; isFeatured: boolean; features: string[] }[]) {
+  return tiers.map((tier, i) => {
+    const featured = tier.isFeatured ?? i === 1
+    const suffix = featured ? '' : '+'
+    return {
+      name: tier.name,
+      priceRange: `${formatPrice(tier.startingPrice)}${suffix}`,
+      popular: featured,
+      features: tier.features,
+    }
+  })
+}
 
-const PRICING_SUMMARY = PRICING_TIERS.map((tier, i) => ({
-  name: tier.name,
-  range: `${formatPrice(tier.startingPrice)}${i === PRICING_TIERS.length - 1 ? '+' : i === 1 ? '' : '+'}`,
-  oneLiner: [
-    'Custom site that builds credibility.',
-    'Site + lead capture + automated follow-up.',
-    'Full system with booking and dashboards.',
-  ][i],
-  popular: i === 1,
-}))
+const oneLiners: Record<string, string> = {
+  'Managed Website': 'Custom site that builds credibility.',
+  'Website + Lead System': 'Site + lead capture + automated follow-up.',
+  'Website + Operations': 'Full system with booking and dashboards.',
+}
 
 const STEPS = [
   {
@@ -55,7 +57,26 @@ const PROJECTS = [
   },
 ]
 
-export default function Home() {
+export default async function Home() {
+  const dbPricing = await getPublishedPricing()
+  const tiers = dbPricing && dbPricing.length > 0
+    ? dbPricing.map((t) => ({
+        name: t.name,
+        startingPrice: t.starting_price,
+        features: t.features ?? [],
+        isFeatured: t.is_featured,
+        description: t.description ?? '',
+      }))
+    : PRICING_TIERS.map((t) => ({
+        name: t.name,
+        startingPrice: t.startingPrice,
+        features: t.features,
+        isFeatured: t.description === 'Businesses ready to capture and track leads.',
+        description: t.description,
+      }))
+
+  const displayTiers = pricingData(tiers)
+
   return (
     <>
       <section className={styles.hero}>
@@ -85,7 +106,7 @@ export default function Home() {
             Services
           </Text>
           <div className={styles.tierGrid}>
-            {TIER_DATA.map((tier) => (
+            {displayTiers.map((tier) => (
               <Card
                 key={tier.name}
                 className={`${styles.tierCard} ${tier.popular ? styles.tierCardPopular : ''}`}
@@ -218,7 +239,7 @@ export default function Home() {
             Pricing
           </Text>
           <div className={styles.pricingGrid}>
-            {PRICING_SUMMARY.map((tier) => (
+            {displayTiers.map((tier) => (
               <Card
                 key={tier.name}
                 className={`${styles.pricingCard} ${tier.popular ? styles.pricingCardPopular : ''}`}
@@ -234,10 +255,10 @@ export default function Home() {
                 )}
                 <Text weight="semibold">{tier.name}</Text>
                 <Text weight="bold" className={styles.priceRange}>
-                  {tier.range}
+                  {tier.priceRange}
                 </Text>
                 <Text element={{ size: 'sm' }} color="muted">
-                  {tier.oneLiner}
+                  {oneLiners[tier.name] ?? tier.priceRange}
                 </Text>
               </Card>
             ))}
