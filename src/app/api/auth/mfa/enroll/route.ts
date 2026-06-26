@@ -35,7 +35,8 @@ export async function POST(request: Request) {
       )
     }
 
-    const result = await enrollMfa()
+    const factorType = parsed.data.factorType ?? 'totp'
+    const result = await enrollMfa(factorType)
     if ('error' in result)
       return NextResponse.json({ error: 'Enrollment failed' }, { status: 400 })
 
@@ -43,13 +44,15 @@ export async function POST(request: Request) {
       action: 'auth.mfa.enroll',
       entity: 'user',
       entityId: user.id,
-      metadata: { factor_type: parsed.data.factorType ?? 'totp' },
+      metadata: { factor_type: factorType },
       userId: user.id,
     })
 
     return NextResponse.json({
       id: result.id,
-      qr: result.qr,
+      type: factorType,
+      ...('qr' in result ? { qr: result.qr, secret: result.secret, uri: result.uri } : {}),
+      ...('webauthn' in result ? { webauthn: result.webauthn } : {}),
     })
   } catch (err) {
     Sentry.captureException(err)

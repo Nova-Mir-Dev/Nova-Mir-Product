@@ -2,26 +2,35 @@
 
 import { createClient } from '@/lib/supabase-server'
 
-/** Enrolls the current user in TOTP MFA. Returns QR code data for setup. */
-export async function enrollMfa() {
+export async function enrollMfa(factorType: 'totp' | 'phone' | 'webauthn' = 'totp') {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Unauthorized' }
-  const { data, error } = await supabase.auth.mfa.enroll({
-    factorType: 'totp',
+
+  const { data, error } = await (supabase.auth.mfa.enroll as any)({
+    factorType,
   })
   if (error) return { error: error.message }
-  return {
-    id: data.id,
-    qr: data.totp.qr_code,
-    secret: data.totp.secret,
-    uri: data.totp.uri,
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = data as any
+
+  const result: { id: string; type: string; qr?: string; secret?: string; uri?: string; webauthn?: unknown } = {
+    id: d.id,
+    type: factorType,
   }
+
+  if (factorType === 'totp') {
+    result.qr = d.totp?.qr_code
+    result.secret = d.totp?.secret
+    result.uri = d.totp?.uri
+  }
+
+  return result
 }
 
-/** Verifies a TOTP code against an enrolled MFA factor. */
 export async function verifyMfa(factorId: string, code: string) {
   const supabase = await createClient()
   const { data, error } = await supabase.auth.mfa.challenge({
@@ -38,7 +47,6 @@ export async function verifyMfa(factorId: string, code: string) {
   return { success: true }
 }
 
-/** Removes an enrolled MFA factor for the current user. */
 export async function removeMfa(factorId: string) {
   const supabase = await createClient()
   const { error } = await supabase.auth.mfa.unenroll({ factorId })
@@ -46,7 +54,6 @@ export async function removeMfa(factorId: string) {
   return { success: true }
 }
 
-/** Lists all MFA factors (TOTP, phone, etc.) for the current user. */
 export async function listMfaFactors() {
   const supabase = await createClient()
   const { data, error } = await supabase.auth.mfa.listFactors()
