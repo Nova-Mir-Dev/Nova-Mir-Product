@@ -12,61 +12,77 @@ const createDocumentBodySchema = z.object({
 })
 
 export async function GET() {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json({ documents: [] })
+  try {
+    const supabase = await createServerClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ documents: [] })
+  } catch (err) {
+    Sentry.captureException(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    )
+  }
 }
 
 export async function POST(request: Request) {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const supabase = await createServerClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { allowed } = await rateLimit(`documents:${user.id}`, 20, 60000)
-  if (!allowed) {
+    const { allowed } = await rateLimit(`documents:${user.id}`, 20, 60000)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
+
+    const parsed = createDocumentBodySchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Documents validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
+    const body = parsed.data
+    const safePath = sanitizeFilename(body.filePath || `doc_${Date.now()}.pdf`)
+    const docId = crypto.randomUUID()
+    void logAudit({
+      action: 'document.upload',
+      entity: 'document',
+      entityId: docId,
+      userId: user.id,
+    })
     return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+      {
+        id: docId,
+        title: body.title,
+        filePath: safePath,
+        userId: user.id,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      },
+      { status: 201 },
+    )
+  } catch (err) {
+    Sentry.captureException(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
     )
   }
-
-  const parsed = createDocumentBodySchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Documents validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
-  const body = parsed.data
-  const safePath = sanitizeFilename(body.filePath || `doc_${Date.now()}.pdf`)
-  const docId = crypto.randomUUID()
-  void logAudit({
-    action: 'document.upload',
-    entity: 'document',
-    entityId: docId,
-    userId: user.id,
-  })
-  return NextResponse.json(
-    {
-      id: docId,
-      title: body.title,
-      filePath: safePath,
-      userId: user.id,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    },
-    { status: 201 },
-  )
 }

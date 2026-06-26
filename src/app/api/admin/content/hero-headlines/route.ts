@@ -39,156 +39,191 @@ async function requireAdmin() {
 }
 
 export async function GET() {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const admin = createServiceClient()
-  const { data, error } = await admin
-    .from('hero_headlines')
-    .select('*')
-    .order('sort_order')
+    const admin = createServiceClient()
+    const { data, error } = await admin
+      .from('hero_headlines')
+      .select('*')
+      .order('sort_order')
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to fetch hero headlines' },
+        { status: 500 },
+      )
+    }
+
+    return NextResponse.json(data ?? [])
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to fetch hero headlines' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  return NextResponse.json(data ?? [])
 }
 
 export async function POST(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:headlines:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:headlines:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const parsed = createSchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Admin headlines POST validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
+    const parsed = createSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Admin headlines POST validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
 
-  const admin = createServiceClient()
-  const { data, error } = await admin
-    .from('hero_headlines')
-    .insert(parsed.data)
-    .select()
-    .single()
+    const admin = createServiceClient()
+    const { data, error } = await admin
+      .from('hero_headlines')
+      .insert(parsed.data)
+      .select()
+      .single()
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to create hero headline' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('hero-headlines', { expire: 60 })
+    return NextResponse.json(data, { status: 201 })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to create hero headline' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('hero-headlines', { expire: 60 })
-  return NextResponse.json(data, { status: 201 })
 }
 
 export async function PUT(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:headlines:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:headlines:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const parsed = updateSchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Admin headlines PUT validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
+    const parsed = updateSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Admin headlines PUT validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
 
-  const { id, ...body } = parsed.data
-  const updates: Record<string, unknown> = {
-    updated_at: new Date().toISOString(),
-  }
-  for (const [key, value] of Object.entries(body)) {
-    if (value !== undefined) updates[key] = value
-  }
+    const { id, ...body } = parsed.data
+    const updates: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    }
+    for (const [key, value] of Object.entries(body)) {
+      if (value !== undefined) updates[key] = value
+    }
 
-  const admin = createServiceClient()
-  const { data, error } = await admin
-    .from('hero_headlines')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single()
+    const admin = createServiceClient()
+    const { data, error } = await admin
+      .from('hero_headlines')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to update hero headline' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('hero-headlines', { expire: 60 })
+    return NextResponse.json(data)
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to update hero headline' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('hero-headlines', { expire: 60 })
-  return NextResponse.json(data)
 }
 
 export async function DELETE(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:headlines:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:headlines:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get('id')
-  if (!id) {
-    return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 })
-  }
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Missing id parameter' },
+        { status: 400 },
+      )
+    }
 
-  const admin = createServiceClient()
-  const { error } = await admin.from('hero_headlines').delete().eq('id', id)
+    const admin = createServiceClient()
+    const { error } = await admin.from('hero_headlines').delete().eq('id', id)
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to delete hero headline' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('hero-headlines', { expire: 60 })
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to delete hero headline' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('hero-headlines', { expire: 60 })
-  return NextResponse.json({ success: true })
 }

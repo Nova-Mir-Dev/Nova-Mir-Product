@@ -1,4 +1,6 @@
+import * as Sentry from '@sentry/nextjs'
 import { createServiceClient } from './supabase-admin'
+import { isPIIKey } from './pii'
 
 interface AuditEntry {
   action: string
@@ -8,39 +10,12 @@ interface AuditEntry {
   userId?: string
 }
 
-const PII_KEYS = new Set([
-  'email',
-  'phone',
-  'message',
-  'token',
-  'password',
-  'secret',
-  'access_token',
-  'refresh_token',
-  'authorization',
-  'cookie',
-  'ssn',
-  'address',
-  'dob',
-  'date_of_birth',
-  'name',
-  'full_name',
-  'first_name',
-  'last_name',
-  'user_agent',
-  'api_key',
-  'private_key',
-  'ip',
-  'ip_address',
-  'jwt',
-])
-
 function sanitizeValue(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sanitizeValue)
   if (value && typeof value === 'object') {
     const out: Record<string, unknown> = {}
     for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
-      if (PII_KEYS.has(key.toLowerCase())) continue
+      if (isPIIKey(key)) continue
       out[key] = sanitizeValue(val)
     }
     return out
@@ -85,6 +60,7 @@ export async function logAudit(entry: AuditEntry): Promise<void> {
       metadata: sanitized ?? null,
     })
   } catch (err) {
-    void err
+    Sentry.captureException(err)
+    Sentry.captureException(err)
   }
 }

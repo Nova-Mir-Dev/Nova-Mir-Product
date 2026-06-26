@@ -105,93 +105,110 @@ async function checkAuth(): Promise<
 }
 
 export async function GET() {
-  const authResult = await checkAuth()
-  if (authResult instanceof NextResponse) return authResult
+  try {
+    const authResult = await checkAuth()
+    if (authResult instanceof NextResponse) return authResult
 
-  return NextResponse.json({
-    presets: Object.values(PRESETS).map((p) => ({
-      id: (p as { id: string }).id,
-      name: (p as { name: string }).name,
-      description: (p as { description: string }).description,
-    })),
-    options: SUPPORTED_OPTIONS,
-  })
+    return NextResponse.json({
+      presets: Object.values(PRESETS).map((p) => ({
+        id: (p as { id: string }).id,
+        name: (p as { name: string }).name,
+        description: (p as { description: string }).description,
+      })),
+      options: SUPPORTED_OPTIONS,
+    })
+  } catch (err) {
+    Sentry.captureException(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    )
+  }
 }
 
 export async function POST(request: Request) {
-  const authResult = await checkAuth()
-  if (authResult instanceof NextResponse) return authResult
+  try {
+    const authResult = await checkAuth()
+    if (authResult instanceof NextResponse) return authResult
 
-  const { allowed } = await rateLimit(
-    `admin:bootstrap:${authResult.user.id}`,
-    20,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:bootstrap:${authResult.user.id}`,
+      20,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const raw = await request.json().catch(() => ({}))
-  const parsed = BootstrapSchema.safeParse(raw)
-  if (!parsed.success) {
-    Sentry.captureMessage('Bootstrap validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
+    const raw = await request.json().catch(() => ({}))
+    const parsed = BootstrapSchema.safeParse(raw)
+    if (!parsed.success) {
+      Sentry.captureMessage('Bootstrap validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
 
-  const { mode = 'validate', ...configFields } = parsed.data
+    const { mode = 'validate', ...configFields } = parsed.data
 
-  if (!(configFields.preset in PRESETS)) {
-    return NextResponse.json(
-      { error: `Unknown preset: ${configFields.preset}` },
-      { status: 400 },
-    )
-  }
+    if (!(configFields.preset in PRESETS)) {
+      return NextResponse.json(
+        { error: `Unknown preset: ${configFields.preset}` },
+        { status: 400 },
+      )
+    }
 
-  const presetDefaults =
-    (PRESETS as Record<string, Partial<BootConfig>>)[configFields.preset] ?? {}
-  const config: BootConfig = {
-    ...DEFAULT_CONFIG,
-    ...presetDefaults,
-    ...configFields,
-  } as BootConfig
+    const presetDefaults =
+      (PRESETS as Record<string, Partial<BootConfig>>)[configFields.preset] ??
+      {}
+    const config: BootConfig = {
+      ...DEFAULT_CONFIG,
+      ...presetDefaults,
+      ...configFields,
+    } as BootConfig
 
-  const violations = validateConfig(config)
-  const audit = runComplianceAudit(config)
+    const violations = validateConfig(config)
+    const audit = runComplianceAudit(config)
 
-  if (mode === 'generate') {
-    const result = generateProject(config)
+    if (mode === 'generate') {
+      const result = generateProject(config)
+      return NextResponse.json({
+        valid: violations.filter((v) => v.severity === 'error').length === 0,
+        violations,
+        audit,
+        generated: {
+          files: result.files,
+          warnings: result.warnings,
+          projectName: result.projectName,
+        },
+      })
+    }
+
     return NextResponse.json({
       valid: violations.filter((v) => v.severity === 'error').length === 0,
       violations,
       audit,
-      generated: {
-        files: result.files,
-        warnings: result.warnings,
-        projectName: result.projectName,
+      config: {
+        preset: config.preset,
+        projectName: config.projectName,
+        framework: config.framework,
+        hosting: config.hosting,
+        database: config.database,
+        auth: config.auth,
+        payments: config.payments || 'none',
       },
     })
+  } catch (err) {
+    Sentry.captureException(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    )
   }
-
-  return NextResponse.json({
-    valid: violations.filter((v) => v.severity === 'error').length === 0,
-    violations,
-    audit,
-    config: {
-      preset: config.preset,
-      projectName: config.projectName,
-      framework: config.framework,
-      hosting: config.hosting,
-      database: config.database,
-      auth: config.auth,
-      payments: config.payments || 'none',
-    },
-  })
 }

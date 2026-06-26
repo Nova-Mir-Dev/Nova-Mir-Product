@@ -12,110 +12,134 @@ const createClientBodySchema = z.object({
 })
 
 export async function GET() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    if (profile?.role !== 'admin')
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const admin = createServiceClient()
-  const { data: clients, error: clientsError } = await admin
-    .from('portfolio_clients')
-    .select('*')
-    .order('created_at', { ascending: false })
+    const { allowed } = await rateLimit(`admin:clients:${user.id}`, 30, 60000)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  if (clientsError)
+    const admin = createServiceClient()
+    const { data: clients, error: clientsError } = await admin
+      .from('portfolio_clients')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (clientsError)
+      return NextResponse.json(
+        { error: 'Failed to fetch clients' },
+        { status: 500 },
+      )
+
+    const mapped = (clients ?? []).map((c: Record<string, unknown>) => ({
+      id: c.id,
+      name: c.name,
+      email: c.email,
+      projectCount: c.project_count ?? 0,
+      status: c.status ?? 'active',
+    }))
+
+    return NextResponse.json(mapped)
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to fetch clients' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
-
-  const mapped = (clients ?? []).map((c: Record<string, unknown>) => ({
-    id: c.id,
-    name: c.name,
-    email: c.email,
-    projectCount: c.project_count ?? 0,
-    status: c.status ?? 'active',
-  }))
-
-  return NextResponse.json(mapped)
+  }
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    if (profile?.role !== 'admin')
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { allowed } = await rateLimit(`admin:clients:${user.id}`, 30, 60000)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
-    )
-  }
+    const { allowed } = await rateLimit(`admin:clients:${user.id}`, 30, 60000)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const parsed = createClientBodySchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Admin clients validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
+    const parsed = createClientBodySchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Admin clients validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
+    const body = parsed.data
+
+    const admin = createServiceClient()
+    const { data: client, error: createError } = await admin
+      .from('portfolio_clients')
+      .insert({ name: body.name, email: body.email })
+      .select()
+      .single()
+
+    if (createError)
+      return NextResponse.json(
+        { error: 'Failed to create client' },
+        { status: 500 },
+      )
+
+    void logAudit({
+      action: 'client.create',
+      entity: 'client',
+      entityId: client.id,
+      metadata: { has_password: false },
+      userId: user.id,
     })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
-  const body = parsed.data
 
-  const admin = createServiceClient()
-  const { data: client, error: createError } = await admin
-    .from('portfolio_clients')
-    .insert({ name: body.name, email: body.email })
-    .select()
-    .single()
+    const mapped = {
+      id: client.id,
+      name: client.name,
+      email: client.email,
+      projectCount: client.project_count ?? 0,
+      status: client.status ?? 'active',
+    }
 
-  if (createError)
+    return NextResponse.json(mapped, { status: 201 })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to create client' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
-
-  void logAudit({
-    action: 'client.create',
-    entity: 'client',
-    entityId: client.id,
-    metadata: { has_password: false },
-    userId: user.id,
-  })
-
-  const mapped = {
-    id: client.id,
-    name: client.name,
-    email: client.email,
-    projectCount: client.project_count ?? 0,
-    status: client.status ?? 'active',
   }
-
-  return NextResponse.json(mapped, { status: 201 })
 }

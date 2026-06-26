@@ -40,160 +40,198 @@ async function requireAdmin() {
 }
 
 export async function GET(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { searchParams } = new URL(request.url)
-  const published = searchParams.get('published')
+    const { searchParams } = new URL(request.url)
+    const published = searchParams.get('published')
 
-  const admin = createServiceClient()
-  let query = admin.from('portfolio_projects').select('*').order('sort_order')
+    const admin = createServiceClient()
+    let query = admin.from('portfolio_projects').select('*').order('sort_order')
 
-  if (published === 'true') query = query.eq('is_published', true)
-  else if (published === 'false') query = query.eq('is_published', false)
+    if (published === 'true') query = query.eq('is_published', true)
+    else if (published === 'false') query = query.eq('is_published', false)
 
-  const { data, error } = await query
-  if (error) {
+    const { data, error } = await query
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to fetch portfolio projects' },
+        { status: 500 },
+      )
+    }
+
+    return NextResponse.json(data ?? [])
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to fetch portfolio projects' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  return NextResponse.json(data ?? [])
 }
 
 export async function POST(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:portfolio:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:portfolio:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const parsed = createSchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Admin portfolio POST validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
+    const parsed = createSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Admin portfolio POST validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
 
-  const admin = createServiceClient()
-  const { data, error } = await admin
-    .from('portfolio_projects')
-    .insert(parsed.data)
-    .select()
-    .single()
+    const admin = createServiceClient()
+    const { data, error } = await admin
+      .from('portfolio_projects')
+      .insert(parsed.data)
+      .select()
+      .single()
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to create portfolio project' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('portfolio', { expire: 60 })
+    return NextResponse.json(data, { status: 201 })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to create portfolio project' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('portfolio', { expire: 60 })
-  return NextResponse.json(data, { status: 201 })
 }
 
 export async function PUT(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:portfolio:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:portfolio:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const parsed = updateSchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Admin portfolio PUT validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
+    const parsed = updateSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Admin portfolio PUT validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
 
-  const { id, ...body } = parsed.data
-  const updates: Record<string, unknown> = {
-    updated_at: new Date().toISOString(),
-  }
-  for (const [key, value] of Object.entries(body)) {
-    if (value !== undefined) updates[key] = value
-  }
+    const { id, ...body } = parsed.data
+    const updates: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    }
+    for (const [key, value] of Object.entries(body)) {
+      if (value !== undefined) updates[key] = value
+    }
 
-  const admin = createServiceClient()
-  const { data, error } = await admin
-    .from('portfolio_projects')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single()
+    const admin = createServiceClient()
+    const { data, error } = await admin
+      .from('portfolio_projects')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to update portfolio project' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('portfolio', { expire: 60 })
+    return NextResponse.json(data)
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to update portfolio project' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('portfolio', { expire: 60 })
-  return NextResponse.json(data)
 }
 
 export async function DELETE(request: Request) {
-  const user = await requireAdmin()
-  if (user instanceof NextResponse) return user
+  try {
+    const user = await requireAdmin()
+    if (user instanceof NextResponse) return user
 
-  const { allowed } = await rateLimit(
-    `admin:content:portfolio:${user.id}`,
-    30,
-    60000,
-  )
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+    const { allowed } = await rateLimit(
+      `admin:content:portfolio:${user.id}`,
+      30,
+      60000,
     )
-  }
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
 
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get('id')
-  if (!id) {
-    return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 })
-  }
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Missing id parameter' },
+        { status: 400 },
+      )
+    }
 
-  const admin = createServiceClient()
-  const { error } = await admin.from('portfolio_projects').delete().eq('id', id)
+    const admin = createServiceClient()
+    const { error } = await admin
+      .from('portfolio_projects')
+      .delete()
+      .eq('id', id)
 
-  if (error) {
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to delete portfolio project' },
+        { status: 500 },
+      )
+    }
+
+    revalidateTag('portfolio', { expire: 60 })
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Failed to delete portfolio project' },
+      { error: 'Internal server error' },
       { status: 500 },
     )
   }
-
-  revalidateTag('portfolio', { expire: 60 })
-  return NextResponse.json({ success: true })
 }

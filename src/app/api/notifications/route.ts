@@ -14,48 +14,64 @@ const markReadBodySchema = z.object({
 })
 
 export async function GET() {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  return NextResponse.json(getNotifications(user.id))
+  try {
+    const supabase = await createServerClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json(getNotifications(user.id))
+  } catch (err) {
+    Sentry.captureException(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    )
+  }
 }
 
 export async function POST(request: Request) {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  if (error || !user)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const supabase = await createServerClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
+    if (error || !user)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { allowed } = await rateLimit(`notifications:${user.id}`, 60, 60000)
-  if (!allowed) {
+    const { allowed } = await rateLimit(`notifications:${user.id}`, 60, 60000)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 },
+      )
+    }
+
+    const parsed = markReadBodySchema.safeParse(await request.json())
+    if (!parsed.success) {
+      Sentry.captureMessage('Notifications validation failed', {
+        extra: {
+          issueCount: parsed.error.issues.length,
+          issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
+        },
+      })
+      return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
+    }
+    const { notificationIds } = parsed.data
+    if (notificationIds && notificationIds.length > 0) {
+      notificationIds.forEach((id) => void markAsRead(user.id, id))
+    } else {
+      void markAllAsRead(user.id)
+    }
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    Sentry.captureException(err)
     return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 },
+      { error: 'Internal server error' },
+      { status: 500 },
     )
   }
-
-  const parsed = markReadBodySchema.safeParse(await request.json())
-  if (!parsed.success) {
-    Sentry.captureMessage('Notifications validation failed', {
-      extra: {
-        issueCount: parsed.error.issues.length,
-        issuePaths: parsed.error.issues.map((i) => i.path.join('.')),
-      },
-    })
-    return NextResponse.json({ error: 'Validation failed.' }, { status: 400 })
-  }
-  const { notificationIds } = parsed.data
-  if (notificationIds && notificationIds.length > 0) {
-    notificationIds.forEach((id) => void markAsRead(user.id, id))
-  } else {
-    void markAllAsRead(user.id)
-  }
-  return NextResponse.json({ success: true })
 }

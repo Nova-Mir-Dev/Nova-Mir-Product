@@ -1,7 +1,5 @@
 import type { ErrorEvent, EventHint } from '@sentry/nextjs'
-
-const PII_KEYS =
-  /^(email|phone|name|message|address|ip|password|token|secret|key|hash|ssn|dob|birth|credit|card|cvv)$/i
+import { isPIIKey } from './pii'
 
 /**
  * Scrub PII from a Sentry event before it is sent to the server.
@@ -12,7 +10,10 @@ const PII_KEYS =
  * caps array length to bound payload size. Returns the mutated event, or
  * `null` if the input was null.
  */
-export function scrubPii(event: ErrorEvent | null, _hint?: EventHint): ErrorEvent | null {
+export function scrubPii(
+  event: ErrorEvent | null,
+  _hint?: EventHint,
+): ErrorEvent | null {
   if (!event) return null
   if (event.extra) event.extra = scrubObject(event.extra)
   if (event.request?.data) event.request.data = scrubValue(event.request.data)
@@ -34,7 +35,7 @@ export function scrubPii(event: ErrorEvent | null, _hint?: EventHint): ErrorEven
 function scrubObject(obj: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {}
   for (const [k, v] of Object.entries(obj)) {
-    out[k] = PII_KEYS.test(k) ? '[REDACTED]' : scrubValue(v)
+    out[k] = isPIIKey(k) ? '[REDACTED]' : scrubValue(v)
   }
   return out
 }
