@@ -42,13 +42,16 @@ export default function AdminNav() {
     <nav className={styles.nav} aria-label="Admin navigation">
       <div className={styles.navInner}>
         <Stack spacing="sm">
-          <Text
-            element={{ as: 'h2', size: 'h5' }}
-            weight="semibold"
-            className={styles.title}
-          >
-            Admin
-          </Text>
+          <Link href="/" className={styles.brand}>
+            <img src="/logo-icon.svg" alt="" className={styles.logo} />
+            <Text
+              element={{ as: 'h2', size: 'h5' }}
+              weight="semibold"
+              className={styles.title}
+            >
+              Nova Mir
+            </Text>
+          </Link>
           <ul className={styles.navList}>
             {navItems.map((item) => (
               <li key={item.path} className={styles.navItem}>

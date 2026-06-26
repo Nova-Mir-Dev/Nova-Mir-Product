@@ -17,6 +17,23 @@
   margin-bottom: var(--azimuth-spacing-sm);
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-sm);
+  text-decoration: none;
+  margin-bottom: var(--azimuth-spacing-sm);
+}
+
+.brand:hover .title {
+  text-decoration: underline;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+}
+
 .navList {
   list-style: none;
   padding: 0;
