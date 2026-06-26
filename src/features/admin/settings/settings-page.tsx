@@ -13,6 +13,7 @@ import {
 import { useActionState } from 'react'
 import { updateProfile, createApiKey, revokeApiKey } from './actions'
 import type { CreateApiKeyResult } from './actions'
+import { MfaPanel } from '@/features/auth/mfa-panel'
 import styles from './settings-page.module.css'
 
 interface TabItem {
@@ -31,15 +32,21 @@ export interface ApiKeyItem {
 export interface SettingsPageProps {
   user: { email: string; name: string | null }
   apiKeys?: ApiKeyItem[]
+  factors: { id: string; type: string; created_at: string }[]
 }
 
-export const SettingsPage = ({ user, apiKeys = [] }: SettingsPageProps) => {
+export const SettingsPage = ({ user, apiKeys = [], factors }: SettingsPageProps) => {
   const tabs: TabItem[] = [
     { id: 'profile', label: 'Profile', content: <ProfileTab user={user} /> },
     {
       id: 'api-keys',
       label: 'API Keys',
       content: <ApiKeysTab apiKeys={apiKeys} />,
+    },
+    {
+      id: 'security',
+      label: 'Security',
+      content: <SecurityTab factors={factors} />,
     },
   ]
 
@@ -84,6 +91,16 @@ const ProfileTab = ({
       </form>
     </Stack>
   </Card>
+)
+
+const SecurityTab = ({
+  factors,
+}: {
+  factors: { id: string; type: string; created_at: string }[]
+}) => (
+  <Stack spacing="md">
+    <MfaPanel factors={factors} />
+  </Stack>
 )
 
 const ApiKeysTab = ({ apiKeys }: { apiKeys: ApiKeyItem[] }) => {

@@ -23,7 +23,6 @@ const navItems: NavItem[] = [
   { label: 'Admins', path: '/admin/admins' },
   { label: 'Audit Log', path: '/admin/audit' },
   { label: 'DSAR', path: '/admin/compliance/dsar' },
-  { label: 'Settings', path: '/admin/settings' },
   {
     label: 'Content',
     path: '/admin/content',

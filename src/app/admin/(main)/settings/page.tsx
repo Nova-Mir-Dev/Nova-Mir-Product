@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { SettingsPage } from '@/features/admin/settings/settings-page'
+import { listMfaFactors } from '@/features/auth/mfa'
 
 export default async function SettingsRoute() {
   const supabase = await createClient()
@@ -11,7 +12,8 @@ export default async function SettingsRoute() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/admin/auth/login')
 
-  const { data: profile } = await createServiceClient()
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('name, role')
     .eq('id', user.id)
@@ -26,10 +28,18 @@ export default async function SettingsRoute() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  const mfaResult = await listMfaFactors()
+  const factors = 'error' in mfaResult ? [] : (mfaResult.all ?? []).map((f) => ({
+    id: f.id,
+    type: f.factor_type,
+    created_at: f.created_at,
+  }))
+
   return (
     <SettingsPage
       user={{ email: user.email!, name: profile?.name ?? null }}
       apiKeys={apiKeys ?? []}
+      factors={factors}
     />
   )
 }
