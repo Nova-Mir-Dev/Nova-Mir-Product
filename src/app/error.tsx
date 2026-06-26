@@ -19,7 +19,7 @@ export default function Error({
           Something went wrong
         </Text>
         <Text element={{ size: 'base' }} color="secondary" align="center">
-          An unexpected error occurred in the admin area. Please try again.
+          An unexpected error occurred. Please try again.
         </Text>
         <div style={{ textAlign: 'center' }}>
           <Button variant="primary" onClick={reset}>

@@ -8,7 +8,7 @@ export default function Loading() {
     >
       <Stack spacing="md">
         <Text element={{ size: 'lg' }} color="secondary" align="center">
-          Loading admin area...
+          Loading...
         </Text>
       </Stack>
     </Container>
