@@ -12,7 +12,7 @@ This document outlines the security baseline for nova-mir-product.
 - [ ] API keys and secrets rotated regularly
 - [x] Dependencies scanned via `npm audit` in CI
 - [ ] SQL injection prevention via parameterized queries
-- [ ] CORS configured for allowed origins
+- [x] CORS configured for allowed origins (allowlist via `CORS_ORIGINS` env var)
 - [x] Rate limiting on public API endpoints
 - [ ] Webhook signature verification
 - [ ] File upload validation
@@ -20,7 +20,7 @@ This document outlines the security baseline for nova-mir-product.
 
 ## Content Security Policy
 
-The CSP in `next.config.ts` includes `'unsafe-inline'` and `'strict-dynamic'`, which Next.js requires for hydration. The CSP also covers `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`, `frame-src 'none'`, and `upgrade-insecure-requests`.
+The CSP in `next.config.ts` includes `'unsafe-inline'` (required by Next.js hydration — see inline TODO about moving to nonces). The CSP also covers `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`, `frame-src 'none'`, and `upgrade-insecure-requests`.
 
 For production hardening, consider:
 

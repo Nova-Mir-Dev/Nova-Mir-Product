@@ -16,6 +16,7 @@
 - **Email**: SMTP via Resend (transactional)
 - **File Storage**: Supabase Storage (documents)
 - **Notifications**: Slack (lead alerts, error notifications)
+- **i18n**: next-intl (server-side, locale routing via `i18n/request.ts`)
 - **Cache**: Upstash Redis (rate limiting via sliding window)
 - **Analytics**: Plausible
 
@@ -27,12 +28,15 @@
 │   ├── supabase-server.ts  # SSR client (ANON key — respects RLS)
 │   ├── supabase-admin.ts   # Service-role client (server-only)
 │   ├── roles.ts            # Role-based permissions
-│   ├── api-keys.ts         # API key generation + validation
 │   ├── rate-limit.ts       # Rate limiting (in-memory; Redis-ready)
 │   ├── sanitize.ts         # Input sanitization
-│   ├── audit-log.ts        # Audit trail
+│   ├── cors.ts             # CORS origin allowlist + headers
+│   ├── audit-log.ts        # Audit trail (all state mutations)
+│   ├── sentry-scrub.ts     # PII scrubbing before Sentry ingestion
 │   ├── pricing.ts          # Shared pricing tier config
-│   └── navigation.ts       # Nav structure + app config
+│   ├── navigation.ts       # Nav structure + app config
+│   └── bridge/             # Bridge primitives (auth, idempotency, types)
+├── i18n/                   # next-intl locale config
 ├── src/
 │   ├── app/                # Next.js App Router
 │   │   ├── layout.tsx      # Root layout (metadata, fonts, JSON-LD, theme)
@@ -134,25 +138,25 @@
 
 ## API Routes
 
-| Route                 | Methods   | Auth                     | Rate Limited | Validation |
-| --------------------- | --------- | ------------------------ | ------------ | ---------- |
-| `/api/leads`          | GET, POST | GET: admin, POST: public | POST only    | Zod        |
-| `/api/leads/[id]`     | PATCH     | Admin                    | Yes          | Zod        |
-| `/api/appointments`   | GET, POST | Required                 | POST only    | Zod        |
-| `/api/admin/api-keys` | GET, POST | Required + role check    | POST only    | Zod        |
-| `/api/admin/audit`    | GET       | Required + admin role    | Yes          | N/A        |
-| `/api/admin/billing`  | GET, POST | Required + admin role    | Yes          | N/A        |
-| `/api/admin/clients`  | GET, POST | Required + admin role    | Yes          | N/A        |
-| `/api/admin/leads`    | GET       | Required + admin role    | Yes          | N/A        |
-| `/api/auth/mfa/*`     | POST      | Required                 | Yes          | Zod        |
-| `/api/auth/me`        | GET       | None (self-service)      | Yes          | N/A        |
-| `/api/bootstrap`      | POST      | Required + admin role    | Yes          | Zod        |
-| `/api/compliance/*`   | Various   | Required                 | Yes          | Zod        |
-| `/api/crud/[entity]`  | Various   | Required + admin role    | Yes          | Zod        |
-| `/api/documents`      | Various   | Required + role check    | Yes          | Zod        |
-| `/api/export`         | GET       | Required + admin role    | Yes          | N/A        |
-| `/api/health`         | GET       | None                     | Yes          | N/A        |
-| `/api/notifications`  | Various   | Required + admin role    | Yes          | Zod        |
+| Route                  | Methods   | Auth                     | Rate Limited | Validation |
+| ---------------------- | --------- | ------------------------ | ------------ | ---------- |
+| `/api/leads`           | GET, POST | GET: admin, POST: public | POST only    | Zod        |
+| `/api/leads/[id]`      | PATCH     | Admin                    | Yes          | Zod        |
+| `/api/appointments`    | GET, POST | Required                 | POST only    | Zod        |
+| `/api/admin/api-keys`  | GET, POST | Required + role check    | POST only    | Zod        |
+| `/api/admin/audit`     | GET       | Required + admin role    | Yes          | N/A        |
+| `/api/admin/billing`   | GET, POST | Required + admin role    | Yes          | N/A        |
+| `/api/admin/clients`   | GET, POST | Required + admin role    | Yes          | N/A        |
+| `/api/admin/leads`     | GET       | Required + admin role    | Yes          | N/A        |
+| `/api/auth/mfa/*`      | POST      | Required                 | Yes          | Zod        |
+| `/api/auth/me`         | GET       | None (self-service)      | Yes          | N/A        |
+| `/api/admin/bootstrap` | POST      | Required + admin role    | Yes          | Zod        |
+| `/api/compliance/*`    | Various   | Required                 | Yes          | Zod        |
+| `/api/crud/[entity]`   | Various   | Required + admin role    | Yes          | Zod        |
+| `/api/documents`       | Various   | Required + role check    | Yes          | Zod        |
+| `/api/export`          | GET       | Required + admin role    | Yes          | N/A        |
+| `/api/health`          | GET       | None                     | Yes          | N/A        |
+| `/api/notifications`   | Various   | Required + admin role    | Yes          | Zod        |
 
 ## Authentication Flow
 
@@ -160,6 +164,8 @@
 - **Inline checks**: Every protected API route and the admin layout verify auth a second time (defense in depth). Admin routes also verify role === 'admin'.
 - **Service role**: Used only where RLS bypass is required (public lead submission, admin bulk operations). All user-bound operations use the ANON key via `createClient()`. Never used in user-facing SSR.
 - **Rate limiting**: All mutation endpoints use Upstash Redis sliding window (10 req/min per IP by default). Falls back to in-memory counter when Redis unavailable.
+- **Audit logging**: Every state mutation is recorded via `src/lib/audit-log.ts` (user_id, action, entity, metadata, ip_address).
+- **Sentry PII scrubbing**: `src/lib/sentry-scrub.ts` strips PII (emails, names, IPs) from error reports before they reach Sentry.
 
 ## Data Model
 

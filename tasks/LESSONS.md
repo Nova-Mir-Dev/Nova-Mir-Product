@@ -1,5 +1,15 @@
 # Lessons
 
+## 2026-06-25: API tests, i18n scaffolding, Sentry PII, audit logging, full audit
+
+- Non-obvious bug: Upstash env var naming — rate-limit.ts reads `UPSTASH_REDIS_REST_URL` (library convention) but `.env.example`/README/setup used `UPSTASH_REDIS_URL`. Root cause: env var names drifted between code and documentation. Prevention: add env var cross-reference check to audit skill — verify all vars consumed in code appear in `.env.example` and vice versa.
+- Bridge beads moot after consolidation: created bridge primitives lib (auth.ts, idempotency.ts) before checking whether the intended bridge endpoints already existed as session-auth routes. They did. Prevention: before planning new API endpoints, check existing routes for equivalent session-auth variants covering the same use case.
+- Parallel subagent file conflicts: Sentry PII subagent and audit-log subagent both modified many of the same route files concurrently. Merges succeeded, but this risks conflicts on larger edits. Prevention: avoid concurrent subagents editing overlapping file sets; sequence them or use fine-grained file assignments.
+- Zod flatten leak pattern: 3 routes returned `parsed.error.flatten()` in error responses, leaking schema internals (field names, constraints). Root cause: reused a convenient error-reporting pattern without considering it reaches HTTP clients. Prevention: search for `parsed.error.flatten()` in route handlers during code review — should never appear in a `NextResponse`.
+- Subagent work not tracked in git until session end: multiple subagents changed dozens of files across 5+ work streams, committed only at session close. An intermediate crash would lose work. Prevention: commit after each subagent completes its work unit, with descriptive messages.
+- Audit reports in `.tmp/` are ephemeral (gitignored). Prevention: copy audit reports to `audit-history/YYYY-MM-DD/` at session close so they persist in git for trend tracking.
+- Full audit identified 1 critical, 12 high, 7 medium findings across 13 dimensions. The two real security issues were the 3 flatten() leaks (H-01) and unprotected opt-out endpoint (H-03) — both now fixed. Biggest documentation gaps: README version drift and PRIVACY.md duplicate content.
+
 ## 2026-06-18: Hardcoded content audit + DSAR completeness
 
 - Non-obvious bug: ComplianceRequestForm component was defined, tested, but never imported on any page. Root cause: no dead-code check verifies that exported components are actually rendered. Prevention: add "orphaned component" detection to full-audit skill.

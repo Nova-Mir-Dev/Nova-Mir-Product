@@ -18,7 +18,7 @@ Web development for small businesses. Custom websites, lead systems, and operati
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Database**: PostgreSQL (Supabase)
 - **Auth**: Supabase SSR (session-based)
 - **Hosting**: Vercel
@@ -41,15 +41,18 @@ npm run dev
 
 ## Scripts
 
-| Command              | Description              |
-| -------------------- | ------------------------ |
-| `npm run dev`        | Start development server |
-| `npm run build`      | Production build         |
-| `npm run typecheck`  | TypeScript type checking |
-| `npm run lint`       | Lint all source files    |
-| `npm run format`     | Format with Prettier     |
-| `npm test`           | Run tests (Vitest)       |
-| `npm run test:watch` | Run tests in watch mode  |
+| Command                | Description                 |
+| ---------------------- | --------------------------- |
+| `npm run dev`          | Start development server    |
+| `npm run build`        | Production build            |
+| `npm run typecheck`    | TypeScript type checking    |
+| `npm run lint`         | Lint all source files       |
+| `npm run format`       | Format with Prettier        |
+| `npm test`             | Run tests (Vitest)          |
+| `npm run test:watch`   | Run tests in watch mode     |
+| `npm run verify`       | Run full verification suite |
+| `npm run check:assets` | Check public assets         |
+| `npm run start`        | Start production server     |
 
 ## Environment Variables
 
@@ -76,7 +79,7 @@ Before deploying, ensure these pass:
 
 - `npm run typecheck` — zero errors
 - `npm run build` — succeeds
-- `npm test` — 562 tests across 56 test files
+- `npm test` — 757 tests across 84 test files
 - `npm run lint` — zero errors
 - `npx prettier --check .` — all files formatted
 

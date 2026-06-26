@@ -36,7 +36,6 @@ cp .env.example .env.local
 ### Slack App Setup
 
 - [ ] Go to [api.slack.com/apps](https://api.slack.com/apps) → Create New App
-- [ ] Enable Socket Mode if using `slack-app/` standalone
 - [ ] Set `SLACK_BOT_TOKEN` from OAuth & Permissions
 - [ ] Set `SLACK_SIGNING_SECRET` from Basic Information
 - [ ] Configure Event Subscriptions URL: `https://YOUR_DOMAIN/api/slack/events`
@@ -140,7 +139,7 @@ After migrations, you need seed data for managed content tables. Create an admin
 - [ ] API keys and secrets are not in version control
 - [ ] HTTPS is enforced for all traffic
 - [ ] CSP headers are not in report-only mode
-- [ ] IP allowlist is configured with your team's IPs in `ALLOWED_IPS` (optional — set in env if using ip-allowlist.ts)
+- [ ] All API endpoints require authentication (public endpoints are intentional)
 - [ ] Test all API endpoints with authentication required
 - [ ] Set up automated dependency updates (Dependabot/Snyk)
 - [ ] Review `docs/SECURITY.md` for complete checklist
