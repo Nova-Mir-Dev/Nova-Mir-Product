@@ -44,15 +44,6 @@ function hasSupabaseEnv(): boolean {
   return !!supabaseUrl() && !!supabaseAnonKey()
 }
 
-function createServiceRoleClient() {
-  return createServerClient(supabaseUrl()!, supabaseServiceKey()!, {
-    cookies: {
-      getAll: () => [],
-      setAll: () => {},
-    },
-  })
-}
-
 async function getAuth(request: NextRequest) {
   if (!hasSupabaseEnv())
     return {
@@ -86,13 +77,22 @@ async function getAuth(request: NextRequest) {
 
   let role: string | null = null
   if (user) {
-    const admin = createServiceRoleClient()
-    const { data: profile } = await admin
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-    role = (profile?.role as string) ?? null
+    const url = supabaseUrl()!
+    const key = supabaseServiceKey()!
+    try {
+      const res = await fetch(`${url}/rest/v1/users?id=eq.${user.id}&select=role`, {
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+        },
+      })
+      if (res.ok) {
+        const rows = await res.json()
+        role = (rows?.[0]?.role as string) ?? null
+      }
+    } catch {
+      role = null
+    }
   }
 
   return { user, role, supabaseResponse }
