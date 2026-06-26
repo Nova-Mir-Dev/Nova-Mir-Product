@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import AdminNav from '@/features/admin/components/admin-nav'
 import { UserMenu } from '@/features/admin/components/user-menu'
-import { ThemeToggle } from '@/components/theme-toggle'
 import styles from './admin-layout.module.css'
 
 export default async function AdminMainLayout({
@@ -33,7 +32,6 @@ export default async function AdminMainLayout({
         {children}
       </main>
       <div className={styles.topRight}>
-        <ThemeToggle />
         <UserMenu
           name={(profile as { name?: string })?.name ?? null}
           email={user.email ?? null}

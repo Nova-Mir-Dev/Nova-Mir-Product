@@ -6,6 +6,7 @@
 .main {
   flex: 1;
   padding: var(--azimuth-space-lg);
+  padding-top: calc(var(--azimuth-space-lg) + 48px);
 }
 
 .topRight {
@@ -24,5 +25,6 @@
   }
   .main {
     padding: var(--azimuth-space-md);
+    padding-top: calc(var(--azimuth-space-md) + 48px);
   }
 }
