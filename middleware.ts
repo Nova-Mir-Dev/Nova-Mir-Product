@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr'
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isAllowedOrigin, CORS_HEADERS, getCorsOriginHeader } from '@/lib/cors'
 import { rateLimit } from '@/lib/rate-limit'
@@ -46,8 +45,11 @@ function hasSupabaseEnv(): boolean {
 }
 
 function createServiceRoleClient() {
-  return createClient(supabaseUrl()!, supabaseServiceKey()!, {
-    auth: { autoRefreshToken: false, persistSession: false },
+  return createServerClient(supabaseUrl()!, supabaseServiceKey()!, {
+    cookies: {
+      getAll: () => [],
+      setAll: () => {},
+    },
   })
 }
 
