@@ -15,7 +15,9 @@ export function AdminLoginForm({ redirectTo }: { redirectTo?: string }) {
     setError('')
     setLoading(true)
 
-    const result = await loginAction(email, password, redirectTo)
+    const result = redirectTo
+      ? await loginAction(email, password, redirectTo)
+      : await loginAction(email, password)
 
     if (result?.error) {
       setError(result.error)
