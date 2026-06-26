@@ -94,7 +94,7 @@ export default async function DashboardPage() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--azimuth-spacing-sm)',
+          gap: 'var(--azimuth-space-sm)',
           flexWrap: 'wrap',
         }}
       >
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 'var(--azimuth-spacing-md)',
+          gap: 'var(--azimuth-space-md)',
         }}
       >
         <Card>
@@ -196,7 +196,7 @@ export default async function DashboardPage() {
         <div
           style={{
             display: 'flex',
-            gap: 'var(--azimuth-spacing-sm)',
+            gap: 'var(--azimuth-space-sm)',
             flexWrap: 'wrap',
           }}
         >
@@ -268,7 +268,7 @@ export default async function DashboardPage() {
             spacing="sm"
             style={{
               textAlign: 'center',
-              padding: 'var(--azimuth-spacing-lg)',
+              padding: 'var(--azimuth-space-lg)',
             }}
           >
             <Text color="secondary">No active projects yet.</Text>

@@ -5,11 +5,11 @@
 }
 
 .title {
-  margin-bottom: var(--azimuth-spacing-sm);
+  margin-bottom: var(--azimuth-space-sm);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--azimuth-spacing-sm);
+  gap: var(--azimuth-space-sm);
 }

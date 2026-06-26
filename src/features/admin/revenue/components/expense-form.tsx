@@ -41,7 +41,7 @@ export function ExpenseForm({ categoryLabels }: ExpenseFormProps) {
               required
               style={{
                 width: '100%',
-                padding: 'var(--azimuth-spacing-xs)',
+                padding: 'var(--azimuth-space-xs)',
                 borderRadius: 'var(--azimuth-radius-sm)',
                 border: '1px solid var(--azimuth-color-border)',
               }}

@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Dashboard
           </Text>
@@ -35,7 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -95,7 +95,7 @@ export default async function LeadsPage({
         Leads
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -106,7 +106,7 @@ export default async function LeadsPage({
           name="status"
           defaultValue={params.status || ""}
           style={{
-            padding: "var(--azimuth-spacing-sm)",
+            padding: "var(--azimuth-space-sm)",
             border: "1px solid var(--azimuth-color-border)",
             borderRadius: "var(--azimuth-radius-md)",
             fontFamily: "inherit",
@@ -127,7 +127,7 @@ export default async function LeadsPage({
 
       {filtered.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No leads yet.</Text>
             <Text element={{ size: "sm" }} color="secondary">
               Leads captured from your landing page will appear here.
@@ -267,7 +267,7 @@ export function LeadForm() {
   if (status === "success") {
     return (
       <Card>
-        <Stack spacing="md" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+        <Stack spacing="md" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
           <Text element={{ as: "h3", size: "h4" }} weight="semibold">
             Thank you!
           </Text>
@@ -314,12 +314,12 @@ export function LeadForm() {
               rows={4}
               style={{
                 width: "100%",
-                padding: "var(--azimuth-spacing-sm)",
+                padding: "var(--azimuth-space-sm)",
                 border: "1px solid var(--azimuth-color-border)",
                 borderRadius: "var(--azimuth-radius-md)",
                 fontFamily: "inherit",
                 resize: "vertical",
-                marginTop: "var(--azimuth-spacing-xs)",
+                marginTop: "var(--azimuth-space-xs)",
               }}
             />
           </div>
@@ -343,7 +343,7 @@ import { Text, Stack, Card } from "azimuth-ui";
 
 export default function Home() {
   return (
-    <Stack spacing="lg" style={{ padding: "var(--azimuth-spacing-xl)" }}>
+    <Stack spacing="lg" style={{ padding: "var(--azimuth-space-xl)" }}>
       <section style={{ textAlign: "center", padding: "4rem 0" }}>
         <Stack spacing="md" style={{ maxWidth: 600, margin: "0 auto" }}>
           <Text element={{ as: "h1", size: "h2" }} weight="bold">
@@ -360,7 +360,7 @@ export default function Home() {
       </section>
 
       <section style={{ padding: "4rem 0" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "var(--azimuth-spacing-md)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "var(--azimuth-space-md)" }}>
           <Card>
             <Stack spacing="sm">
               <Text element={{ as: "h3", size: "h5" }} weight="semibold">Capture</Text>

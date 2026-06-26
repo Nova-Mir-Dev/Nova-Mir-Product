@@ -1,6 +1,6 @@
 .card {
   cursor: pointer;
-  padding: var(--azimuth-spacing-sm);
+  padding: var(--azimuth-space-sm);
   position: relative;
 }
 
@@ -11,7 +11,7 @@
 
 .icon {
   font-size: 1.5rem;
-  margin-bottom: var(--azimuth-spacing-xs);
+  margin-bottom: var(--azimuth-space-xs);
 }
 
 .description {

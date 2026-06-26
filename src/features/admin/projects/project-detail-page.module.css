@@ -1,4 +1,4 @@
 .infoCards {
   display: flex;
-  gap: var(--azimuth-spacing-md);
+  gap: var(--azimuth-space-md);
 }

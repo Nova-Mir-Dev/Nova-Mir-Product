@@ -31,7 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Internal Tool
           </Text>
@@ -46,7 +46,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -168,7 +168,7 @@ export default async function DataPage({
         Data Browser
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -192,7 +192,7 @@ export default async function DataPage({
             <Stack spacing="sm">
               <Input label={{ text: "Title" }} name="title" required />
               <Input label={{ text: "Description" }} name="description" />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Create</Button>
                 <a href="/dashboard/data">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -210,7 +210,7 @@ export default async function DataPage({
               <input type="hidden" name="id" value={editRecord.id} />
               <Input label={{ text: "Title" }} name="title" defaultValue={editRecord.title} required />
               <Input label={{ text: "Description" }} name="description" defaultValue={editRecord.description || ""} />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Update</Button>
                 <a href="/dashboard/data">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -221,7 +221,7 @@ export default async function DataPage({
         </Card>
       )}
 
-      <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
         <Text element={{ size: "sm" }}>Sort by:</Text>
         <a href={"/dashboard/data?sort=title&dir=asc" + (params.q ? "&q=" + params.q : "")}>
           <Button variant="ghost" type="button">Title</Button>
@@ -256,7 +256,7 @@ export default async function DataPage({
                   <td>{new Date(record.created_at).toLocaleDateString()}</td>
                   <td>{new Date(record.updated_at).toLocaleDateString()}</td>
                   <td>
-                    <div style={{ display: "flex", gap: "var(--azimuth-spacing-xs)" }}>
+                    <div style={{ display: "flex", gap: "var(--azimuth-space-xs)" }}>
                       <a href={"/dashboard/data?edit=" + record.id}>
                         <Button variant="ghost" type="button">Edit</Button>
                       </a>
@@ -272,7 +272,7 @@ export default async function DataPage({
           </table>
 
           {totalPages > 1 && (
-            <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
+            <div style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
               <Text element={{ size: "sm" }}>Page {page} of {totalPages}</Text>
               {page > 1 && (
                 <a href={"/dashboard/data?page=" + (page - 1) + (params.q ? "&q=" + params.q : "") + (params.sort ? "&sort=" + params.sort : "")}>
@@ -345,7 +345,7 @@ export default async function AuditPage({
         Audit Log
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Input
           label={{ text: "Action" }}
           name="action"
@@ -509,7 +509,7 @@ export default async function FilesPage({
         <Text element={{ as: "h1", size: "h3" }} weight="semibold">
           File Storage
         </Text>
-        <form action={uploadFile} style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
+        <form action={uploadFile} style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
           <input type="file" name="file" required />
           <Button variant="primary" type="submit">Upload</Button>
         </form>
@@ -523,7 +523,7 @@ export default async function FilesPage({
 
       {raw.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No files uploaded yet.</Text>
             <Text element={{ size: "sm" }} color="secondary">
               Use the upload button above to add files.
@@ -541,7 +541,7 @@ export default async function FilesPage({
                     {formatFileSize(file.file_size)} — {new Date(file.uploaded_at).toLocaleDateString()}
                   </Text>
                 </Stack>
-                <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+                <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                   <a href={file.file_url} target="_blank" rel="noopener noreferrer">
                     <Button variant="ghost" type="button">Download</Button>
                   </a>

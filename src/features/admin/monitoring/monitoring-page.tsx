@@ -23,7 +23,7 @@ export default function MonitoringPage({ clients }: MonitoringPageProps) {
         Site Monitoring
       </Text>
 
-      <Grid cols={{ base: 1, sm: 2, lg: 4 }} gap="var(--azimuth-spacing-md)">
+      <Grid cols={{ base: 1, sm: 2, lg: 4 }} gap="var(--azimuth-space-md)">
         <KPICard value={String(total)} label="Total Sites" variant="default" />
         <KPICard value={String(healthy)} label="Healthy" variant="success" />
         <KPICard value={String(warning)} label="Warning" variant="warning" />
@@ -36,7 +36,7 @@ export default function MonitoringPage({ clients }: MonitoringPageProps) {
           description="Add clients to start monitoring their site status."
         />
       ) : (
-        <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-spacing-md)">
+        <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-space-md)">
           {clients.map((client) => (
             <ClientStatusCard key={client.id} client={client} />
           ))}

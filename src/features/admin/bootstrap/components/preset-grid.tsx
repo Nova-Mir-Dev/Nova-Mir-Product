@@ -20,12 +20,12 @@ export default function PresetGrid({
       <Text
         element={{ as: 'h2', size: 'h5' }}
         weight="semibold"
-        style={{ marginBottom: 'var(--azimuth-spacing-sm)' }}
+        style={{ marginBottom: 'var(--azimuth-space-sm)' }}
       >
         1. Choose a Preset
       </Text>
 
-      <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-spacing-sm)">
+      <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-space-sm)">
         {presets.map((preset) => (
           <Card
             key={preset.id}

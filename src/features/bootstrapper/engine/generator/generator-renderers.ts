@@ -48,7 +48,7 @@ ${navItemsCode}
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Admin
           </Text>
@@ -63,7 +63,7 @@ ${navItemsCode}
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -116,7 +116,7 @@ ${navItemsCode}
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Dashboard
           </Text>
@@ -131,7 +131,7 @@ ${navItemsCode}
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -305,7 +305,7 @@ export default function LoginPage() {
               onClick={() => { setTab("admin"); setError("") }}
               style={{
                 flex: 1,
-                padding: "var(--azimuth-spacing-sm)",
+                padding: "var(--azimuth-space-sm)",
                 border: "none",
                 background: "none",
                 cursor: "pointer",
@@ -322,7 +322,7 @@ export default function LoginPage() {
               onClick={() => { setTab("client"); setError("") }}
               style={{
                 flex: 1,
-                padding: "var(--azimuth-spacing-sm)",
+                padding: "var(--azimuth-space-sm)",
                 border: "none",
                 background: "none",
                 cursor: "pointer",
@@ -802,7 +802,7 @@ export default async function ClientsPage({
         Client Management
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -830,7 +830,7 @@ export default async function ClientsPage({
             <Stack spacing="sm">
               <Input label={{ text: "Name" }} name="name" required />
               <Input label={{ text: "Email" }} name="email" type="email" required />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Create</Button>
                 <a href="/admin/clients">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -941,7 +941,7 @@ export default async function BillingPage({
         Billing Overview
       </Text>
 
-      <div style={{ display: "flex", gap: "var(--azimuth-spacing-md)" }}>
+      <div style={{ display: "flex", gap: "var(--azimuth-space-md)" }}>
         <Card><Text>Paid: {summary.paid}</Text></Card>
         <Card><Text>Pending: {summary.pending}</Text></Card>
         <Card><Text>Overdue: {summary.overdue}</Text></Card>
@@ -959,7 +959,7 @@ export default async function BillingPage({
             <Stack spacing="sm">
               <Input label={{ text: "Client Name" }} name="clientName" required />
               <Input label={{ text: "Amount" }} name="amount" type="number" step="0.01" required />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Create</Button>
                 <a href="/admin/billing">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -1074,7 +1074,7 @@ export default async function AuditLogPage({
         Audit Log
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Input
           label={{ text: "Action" }}
           name="action"
@@ -1186,7 +1186,7 @@ export default async function DashboardPage() {
         Welcome{profile ? ", " + profile.name : ""}
       </Text>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--azimuth-spacing-md)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--azimuth-space-md)" }}>
         <Card>
           <Stack spacing="xs">
             <Text element={{ size: "sm" }} color="secondary">Active Projects</Text>
@@ -1244,7 +1244,7 @@ export default async function DashboardPage() {
         </Stack>
       ) : (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No active projects yet.</Text>
             <a href="/dashboard/projects">
               <Text>View Projects</Text>
@@ -1317,7 +1317,7 @@ export default async function ProjectsPage() {
 
       {raw.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No projects assigned yet.</Text>
             <Text element={{ size: "sm" }} color="secondary">
               When projects are assigned, they will appear here.
@@ -1443,7 +1443,7 @@ export default async function DocumentsPage({
         <Text element={{ as: "h1", size: "h3" }} weight="semibold">
           My Documents
         </Text>
-        <form action={uploadDocument} style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
+        <form action={uploadDocument} style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
           <input type="file" name="file" required />
           <Button variant="primary" type="submit">
             Upload Document
@@ -1459,7 +1459,7 @@ export default async function DocumentsPage({
 
       {raw.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No documents uploaded yet.</Text>
             <Text element={{ size: "sm" }} color="secondary">
               Use the upload button above to add files.
@@ -1605,7 +1605,7 @@ export default async function SupportPage({
                   required
                   style={{
                     width: "100%",
-                    padding: "var(--azimuth-spacing-sm)",
+                    padding: "var(--azimuth-space-sm)",
                     border: "1px solid var(--azimuth-color-border)",
                     borderRadius: "var(--azimuth-radius-md)",
                     fontFamily: "inherit",
@@ -1613,7 +1613,7 @@ export default async function SupportPage({
                   }}
                 />
               </div>
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Submit</Button>
                 <a href="/dashboard/support">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -1641,10 +1641,10 @@ export default async function SupportPage({
           </Text>
           {FAQ_ITEMS.map((item, index) => (
             <details key={index}>
-              <summary style={{ cursor: "pointer", padding: "var(--azimuth-spacing-sm) 0" }}>
+              <summary style={{ cursor: "pointer", padding: "var(--azimuth-space-sm) 0" }}>
                 <Text weight="semibold">{item.question}</Text>
               </summary>
-              <Text element={{ size: "sm" }} color="secondary" style={{ padding: "0 var(--azimuth-spacing-md) var(--azimuth-spacing-sm)" }}>
+              <Text element={{ size: "sm" }} color="secondary" style={{ padding: "0 var(--azimuth-space-md) var(--azimuth-space-sm)" }}>
                 {item.answer}
               </Text>
             </details>
@@ -1711,7 +1711,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Dashboard
           </Text>
@@ -1726,7 +1726,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -1779,7 +1779,7 @@ export default async function MembersPage({
         Members
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -1877,7 +1877,7 @@ export default async function ContentPage({
                   rows={4}
                   style={{
                     width: "100%",
-                    padding: "var(--azimuth-spacing-sm)",
+                    padding: "var(--azimuth-space-sm)",
                     border: "1px solid var(--azimuth-color-border)",
                     borderRadius: "var(--azimuth-radius-md)",
                     fontFamily: "inherit",
@@ -1891,7 +1891,7 @@ export default async function ContentPage({
                 placeholder="free, premium, or pro"
                 required
               />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">Create</Button>
                 <a href="/dashboard/content">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -1904,7 +1904,7 @@ export default async function ContentPage({
 
       {raw.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No content created yet.</Text>
           </Stack>
         </Card>
@@ -2020,7 +2020,7 @@ const TIERS = [
 
 export default function HomePage() {
   return (
-    <div style={{ maxWidth: 900, margin: "4rem auto", padding: "0 var(--azimuth-spacing-md)" }}>
+    <div style={{ maxWidth: 900, margin: "4rem auto", padding: "0 var(--azimuth-space-md)" }}>
       <Stack spacing="lg" style={{ textAlign: "center" }}>
         <Text element={{ as: "h1", size: "h1" }} weight="bold">
           Pricing
@@ -2029,10 +2029,10 @@ export default function HomePage() {
           Choose the plan that fits your needs.
         </Text>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "var(--azimuth-spacing-md)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "var(--azimuth-space-md)" }}>
           {TIERS.map((tier) => (
             <Card key={tier.tier}>
-              <Stack spacing="md" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+              <Stack spacing="md" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
                 <Text element={{ as: "h2", size: "h4" }} weight="semibold">
                   {tier.name}
                 </Text>

@@ -1,6 +1,6 @@
 .toolbar {
   display: flex;
-  gap: var(--azimuth-spacing-sm);
+  gap: var(--azimuth-space-sm);
   flex-wrap: wrap;
   align-items: flex-end;
 }
@@ -12,7 +12,7 @@
 .detailGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--azimuth-spacing-md);
+  gap: var(--azimuth-space-md);
 }
 
 .detailLabel {
@@ -26,5 +26,5 @@
 
 .formActions {
   display: flex;
-  gap: var(--azimuth-spacing-sm);
+  gap: var(--azimuth-space-sm);
 }

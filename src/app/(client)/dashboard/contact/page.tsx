@@ -42,7 +42,7 @@ export default async function ContactPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: 'var(--azimuth-spacing-md)',
+          gap: 'var(--azimuth-space-md)',
         }}
       >
         <Card>
@@ -107,7 +107,7 @@ export default async function ContactPage() {
                 required
                 style={{
                   width: '100%',
-                  padding: 'var(--azimuth-spacing-sm)',
+                  padding: 'var(--azimuth-space-sm)',
                   border: '1px solid var(--azimuth-color-border)',
                   borderRadius: 'var(--azimuth-radius-md)',
                   fontFamily: 'inherit',
@@ -133,7 +133,7 @@ export default async function ContactPage() {
                 required
                 style={{
                   width: '100%',
-                  padding: 'var(--azimuth-spacing-sm)',
+                  padding: 'var(--azimuth-space-sm)',
                   border: '1px solid var(--azimuth-color-border)',
                   borderRadius: 'var(--azimuth-radius-md)',
                   fontFamily: 'inherit',

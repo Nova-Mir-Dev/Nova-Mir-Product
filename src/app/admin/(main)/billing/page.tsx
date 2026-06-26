@@ -75,7 +75,7 @@ function RevenueTable({
   revenueByMonth: [string, number][]
 }) {
   return (
-    <div style={{ marginTop: 'var(--azimuth-spacing-md)' }}>
+    <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
       <h2>Revenue by Month</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>

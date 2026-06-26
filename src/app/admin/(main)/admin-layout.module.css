@@ -4,13 +4,13 @@
 }
 .main {
   flex: 1;
-  padding: var(--azimuth-spacing-lg);
+  padding: var(--azimuth-space-lg);
 }
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
   .main {
-    padding: var(--azimuth-spacing-md);
+    padding: var(--azimuth-space-md);
   }
 }

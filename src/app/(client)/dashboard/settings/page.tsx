@@ -60,7 +60,7 @@ export default async function SettingsPage() {
               name="name"
               placeholder="Enter your name"
             />
-            <div style={{ marginTop: 'var(--azimuth-spacing-sm)' }}>
+            <div style={{ marginTop: 'var(--azimuth-space-sm)' }}>
               <Button variant="primary" type="submit">
                 Save
               </Button>

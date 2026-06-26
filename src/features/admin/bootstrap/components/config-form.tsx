@@ -72,7 +72,7 @@ export default function ConfigForm({
             onChange('projectName', e.target.value),
         }}
         placeholder={`${preset}-app`}
-        style={{ marginBottom: 'var(--azimuth-spacing-sm)' }}
+        style={{ marginBottom: 'var(--azimuth-space-sm)' }}
       />
 
       <div className={styles.grid}>

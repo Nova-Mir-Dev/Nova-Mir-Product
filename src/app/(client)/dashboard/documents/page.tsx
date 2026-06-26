@@ -77,7 +77,7 @@ export default async function DocumentsPage({
           action={uploadDocument}
           style={{
             display: 'flex',
-            gap: 'var(--azimuth-spacing-sm)',
+            gap: 'var(--azimuth-space-sm)',
             alignItems: 'center',
           }}
         >
@@ -213,7 +213,7 @@ export default async function DocumentsPage({
             spacing="sm"
             style={{
               textAlign: 'center',
-              padding: 'var(--azimuth-spacing-lg)',
+              padding: 'var(--azimuth-space-lg)',
             }}
           >
             <Text color="secondary">No documents available yet.</Text>

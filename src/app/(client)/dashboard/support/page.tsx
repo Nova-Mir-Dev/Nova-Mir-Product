@@ -99,7 +99,7 @@ export default async function SupportPage({
                   required
                   style={{
                     width: '100%',
-                    padding: 'var(--azimuth-spacing-sm)',
+                    padding: 'var(--azimuth-space-sm)',
                     border: '1px solid var(--azimuth-color-border)',
                     borderRadius: 'var(--azimuth-radius-md)',
                     fontFamily: 'inherit',
@@ -108,7 +108,7 @@ export default async function SupportPage({
                 />
               </div>
               <div
-                style={{ display: 'flex', gap: 'var(--azimuth-spacing-sm)' }}
+                style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}
               >
                 <Button variant="primary" type="submit">
                   Submit
@@ -146,7 +146,7 @@ export default async function SupportPage({
               <summary
                 style={{
                   cursor: 'pointer',
-                  padding: 'var(--azimuth-spacing-sm) 0',
+                  padding: 'var(--azimuth-space-sm) 0',
                 }}
               >
                 <Text weight="semibold">{item.question}</Text>
@@ -156,7 +156,7 @@ export default async function SupportPage({
                 color="secondary"
                 style={{
                   padding:
-                    '0 var(--azimuth-spacing-md) var(--azimuth-spacing-sm)',
+                    '0 var(--azimuth-space-md) var(--azimuth-space-sm)',
                 }}
               >
                 {item.answer}

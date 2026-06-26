@@ -117,7 +117,7 @@ export default async function StatusPage() {
             spacing="sm"
             style={{
               textAlign: 'center',
-              padding: 'var(--azimuth-spacing-md)',
+              padding: 'var(--azimuth-space-md)',
             }}
           >
             <Text color="secondary">No maintenance scheduled</Text>
@@ -138,7 +138,7 @@ export default async function StatusPage() {
               spacing="sm"
               style={{
                 textAlign: 'center',
-                padding: 'var(--azimuth-spacing-lg)',
+                padding: 'var(--azimuth-space-lg)',
               }}
             >
               <Text color="secondary">No recent incidents</Text>

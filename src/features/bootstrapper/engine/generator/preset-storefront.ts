@@ -30,7 +30,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{ width: 240, borderRight: "1px solid var(--azimuth-color-border)" }}>
-        <Stack spacing="sm" style={{ padding: "var(--azimuth-spacing-md)" }}>
+        <Stack spacing="sm" style={{ padding: "var(--azimuth-space-md)" }}>
           <Text element={{ as: "h2", size: "h5" }} weight="semibold">
             Storefront
           </Text>
@@ -45,7 +45,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: "var(--azimuth-spacing-lg)" }}>
+      <main style={{ flex: 1, padding: "var(--azimuth-space-lg)" }}>
         {children}
       </main>
     </div>
@@ -216,7 +216,7 @@ export default async function ProductsPage({
         </a>
       </div>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -227,7 +227,7 @@ export default async function ProductsPage({
           name="category"
           defaultValue={params.category || ""}
           style={{
-            padding: "var(--azimuth-spacing-sm)",
+            padding: "var(--azimuth-space-sm)",
             border: "1px solid var(--azimuth-color-border)",
             borderRadius: "var(--azimuth-radius-md)",
             fontFamily: "inherit",
@@ -258,7 +258,7 @@ export default async function ProductsPage({
               <Input label={{ text: "Category" }} name="category" defaultValue={editProduct?.category || ""} />
               <Input label={{ text: "Image URL" }} name="image_url" defaultValue={editProduct?.image_url || ""} />
               <Input label={{ text: "Inventory Count" }} name="inventory" type="number" defaultValue={editProduct?.inventory_count.toString() || "0"} />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
                 <Button variant="primary" type="submit">{editProduct ? "Update" : "Create"}</Button>
                 <a href="/dashboard/products">
                   <Button variant="ghost" type="button">Cancel</Button>
@@ -292,7 +292,7 @@ export default async function ProductsPage({
                 <td>{product.inventory_count}</td>
                 <td>{product.is_active ? "Active" : "Inactive"}</td>
                 <td>
-                  <div style={{ display: "flex", gap: "var(--azimuth-spacing-xs)" }}>
+                  <div style={{ display: "flex", gap: "var(--azimuth-space-xs)" }}>
                     <a href={"/dashboard/products?edit=" + product.id}>
                       <Button variant="ghost" type="button">Edit</Button>
                     </a>
@@ -423,7 +423,7 @@ export default async function OrdersPage({
           </Stack>
         </Card>
 
-        <form action={updateStatus} style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "flex-end" }}>
+        <form action={updateStatus} style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "flex-end" }}>
           <input type="hidden" name="id" value={orderData.id} />
           <div>
             <Text element={{ size: "sm" }} weight="semibold">Update Status</Text>
@@ -431,7 +431,7 @@ export default async function OrdersPage({
               name="status"
               defaultValue={orderData.status}
               style={{
-                padding: "var(--azimuth-spacing-sm)",
+                padding: "var(--azimuth-space-sm)",
                 border: "1px solid var(--azimuth-color-border)",
                 borderRadius: "var(--azimuth-radius-md)",
                 fontFamily: "inherit",
@@ -500,7 +500,7 @@ export default async function OrdersPage({
         Orders
       </Text>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Input
           label={{ text: "Search" }}
           name="q"
@@ -511,7 +511,7 @@ export default async function OrdersPage({
           name="status"
           defaultValue={params.status || ""}
           style={{
-            padding: "var(--azimuth-spacing-sm)",
+            padding: "var(--azimuth-space-sm)",
             border: "1px solid var(--azimuth-color-border)",
             borderRadius: "var(--azimuth-radius-md)",
             fontFamily: "inherit",
@@ -595,7 +595,7 @@ export default async function DashboardHome() {
       <Text element={{ as: "h1", size: "h3" }} weight="semibold">
         Dashboard
       </Text>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--azimuth-spacing-md)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--azimuth-space-md)" }}>
         <Card>
           <Stack spacing="xs">
             <Text element={{ size: "sm" }} color="secondary">Active Products</Text>
@@ -674,7 +674,7 @@ export default async function ShopPage({
   const categories = [...new Set((products ?? []).map((p: Product) => p.category).filter(Boolean))] as string[];
 
   return (
-    <Stack spacing="lg" style={{ padding: "var(--azimuth-spacing-lg)" }}>
+    <Stack spacing="lg" style={{ padding: "var(--azimuth-space-lg)" }}>
       <Stack spacing="xs">
         <Text element={{ as: "h1", size: "h2" }} weight="bold">
           Shop
@@ -682,14 +682,14 @@ export default async function ShopPage({
         <Text color="secondary">Browse our products</Text>
       </Stack>
 
-      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-spacing-sm)" }}>
+      <form method="GET" style={{ display: "flex", gap: "var(--azimuth-space-sm)" }}>
         <input
           name="q"
           defaultValue={params.q || ""}
           placeholder="Search products..."
           style={{
             flex: 1,
-            padding: "var(--azimuth-spacing-sm)",
+            padding: "var(--azimuth-space-sm)",
             border: "1px solid var(--azimuth-color-border)",
             borderRadius: "var(--azimuth-radius-md)",
             fontFamily: "inherit",
@@ -698,7 +698,7 @@ export default async function ShopPage({
         <Button variant="primary" type="submit">Search</Button>
       </form>
 
-      <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "var(--azimuth-space-sm)", flexWrap: "wrap" }}>
         <Link href="/shop" style={{ textDecoration: "none" }}>
           <Button variant={params.category ? "ghost" : "primary"} type="button">All</Button>
         </Link>
@@ -711,12 +711,12 @@ export default async function ShopPage({
 
       {raw.length === 0 ? (
         <Card>
-          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+          <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
             <Text color="secondary">No products found.</Text>
           </Stack>
         </Card>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "var(--azimuth-spacing-md)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "var(--azimuth-space-md)" }}>
           {raw.map((product) => (
             <Card key={product.id}>
               <Stack spacing="sm">
@@ -819,7 +819,7 @@ export default async function ProductDetailPage({
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "var(--azimuth-spacing-lg)" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "var(--azimuth-space-lg)" }}>
       <Link href="/shop" style={{ textDecoration: "none" }}>
         <Button variant="ghost" type="button">&larr; Back to Shop</Button>
       </Link>
@@ -844,7 +844,7 @@ export default async function ProductDetailPage({
           {p.inventory_count > 0 && (
             <form action={addToCartAction}>
               <input type="hidden" name="product_id" value={p.id} />
-              <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
                 <input
                   type="number"
                   name="quantity"
@@ -853,7 +853,7 @@ export default async function ProductDetailPage({
                   max={p.inventory_count}
                   style={{
                     width: 60,
-                    padding: "var(--azimuth-spacing-sm)",
+                    padding: "var(--azimuth-space-sm)",
                     border: "1px solid var(--azimuth-color-border)",
                     borderRadius: "var(--azimuth-radius-md)",
                     fontFamily: "inherit",
@@ -968,7 +968,7 @@ export default async function CartPage() {
   );
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "var(--azimuth-spacing-lg)" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "var(--azimuth-space-lg)" }}>
       <Stack spacing="md">
         <Text element={{ as: "h1", size: "h3" }} weight="bold">
           Shopping Cart
@@ -976,7 +976,7 @@ export default async function CartPage() {
 
         {cartItems.length === 0 ? (
           <Card>
-            <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-spacing-lg)" }}>
+            <Stack spacing="sm" style={{ textAlign: "center", padding: "var(--azimuth-space-lg)" }}>
               <Text color="secondary">Your cart is empty.</Text>
               <a href="/shop">
                 <Button variant="primary" type="button">Continue Shopping</Button>
@@ -995,8 +995,8 @@ export default async function CartPage() {
                         \${((item.products?.price_cents ?? 0) / 100).toFixed(2)} each
                       </Text>
                     </Stack>
-                    <div style={{ display: "flex", gap: "var(--azimuth-spacing-sm)", alignItems: "center" }}>
-                      <form action={updateQuantity} style={{ display: "flex", gap: "var(--azimuth-spacing-xs)", alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: "var(--azimuth-space-sm)", alignItems: "center" }}>
+                      <form action={updateQuantity} style={{ display: "flex", gap: "var(--azimuth-space-xs)", alignItems: "center" }}>
                         <input type="hidden" name="id" value={item.id} />
                         <input
                           type="number"
@@ -1005,7 +1005,7 @@ export default async function CartPage() {
                           min="1"
                           style={{
                             width: 60,
-                            padding: "var(--azimuth-spacing-xs)",
+                            padding: "var(--azimuth-space-xs)",
                             border: "1px solid var(--azimuth-color-border)",
                             borderRadius: "var(--azimuth-radius-md)",
                             fontFamily: "inherit",

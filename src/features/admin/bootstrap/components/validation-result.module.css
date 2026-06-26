@@ -1,11 +1,11 @@
 .list {
-  margin: var(--azimuth-spacing-xs) 0 0 0;
+  margin: var(--azimuth-space-xs) 0 0 0;
 }
 
 .configGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--azimuth-spacing-xs);
+  gap: var(--azimuth-space-xs);
 }
 
 .configRow {

@@ -38,7 +38,7 @@ export default async function ProjectsPage() {
             spacing="sm"
             style={{
               textAlign: 'center',
-              padding: 'var(--azimuth-spacing-lg)',
+              padding: 'var(--azimuth-space-lg)',
             }}
           >
             <Text color="secondary">No projects assigned yet.</Text>

@@ -1,12 +1,12 @@
 .section {
-  padding: var(--azimuth-spacing-md) 0;
+  padding: var(--azimuth-space-md) 0;
 }
 
 .apiKeyRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--azimuth-spacing-sm) 0;
+  padding: var(--azimuth-space-sm) 0;
 }
 
 .apiKeyPrefix {

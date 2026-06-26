@@ -150,7 +150,7 @@ export default async function AdminDashboard() {
         Dashboard
       </Text>
 
-      <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-spacing-md)">
+      <Grid cols={{ base: 1, sm: 2, lg: 3 }} gap="var(--azimuth-space-md)">
         <KPICard
           value={String(data.totalClients)}
           label="Total Clients"
@@ -184,7 +184,7 @@ export default async function AdminDashboard() {
         />
       </Grid>
 
-      <Grid cols={{ base: 1, lg: 2 }} gap="var(--azimuth-spacing-md)">
+      <Grid cols={{ base: 1, lg: 2 }} gap="var(--azimuth-space-md)">
         <Stack spacing="sm">
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
             Recent Activity
@@ -222,7 +222,7 @@ export default async function AdminDashboard() {
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
             Quick Links
           </Text>
-          <Grid cols={{ base: 1, sm: 2 }} gap="var(--azimuth-spacing-sm)">
+          <Grid cols={{ base: 1, sm: 2 }} gap="var(--azimuth-space-sm)">
             {QUICK_LINKS.map((link) => (
               <Link
                 key={link.href}

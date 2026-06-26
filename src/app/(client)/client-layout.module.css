@@ -11,7 +11,7 @@
 }
 
 .sidebarInner {
-  padding: var(--azimuth-spacing-md);
+  padding: var(--azimuth-space-md);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -36,9 +36,9 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--azimuth-spacing-sm);
+  gap: var(--azimuth-space-sm);
   text-decoration: none;
-  margin-bottom: var(--azimuth-spacing-sm);
+  margin-bottom: var(--azimuth-space-sm);
 }
 
 .logo {
@@ -53,7 +53,7 @@
 
 .sidebarFooter {
   margin-top: auto;
-  padding-top: var(--azimuth-spacing-md);
+  padding-top: var(--azimuth-space-md);
   border-top: 1px solid var(--azimuth-color-border);
 }
 
@@ -64,7 +64,7 @@
 
 .main {
   flex: 1;
-  padding: var(--azimuth-spacing-lg);
+  padding: var(--azimuth-space-lg);
 }
 
 .bottomBar {
@@ -81,7 +81,7 @@
   }
 
   .main {
-    padding: var(--azimuth-spacing-md);
+    padding: var(--azimuth-space-md);
     padding-bottom: 80px;
   }
 

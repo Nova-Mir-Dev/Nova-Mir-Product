@@ -161,7 +161,7 @@ export default async function AnalyticsPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: 'var(--azimuth-spacing-md)',
+          gap: 'var(--azimuth-space-md)',
         }}
       >
         <Card>
@@ -215,7 +215,7 @@ export default async function AnalyticsPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: 'var(--azimuth-spacing-md)',
+          gap: 'var(--azimuth-space-md)',
         }}
       >
         {projectStatusData.length > 0 && (
@@ -252,7 +252,7 @@ export default async function AnalyticsPage() {
               spacing="sm"
               style={{
                 textAlign: 'center',
-                padding: 'var(--azimuth-spacing-lg)',
+                padding: 'var(--azimuth-space-lg)',
               }}
             >
               <Text color="secondary">

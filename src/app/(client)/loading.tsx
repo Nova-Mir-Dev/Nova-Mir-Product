@@ -7,7 +7,7 @@ export default function ClientLoading() {
           borderRight: '1px solid var(--azimuth-color-border)',
         }}
       >
-        <div style={{ padding: 'var(--azimuth-spacing-md)' }}>
+        <div style={{ padding: 'var(--azimuth-space-md)' }}>
           <div
             style={{
               height: 24,
@@ -30,7 +30,7 @@ export default function ClientLoading() {
           ))}
         </div>
       </nav>
-      <main style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>
+      <main style={{ flex: 1, padding: 'var(--azimuth-space-lg)' }}>
         <div
           style={{
             height: 32,

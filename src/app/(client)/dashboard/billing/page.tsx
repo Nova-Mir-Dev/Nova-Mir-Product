@@ -41,7 +41,7 @@ export default async function BillingPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 'var(--azimuth-spacing-md)',
+          gap: 'var(--azimuth-space-md)',
         }}
       >
         <Card>
@@ -200,7 +200,7 @@ export default async function BillingPage() {
               spacing="sm"
               style={{
                 textAlign: 'center',
-                padding: 'var(--azimuth-spacing-lg)',
+                padding: 'var(--azimuth-space-lg)',
               }}
             >
               <Text color="secondary">No invoices yet.</Text>

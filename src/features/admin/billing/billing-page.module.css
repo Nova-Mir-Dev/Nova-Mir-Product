@@ -1,6 +1,6 @@
 .kpiRow {
   display: flex;
-  gap: var(--azimuth-spacing-md);
+  gap: var(--azimuth-space-md);
 }
 
 .statCard {
@@ -9,5 +9,5 @@
 
 .formActions {
   display: flex;
-  gap: var(--azimuth-spacing-sm);
+  gap: var(--azimuth-space-sm);
 }

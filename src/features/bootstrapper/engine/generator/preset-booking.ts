@@ -31,8 +31,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <nav style={{ width: 240, borderRight: '1px solid var(--azimuth-color-border)', padding: 'var(--azimuth-spacing-md)' }}>
-        <Text weight="semibold" element={{ size: "lg" }} style={{ marginBottom: 'var(--azimuth-spacing-md)' }}>Booking Admin</Text>
+      <nav style={{ width: 240, borderRight: '1px solid var(--azimuth-color-border)', padding: 'var(--azimuth-space-md)' }}>
+        <Text weight="semibold" element={{ size: "lg" }} style={{ marginBottom: 'var(--azimuth-space-md)' }}>Booking Admin</Text>
         <Stack spacing="sm">
           {nav.map((item) => (
             <Link key={item.href} href={item.href}>
@@ -41,7 +41,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </Stack>
       </nav>
-      <main style={{ flex: 1, padding: 'var(--azimuth-spacing-lg)' }}>{children}</main>
+      <main style={{ flex: 1, padding: 'var(--azimuth-space-lg)' }}>{children}</main>
     </div>
   );
 }`
@@ -70,7 +70,7 @@ export default async function AppointmentsPage({ searchParams }: { searchParams:
     <Stack spacing="lg">
       <Text element={{ as: "h1", size: "h1" }} weight="bold">Appointments</Text>
       {!appointments?.length ? (
-        <Card style={{ padding: 'var(--azimuth-spacing-lg)', textAlign: 'center' }}>
+        <Card style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center' }}>
           <Text color="secondary">No ' + status + ' appointments.</Text>
         </Card>
       ) : (
@@ -109,13 +109,13 @@ export default async function HomePage() {
   );
   const { data: services } = await supabase.from('services').select('*').eq('is_active', true);
   return (
-    <Stack spacing="lg" style={{ maxWidth: 800, margin: '0 auto', padding: 'var(--azimuth-spacing-xl)' }}>
+    <Stack spacing="lg" style={{ maxWidth: 800, margin: '0 auto', padding: 'var(--azimuth-space-xl)' }}>
       <Stack spacing="sm" style={{ textAlign: 'center' }}>
         <Text element={{ as: "h1", size: "h1" }} weight="bold">Book a Service</Text>
         <Text color="secondary">Choose a service and pick a time that works for you.</Text>
       </Stack>
       {!services?.length ? (
-        <Card style={{ padding: 'var(--azimuth-spacing-lg)', textAlign: 'center' }}>
+        <Card style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center' }}>
           <Text color="secondary">No services available yet.</Text>
         </Card>
       ) : (
