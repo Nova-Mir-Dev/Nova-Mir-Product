@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isAllowedOrigin, CORS_HEADERS, getCorsOriginHeader } from '@/lib/cors'
 import { rateLimit } from '@/lib/rate-limit'
@@ -38,9 +39,16 @@ function addCorsHeaders(
 
 const supabaseUrl = () => process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = () => process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseServiceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY
 
 function hasSupabaseEnv(): boolean {
   return !!supabaseUrl() && !!supabaseAnonKey()
+}
+
+function createServiceRoleClient() {
+  return createClient(supabaseUrl()!, supabaseServiceKey()!, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  })
 }
 
 async function getAuth(request: NextRequest) {
@@ -76,7 +84,8 @@ async function getAuth(request: NextRequest) {
 
   let role: string | null = null
   if (user) {
-    const { data: profile } = await supabase
+    const admin = createServiceRoleClient()
+    const { data: profile } = await admin
       .from('users')
       .select('role')
       .eq('id', user.id)
