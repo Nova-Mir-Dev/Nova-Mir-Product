@@ -49,7 +49,7 @@ export default function AdminNav() {
               weight="semibold"
               className={styles.title}
             >
-              Nova Mir
+              Nova Mir | Admin
             </Text>
           </Link>
           <ul className={styles.navList}>
