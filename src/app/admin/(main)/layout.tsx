@@ -29,20 +29,15 @@ export default async function AdminMainLayout({
   return (
     <div className={styles.container}>
       <AdminNav />
-      <div className={styles.content}>
-        <header className={styles.topbar}>
-          <div />
-          <div className={styles.topbarRight}>
-            <ThemeToggle />
-            <UserMenu
-              name={(profile as { name?: string })?.name ?? null}
-              email={user.email ?? null}
-            />
-          </div>
-        </header>
-        <main id="main-content" className={styles.main}>
-          {children}
-        </main>
+      <main id="main-content" className={styles.main}>
+        {children}
+      </main>
+      <div className={styles.topRight}>
+        <ThemeToggle />
+        <UserMenu
+          name={(profile as { name?: string })?.name ?? null}
+          email={user.email ?? null}
+        />
       </div>
     </div>
   )

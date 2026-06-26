@@ -47,7 +47,6 @@ export default function AdminNav() {
             <Text
               element={{ as: 'h2', size: 'h5' }}
               weight="semibold"
-              className={styles.title}
             >
               Nova Mir | Admin
             </Text>
@@ -86,6 +85,11 @@ export default function AdminNav() {
               </li>
             ))}
           </ul>
+          <div className={styles.backToSite}>
+            <Link href="/" className={styles.link}>
+              <Text>← Back to Site</Text>
+            </Link>
+          </div>
         </Stack>
       </div>
     </nav>

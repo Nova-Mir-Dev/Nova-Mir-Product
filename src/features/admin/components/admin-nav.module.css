@@ -13,20 +13,12 @@
   flex-direction: column;
 }
 
-.title {
-  margin-bottom: var(--azimuth-space-sm);
-}
-
 .brand {
   display: flex;
   align-items: center;
   gap: var(--azimuth-space-sm);
   text-decoration: none;
   margin-bottom: var(--azimuth-space-sm);
-}
-
-.brand:hover .title {
-  text-decoration: underline;
 }
 
 .logo {
@@ -189,7 +181,7 @@
     margin-bottom: var(--azimuth-space-xs);
   }
 
-  .title {
+  .backToSite {
     display: none;
   }
 }
