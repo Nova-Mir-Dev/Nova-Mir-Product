@@ -11,6 +11,7 @@ import {
   CreditCardIcon,
   IdCardIcon,
   EnvelopeIcon,
+  UserLargeIcon,
 } from 'azimuth-ui'
 import styles from './client-layout.module.css'
 
@@ -24,13 +25,15 @@ const NAV_ITEMS = [
   { label: 'Privacy', path: '/dashboard/privacy', icon: 'privacy' },
   { label: 'Billing', path: '/dashboard/billing', icon: 'billing' },
   { label: 'Support', path: 'mailto:support@novamir.dev', icon: 'support' },
-] as const
+  { label: 'Settings', path: '/dashboard/settings', icon: 'settings' },
+]
 
 const NAV_ICONS: Record<string, React.ReactNode> = {
   home: <HomeIcon />,
   privacy: <IdCardIcon />,
   billing: <CreditCardIcon />,
   support: <EnvelopeIcon />,
+  settings: <UserLargeIcon />,
 }
 
 export default function ClientLayout({

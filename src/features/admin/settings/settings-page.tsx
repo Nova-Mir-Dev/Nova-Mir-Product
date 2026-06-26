@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import {
   Stack,
   Text,
@@ -11,7 +12,7 @@ import {
   EmptyState,
 } from 'azimuth-ui'
 import { useActionState } from 'react'
-import { updateProfile, createApiKey, revokeApiKey } from './actions'
+import { updateProfile, updatePassword, createApiKey, revokeApiKey } from './actions'
 import type { CreateApiKeyResult } from './actions'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import styles from './settings-page.module.css'
@@ -39,14 +40,14 @@ export const SettingsPage = ({ user, apiKeys = [], factors }: SettingsPageProps)
   const tabs: TabItem[] = [
     { id: 'profile', label: 'Profile', content: <ProfileTab user={user} /> },
     {
-      id: 'api-keys',
-      label: 'API Keys',
-      content: <ApiKeysTab apiKeys={apiKeys} />,
-    },
-    {
       id: 'security',
       label: 'Security',
       content: <SecurityTab factors={factors} />,
+    },
+    {
+      id: 'api-keys',
+      label: 'API Keys',
+      content: <ApiKeysTab apiKeys={apiKeys} />,
     },
   ]
 
@@ -64,34 +65,91 @@ const ProfileTab = ({
   user,
 }: {
   user: { email: string; name: string | null }
-}) => (
-  <Card>
+}) => {
+  const [pwStatus, setPwStatus] = useState<{ success?: boolean; error?: string } | null>(null)
+  const [pwValue, setPwValue] = useState('')
+
+  return (
     <Stack spacing="md">
-      <Text element={{ size: 'lg' }} weight="semibold">
-        Profile
-      </Text>
-      <Divider />
-      <form action={updateProfile}>
-        <Stack spacing="sm">
-          <Input
-            label={{ text: 'Name' }}
-            name="name"
-            defaultValue={user.name || ''}
-            placeholder="Your name"
-          />
-          <Input
-            label={{ text: 'Email' }}
-            name="email"
-            value={{ value: user.email, disabled: true }}
-          />
-          <Button variant="primary" type="submit">
-            Save Changes
-          </Button>
+      <Card>
+        <Stack spacing="md">
+          <Text element={{ size: 'lg' }} weight="semibold">
+            Profile
+          </Text>
+          <Divider />
+          <form action={updateProfile}>
+            <Stack spacing="sm">
+              <Input
+                label={{ text: 'Name' }}
+                name="name"
+                defaultValue={user.name || ''}
+                placeholder="Your name"
+              />
+              <Input
+                label={{ text: 'Email' }}
+                name="email"
+                value={{ value: user.email, disabled: true }}
+              />
+              <Button variant="primary" type="submit">
+                Save Changes
+              </Button>
+            </Stack>
+          </form>
         </Stack>
-      </form>
+      </Card>
+      <Card>
+        <Stack spacing="md">
+          <Text element={{ size: 'lg' }} weight="semibold">
+            Password
+          </Text>
+          <Divider />
+          <Stack spacing="sm">
+            <Input
+              label={{ text: 'New Password' }}
+              name="newPassword"
+              type="password"
+              value={{ value: pwValue, onChange: (e) => setPwValue(e.target.value) }}
+              placeholder="Enter new password"
+            />
+            {pwStatus?.success && (
+              <Text element={{ size: 'sm' }}>Password updated.</Text>
+            )}
+            {pwStatus?.error && (
+              <Text element={{ size: 'sm' }}>{pwStatus.error}</Text>
+            )}
+            <Button
+              variant="primary"
+              onClick={async () => {
+                if (!pwValue) return
+                const result = await updatePassword(pwValue)
+                if ('error' in result) setPwStatus({ error: result.error })
+                else { setPwStatus({ success: true }); setPwValue('') }
+              }}
+            >
+              Update Password
+            </Button>
+          </Stack>
+        </Stack>
+      </Card>
+      <Card>
+        <Stack spacing="md">
+          <Text element={{ size: 'lg' }} weight="semibold">
+            Data
+          </Text>
+          <Divider />
+          <Text element={{ size: 'sm' }}>
+            Download a copy of your data for backup or portability.
+          </Text>
+          <a href="/api/export">
+            <Button variant="tertiary" type="button">
+              Export My Data
+            </Button>
+          </a>
+        </Stack>
+      </Card>
     </Stack>
-  </Card>
-)
+  )
+}
 
 const SecurityTab = ({
   factors,
@@ -117,7 +175,7 @@ const ApiKeysTab = ({ apiKeys }: { apiKeys: ApiKeyItem[] }) => {
             API Keys
           </Text>
           <Text element={{ size: 'sm' }}>
-            Manage API keys for programmatic access.
+            API keys let external services authenticate against Nova Mir APIs.
           </Text>
         </Stack>
         <Divider />

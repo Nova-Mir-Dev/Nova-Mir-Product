@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import { listMfaFactors } from '@/features/auth/mfa'
+import { updateClientProfile, updateClientPassword } from './actions'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -21,8 +22,8 @@ export default async function SettingsPage() {
   const factors: { id: string; type: string; created_at: string }[] =
     factorsResult && 'all' in factorsResult
       ? factorsResult.all
-          .filter((f) => f.status === 'verified')
-          .map((f) => ({
+          .filter((f: { status: string }) => f.status === 'verified')
+          .map((f: { factor_type: string; id: string; created_at: string }) => ({
             id: f.id,
             type: f.factor_type,
             created_at: f.created_at,
@@ -42,29 +43,24 @@ export default async function SettingsPage() {
           </Text>
           <Stack spacing="sm">
             <Text element={{ size: 'sm' }} color="secondary">
-              Name
-            </Text>
-            <Text weight="semibold">
-              {(profile as { name?: string } | null)?.name ?? 'Not set'}
-            </Text>
-          </Stack>
-          <Stack spacing="sm">
-            <Text element={{ size: 'sm' }} color="secondary">
               Email
             </Text>
             <Text weight="semibold">{user.email}</Text>
           </Stack>
-          <form>
-            <Input
-              label={{ text: 'Full Name' }}
-              name="name"
-              placeholder="Enter your name"
-            />
-            <div style={{ marginTop: 'var(--azimuth-space-sm)' }}>
+          <form action={updateClientProfile}>
+            <Stack spacing="sm">
+              <Input
+                label={{ text: 'Full Name' }}
+                name="name"
+                defaultValue={
+                  (profile as { name?: string } | null)?.name ?? ''
+                }
+                placeholder="Enter your name"
+              />
               <Button variant="primary" type="submit">
                 Save
               </Button>
-            </div>
+            </Stack>
           </form>
         </Stack>
       </Card>
@@ -72,99 +68,52 @@ export default async function SettingsPage() {
       <Card>
         <Stack spacing="md">
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Notifications
+            Password
           </Text>
           <Stack spacing="sm">
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <input type="checkbox" defaultChecked />
-              <Text element={{ size: 'sm' }}>Email notifications</Text>
-            </label>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <input type="checkbox" defaultChecked />
-              <Text element={{ size: 'sm' }}>Project updates</Text>
-            </label>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <input type="checkbox" defaultChecked />
-              <Text element={{ size: 'sm' }}>Invoice reminders</Text>
-            </label>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <input type="checkbox" />
-              <Text element={{ size: 'sm' }}>Marketing emails</Text>
-            </label>
+            <Text element={{ size: 'sm' }} color="secondary">
+              Change your account password.
+            </Text>
+            <form action={updateClientPassword}>
+              <Input
+                label={{ text: 'New Password' }}
+                name="password"
+                type="password"
+                placeholder="Enter new password"
+              />
+              <div style={{ marginTop: 'var(--azimuth-space-sm)' }}>
+                <Button variant="primary" type="submit">
+                  Update Password
+                </Button>
+              </div>
+            </form>
           </Stack>
         </Stack>
       </Card>
 
-      <MfaPanel factors={factors} />
+      <Card>
+        <Stack spacing="md">
+          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
+            Two-Factor Authentication
+          </Text>
+          <MfaPanel factors={factors} />
+        </Stack>
+      </Card>
 
       <Card>
         <Stack spacing="md">
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Security
+            Data
           </Text>
           <Stack spacing="sm">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <div>
-                <Text weight="semibold">Passkeys</Text>
-                <Text element={{ size: 'sm' }} color="secondary">
-                  Passwordless login with biometrics
-                </Text>
-              </div>
-              <Button variant="tertiary" size="sm" type="button">
-                Add Passkey
+            <Text element={{ size: 'sm' }} color="secondary">
+              Download your data for backup or portability.
+            </Text>
+            <a href="/api/export">
+              <Button variant="tertiary" type="button">
+                Export My Data
               </Button>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <div>
-                <Text weight="semibold">Active Sessions</Text>
-                <Text element={{ size: 'sm' }} color="secondary">
-                  Manage your logged-in devices
-                </Text>
-              </div>
-              <Button variant="tertiary" size="sm" type="button">
-                View Sessions
-              </Button>
-            </div>
+            </a>
           </Stack>
         </Stack>
       </Card>

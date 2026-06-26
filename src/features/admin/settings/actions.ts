@@ -24,6 +24,19 @@ export async function updateProfile(formData: FormData) {
   revalidatePath('/admin/settings')
 }
 
+export async function updatePassword(password: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) return { error: error.message }
+
+  return { success: true }
+}
+
 export interface CreateApiKeyResult {
   success: boolean
   key?: string
@@ -91,4 +104,23 @@ export async function revokeApiKey(formData: FormData) {
   if (error) throw new Error('Failed to revoke API key')
 
   revalidatePath('/admin/settings')
+}
+
+export async function updateClientProfile(formData: FormData) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const name = formData.get('name') as string | null
+
+  const { error } = await supabase
+    .from('users')
+    .update({ name: name || null })
+    .eq('id', user.id)
+
+  if (error) throw new Error('Failed to update profile')
+
+  revalidatePath('/dashboard/settings')
 }
