@@ -77,20 +77,32 @@ async function getAuth(request: NextRequest) {
 
   let role: string | null = null
   if (user) {
-    const url = supabaseUrl()!
-    const key = supabaseServiceKey()!
+    const svcUrl = supabaseUrl()!
+    const svcKey = supabaseServiceKey()!
+    const fetchUrl = `${svcUrl}/rest/v1/users?id=eq.${user.id}&select=role`
+    console.log('[debug] user found:', user.id)
+    console.log('[debug] svcKey exists:', !!svcKey)
+    console.log('[debug] fetchUrl:', fetchUrl)
     try {
-      const res = await fetch(`${url}/rest/v1/users?id=eq.${user.id}&select=role`, {
+      const res = await fetch(fetchUrl, {
         headers: {
-          apikey: key,
-          Authorization: `Bearer ${key}`,
+          apikey: svcKey,
+          Authorization: `Bearer ${svcKey}`,
         },
       })
+      console.log('[debug] fetch status:', res.status)
       if (res.ok) {
-        const rows = await res.json()
+        const text = await res.text()
+        console.log('[debug] fetch body:', text)
+        const rows = JSON.parse(text)
         role = (rows?.[0]?.role as string) ?? null
+        console.log('[debug] role:', role)
+      } else {
+        const errText = await res.text().catch(() => 'could not read body')
+        console.log('[debug] fetch error body:', errText)
       }
-    } catch {
+    } catch (e) {
+      console.log('[debug] fetch threw:', String(e))
       role = null
     }
   }
