@@ -176,20 +176,7 @@ export async function middleware(request: NextRequest) {
     const { user, role, supabaseResponse } = await getAuth(request)
 
     if (pathname === '/' && user) {
-      if (role === 'admin') {
-        return addCorsHeaders(
-          NextResponse.redirect(new URL('/admin', request.url)),
-          origin,
-        )
-      }
-      if (role === 'client') {
-        return addCorsHeaders(
-          NextResponse.redirect(new URL('/dashboard', request.url)),
-          origin,
-        )
-      }
-      addCorsHeaders(supabaseResponse, origin)
-      return supabaseResponse
+      return addCorsHeaders(supabaseResponse, origin)
     }
 
     if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/auth')) {
