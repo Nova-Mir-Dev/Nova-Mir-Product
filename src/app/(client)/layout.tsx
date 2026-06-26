@@ -3,7 +3,15 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Stack, Text, Button } from 'azimuth-ui'
+import {
+  Stack,
+  Text,
+  Button,
+  HomeIcon,
+  CreditCardIcon,
+  IdCardIcon,
+  EnvelopeIcon,
+} from 'azimuth-ui'
 import styles from './client-layout.module.css'
 
 interface ClientUser {
@@ -12,11 +20,18 @@ interface ClientUser {
 }
 
 const NAV_ITEMS = [
-  { label: 'Home', path: '/dashboard', tabIcon: '🏠' },
-  { label: 'Privacy', path: '/dashboard/privacy', tabIcon: '🔒' },
-  { label: 'Billing', path: '/dashboard/billing', tabIcon: '💰' },
-  { label: 'Support', path: 'mailto:support@novamir.dev', tabIcon: '📧' },
-]
+  { label: 'Home', path: '/dashboard', icon: 'home' },
+  { label: 'Privacy', path: '/dashboard/privacy', icon: 'privacy' },
+  { label: 'Billing', path: '/dashboard/billing', icon: 'billing' },
+  { label: 'Support', path: 'mailto:support@novamir.dev', icon: 'support' },
+] as const
+
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  home: <HomeIcon />,
+  privacy: <IdCardIcon />,
+  billing: <CreditCardIcon />,
+  support: <EnvelopeIcon />,
+}
 
 export default function ClientLayout({
   children,
@@ -92,7 +107,7 @@ export default function ClientLayout({
       </main>
 
       <nav className={styles.bottomBar}>
-        {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.map((item) => {
           const isActive =
             item.path !== 'mailto:support@novamir.dev' &&
             pathname.startsWith(item.path)
@@ -102,7 +117,9 @@ export default function ClientLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.tabIcon}</span>
+              <span className={styles.bottomTabIcon}>
+                {NAV_ICONS[item.icon]}
+              </span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </a>
           ) : (
@@ -111,7 +128,9 @@ export default function ClientLayout({
               href={item.path}
               className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
             >
-              <span className={styles.bottomTabIcon}>{item.tabIcon}</span>
+              <span className={styles.bottomTabIcon}>
+                {NAV_ICONS[item.icon]}
+              </span>
               <span className={styles.bottomTabLabel}>{item.label}</span>
             </Link>
           )
