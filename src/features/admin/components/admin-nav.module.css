@@ -161,27 +161,27 @@
   .link span {
     display: none;
   }
-  .navSectionLabel {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--azimuth-color-text-muted);
-    padding: var(--azimuth-space-sm) var(--azimuth-space-sm)
-      var(--azimuth-space-xs);
-  }
-
-  .navSublist {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0 var(--azimuth-space-sm);
-  }
-
-  .navSubItem {
-    margin-bottom: var(--azimuth-space-xs);
-  }
-
   .backToSite {
     display: none;
   }
+}
+
+.navSectionLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--azimuth-color-text-muted);
+  padding: var(--azimuth-space-sm) var(--azimuth-space-sm)
+    var(--azimuth-space-xs);
+}
+
+.navSublist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 var(--azimuth-space-md);
+}
+
+.navSubItem {
+  margin-bottom: var(--azimuth-space-xs);
 }

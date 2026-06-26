@@ -24,14 +24,15 @@ export default async function AdminContentPricingRoute() {
   } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await createServiceClient()
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('role')
     .eq('id', user.id)
     .single()
   if (profile?.role !== 'admin') return <div>Forbidden</div>
 
-  const { data: tiers } = await supabase
+  const { data: tiers } = await admin
     .from('pricing_tiers')
     .select('*')
     .order('sort_order')

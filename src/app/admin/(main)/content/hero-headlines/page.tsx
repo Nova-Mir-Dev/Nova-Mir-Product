@@ -22,14 +22,15 @@ export default async function AdminContentHeroHeadlinesRoute() {
   } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await createServiceClient()
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('role')
     .eq('id', user.id)
     .single()
   if (profile?.role !== 'admin') return <div>Forbidden</div>
 
-  const { data: headlines } = await supabase
+  const { data: headlines } = await admin
     .from('hero_headlines')
     .select('*')
     .order('sort_order')
