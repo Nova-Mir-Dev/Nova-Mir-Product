@@ -11,7 +11,8 @@ export async function createAdminUser(formData: FormData) {
   } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const { data: profile } = await supabase
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('role')
     .eq('id', user.id)
@@ -25,8 +26,6 @@ export async function createAdminUser(formData: FormData) {
   if (!email?.trim() || !name?.trim())
     throw new Error('Name and email are required')
   if (!['admin', 'read_only'].includes(role)) throw new Error('Invalid role')
-
-  const admin = createServiceClient()
 
   const { data: authUser, error: authError } =
     await admin.auth.admin.inviteUserByEmail(email.trim(), {

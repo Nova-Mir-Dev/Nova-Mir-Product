@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { ClientDetailPage } from '@/features/admin/clients/client-detail-page'
 import type {
   PortfolioClient,
@@ -22,7 +23,7 @@ export default async function ClientDetailRoute({
   } = await supabase.auth.getUser()
   if (!user) redirect('/admin/auth/login')
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

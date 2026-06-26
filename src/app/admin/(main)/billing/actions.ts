@@ -11,7 +11,8 @@ export async function createInvoice(formData: FormData) {
   } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const { data: profile } = await supabase
+  const admin = createServiceClient()
+  const { data: profile } = await admin
     .from('users')
     .select('role')
     .eq('id', user.id)
@@ -25,7 +26,6 @@ export async function createInvoice(formData: FormData) {
     throw new Error('Valid client name and amount are required')
   }
 
-  const admin = createServiceClient()
   const { error } = await admin.from('portfolio_invoices').insert({
     client_name: clientName.trim(),
     amount: Math.round(amount),

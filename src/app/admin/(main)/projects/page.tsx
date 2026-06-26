@@ -1,5 +1,6 @@
 import { Stack, Text, Button, Card, Input, TextArea } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { createProject } from '@/features/admin/projects/actions'
 
@@ -20,7 +21,7 @@ export default async function ProjectsPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/admin/auth/login')
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

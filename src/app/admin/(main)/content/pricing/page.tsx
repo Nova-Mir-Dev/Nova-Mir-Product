@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { PricingPage } from '@/features/admin/pricing/pricing-page'
 
 interface PricingTier {
@@ -23,7 +24,7 @@ export default async function AdminContentPricingRoute() {
   } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

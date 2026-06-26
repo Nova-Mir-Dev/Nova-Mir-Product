@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { HeroHeadlinesPage } from '@/features/admin/hero-headlines/hero-headlines-page'
 
 interface HeroHeadline {
@@ -21,7 +22,7 @@ export default async function AdminContentHeroHeadlinesRoute() {
   } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

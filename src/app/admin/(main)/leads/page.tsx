@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { LeadsPage } from '@/features/admin/leads/leads-page'
 import type { Lead } from '@/features/admin/types'
 
@@ -12,7 +13,7 @@ export default async function LeadsRoute() {
     return <div>Unauthorized</div>
   }
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

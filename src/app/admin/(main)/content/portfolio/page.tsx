@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { PortfolioPage } from '@/features/admin/portfolio/portfolio-page'
 
 interface PortfolioProject {
@@ -22,7 +23,7 @@ export default async function AdminContentPortfolioRoute() {
   } = await supabase.auth.getUser()
   if (!user) return <div>Unauthorized</div>
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)

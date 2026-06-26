@@ -1,6 +1,7 @@
 import { Card, Grid, KPICard, Stack, Text } from 'azimuth-ui'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import type { ActivityEntry } from '@/features/admin/types'
 
@@ -133,7 +134,7 @@ export default async function AdminDashboard() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/admin/auth/login')
 
-  const { data: profile } = await supabase
+  const { data: profile } = await createServiceClient()
     .from('users')
     .select('role')
     .eq('id', user.id)
