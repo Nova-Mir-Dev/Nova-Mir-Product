@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
-import { checkFirstAdmin, listAdminUsers } from './actions'
-import { AdminSetupForm } from './setup-form'
+import { listAdminUsers } from './actions'
 import { AdminList } from './admin-list'
 import { InviteForm } from './invite-form'
 
@@ -11,11 +10,7 @@ export default async function AdminsPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    const isFirst = await checkFirstAdmin()
-    if (isFirst) return <AdminSetupForm />
-    redirect('/admin/auth/login')
-  }
+  if (!user) redirect('/admin/auth/login')
 
   const { data: profile } = await supabase
     .from('users')
