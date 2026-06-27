@@ -7,6 +7,7 @@ import {
   Card,
   DataTable,
   EmptyState,
+  FileUpload,
   Input,
   Pagination,
   Select,
@@ -69,6 +70,7 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const { page, setPage, totalPages, pageData } = useClientPagination(
     projects,
@@ -145,6 +147,39 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
     [editingId],
   )
 
+  const handleImageUpload = useCallback(async (files: File[]) => {
+    const file = files[0]
+    if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      alert('Only JPEG, PNG, and WebP images are accepted.')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be under 5MB.')
+      return
+    }
+    setUploading(true)
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        }),
+      })
+      if (!res.ok) throw new Error('Failed to get upload URL')
+      const { uploadUrl, publicUrl } = await res.json()
+      await fetch(uploadUrl, { method: 'PUT', body: file })
+      setForm((f) => ({ ...f, thumbnail_url: publicUrl }))
+    } catch {
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }, [])
+
   const statusBadge = (status: string) => (
     <Badge variant={status === 'published' ? 'success' : 'warning'}>
       {status}
@@ -157,7 +192,16 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
       title: '',
       render: (_, row) =>
         row.thumbnail_url ? (
-          <span style={{ fontSize: '1.25rem' }}>&#128247;</span>
+          <img
+            src={row.thumbnail_url}
+            alt=""
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 'var(--azimuth-radius-sm)',
+              objectFit: 'cover',
+            }}
+          />
         ) : null,
     },
     { key: 'title', title: 'Title' },
@@ -273,14 +317,52 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
               }}
             />
             <Input
-              label={{ text: 'Thumbnail URL' }}
-              name="thumbnail_url"
+              label={{ text: 'Href' }}
+              name="href"
               value={{
-                value: form.thumbnail_url,
+                value: form.href,
                 onChange: (e) =>
-                  setForm((f) => ({ ...f, thumbnail_url: e.target.value })),
+                  setForm((f) => ({ ...f, href: e.target.value })),
               }}
             />
+            <Stack spacing="xs">
+              <Text element={{ size: 'sm' }} weight="semibold">
+                Thumbnail Image
+              </Text>
+              {form.thumbnail_url && (
+                <div style={{ position: 'relative', width: 200 }}>
+                  <img
+                    src={form.thumbnail_url}
+                    alt="Project thumbnail"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: 'var(--azimuth-radius-md)',
+                      border: '1px solid var(--azimuth-color-border)',
+                    }}
+                  />
+                  <Button
+                    variant="tertiary"
+                    size="sm"
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, thumbnail_url: '' }))}
+                    style={{ position: 'absolute', top: 4, right: 4 }}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
+              <FileUpload
+                onFilesSelected={handleImageUpload}
+                accept="image/jpeg,image/png,image/webp"
+                multiple={false}
+                maxSize={5}
+                disabled={uploading}
+              />
+              {uploading && (
+                <Text element={{ size: 'sm' }}>Uploading...</Text>
+              )}
+            </Stack>
             <Stack direction="horizontal" spacing="md">
               <Select
                 label={{ text: 'Status' }}
