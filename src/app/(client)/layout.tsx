@@ -24,7 +24,7 @@ const NAV_ITEMS = [
   { label: 'Home', path: '/dashboard', icon: 'home' },
   { label: 'Privacy', path: '/dashboard/privacy', icon: 'privacy' },
   { label: 'Billing', path: '/dashboard/billing', icon: 'billing' },
-  { label: 'Support', path: 'mailto:support@novamir.dev', icon: 'support' },
+  { label: 'Support', path: '/dashboard/support', icon: 'support' },
   { label: 'Settings', path: '/dashboard/settings', icon: 'settings' },
 ]
 
@@ -76,21 +76,12 @@ export default function ClientLayout({
           </Link>
           {NAV_ITEMS.map((item) => {
             const isActive =
-              item.path !== 'mailto:support@novamir.dev' &&
-              pathname.startsWith(item.path)
-            return item.path.startsWith('mailto:') ? (
-              <a
-                key={item.path}
-                href={item.path}
-                className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
-              >
-                {item.label}
-              </a>
-            ) : (
+              pathname === item.path ||
+              pathname.startsWith(item.path + '/')
+            return (
               <Link
                 key={item.path}
                 href={item.path}
-                aria-current={isActive ? 'page' : undefined}
                 className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
               >
                 {item.label}
@@ -112,20 +103,9 @@ export default function ClientLayout({
       <nav className={styles.bottomBar}>
           {NAV_ITEMS.map((item) => {
           const isActive =
-            item.path !== 'mailto:support@novamir.dev' &&
-            pathname.startsWith(item.path)
-          return item.path.startsWith('mailto:') ? (
-            <a
-              key={item.path}
-              href={item.path}
-              className={`${styles.bottomTab} ${isActive ? styles.bottomTabActive : ''}`}
-            >
-              <span className={styles.bottomTabIcon}>
-                {NAV_ICONS[item.icon]}
-              </span>
-              <span className={styles.bottomTabLabel}>{item.label}</span>
-            </a>
-          ) : (
+            pathname === item.path ||
+            pathname.startsWith(item.path + '/')
+          return (
             <Link
               key={item.path}
               href={item.path}
