@@ -1,10 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
-import { Text } from 'azimuth-ui'
+import { Menu, Avatar } from 'azimuth-ui'
+import { useRouter } from 'next/navigation'
 import { logoutAction } from './actions'
-import styles from './admin-nav.module.css'
 
 interface UserMenuProps {
   name: string | null
@@ -12,57 +10,26 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ name, email }: UserMenuProps) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
-
-  const displayName = name || email?.split('@')[0] || 'User'
+  const router = useRouter()
+  const displayName = name || email?.split('@')[0] || ''
 
   return (
-    <div className={styles.userMenu} ref={ref}>
-      <button
-        className={styles.userMenuTrigger}
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        aria-haspopup="true"
-      >
-        <span className={styles.userAvatar}>
-          {displayName.charAt(0).toUpperCase()}
+    <Menu
+      trigger={
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+          <Avatar fallback={displayName} size="xs" />
+          <span style={{ fontSize: '0.875rem' }}>Hello, {displayName}</span>
         </span>
-        <Text element={{ size: 'sm' }} className={styles.userName}>
-          Hello, {displayName}
-        </Text>
-      </button>
-      {open && (
-        <div className={styles.userMenuDropdown} role="menu">
-          <Link
-            href="/admin/settings"
-            className={styles.userMenuItem}
-            role="menuitem"
-            onClick={() => setOpen(false)}
-          >
-            Settings
-          </Link>
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className={styles.userMenuItem}
-              role="menuitem"
-            >
-              Logout
-            </button>
-          </form>
-        </div>
-      )}
-    </div>
+      }
+      side="right"
+      items={[
+        { key: 'settings', label: 'Settings' },
+        { key: 'logout', label: 'Logout', danger: true, separator: true },
+      ]}
+      onSelect={async (key) => {
+        if (key === 'settings') router.push('/admin/settings')
+        if (key === 'logout') await logoutAction()
+      }}
+    />
   )
 }

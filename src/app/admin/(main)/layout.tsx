@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
-import AdminNav from '@/features/admin/components/admin-nav'
+import { AdminSidebar } from '@/features/admin/components/admin-nav'
 import { UserMenu } from '@/features/admin/components/user-menu'
 import { ThemeToggle } from '@/components/theme-toggle'
-import styles from './admin-layout.module.css'
+import { PageLayout } from 'azimuth-ui'
 
 export default async function AdminMainLayout({
   children,
@@ -27,18 +27,19 @@ export default async function AdminMainLayout({
   if (profile?.role !== 'admin') redirect('/admin/auth/login')
 
   return (
-    <div className={styles.container}>
-      <AdminNav />
-      <main id="main-content" className={styles.main}>
-        {children}
-      </main>
-      <div className={styles.topRight}>
-        <ThemeToggle />
-        <UserMenu
-          name={(profile as { name?: string })?.name ?? null}
-          email={user.email ?? null}
-        />
-      </div>
-    </div>
+    <PageLayout
+      sidebar={<AdminSidebar />}
+      topNav={
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--azimuth-space-sm)', marginLeft: 'auto' }}>
+          <ThemeToggle />
+          <UserMenu
+            name={(profile as { name?: string })?.name ?? null}
+            email={user.email ?? null}
+          />
+        </div>
+      }
+    >
+      <main id="main-content">{children}</main>
+    </PageLayout>
   )
 }
