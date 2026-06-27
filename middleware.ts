@@ -7,6 +7,7 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/health', new Set(['GET', 'HEAD'])],
   ['/api/leads', new Set(['POST'])],
   ['/api/content/hero-headlines', new Set(['GET'])],
+  ['/api/content/pricing', new Set(['GET'])],
 ])
 
 function addCorsHeaders(
