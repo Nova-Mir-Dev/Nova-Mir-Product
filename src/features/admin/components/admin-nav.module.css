@@ -56,7 +56,6 @@
 .link:hover,
 .link:focus-visible {
   background-color: var(--azimuth-color-surface-hover);
-  text-decoration: none;
   outline: none;
 }
 
