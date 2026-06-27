@@ -111,12 +111,14 @@ const ProfileTab = ({
               value={{ value: pwValue, onChange: (e) => setPwValue(e.target.value) }}
               placeholder="Enter new password"
             />
-            {pwStatus?.success && (
-              <Text element={{ size: 'sm' }}>Password updated.</Text>
-            )}
-            {pwStatus?.error && (
-              <Text element={{ size: 'sm' }}>{pwStatus.error}</Text>
-            )}
+            <div role="status" aria-live="polite">
+              {pwStatus?.success && (
+                <Text element={{ size: 'sm' }}>Password updated.</Text>
+              )}
+              {pwStatus?.error && (
+                <Text element={{ size: 'sm' }}>{pwStatus.error}</Text>
+              )}
+            </div>
             <Button
               variant="primary"
               onClick={async () => {
@@ -190,9 +192,11 @@ const ApiKeysTab = ({ apiKeys }: { apiKeys: ApiKeyItem[] }) => {
             </Stack>
           </Card>
         )}
-        {createResult?.error && (
-          <Text element={{ size: 'sm' }}>{createResult.error}</Text>
-        )}
+        <div role="status" aria-live="polite">
+          {createResult?.error && (
+            <Text element={{ size: 'sm' }}>{createResult.error}</Text>
+          )}
+        </div>
         {apiKeys.length === 0 ? (
           <EmptyState
             title="No API keys"

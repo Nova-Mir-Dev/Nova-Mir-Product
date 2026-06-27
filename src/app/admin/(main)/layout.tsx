@@ -39,6 +39,22 @@ export default async function AdminMainLayout({
         </div>
       }
     >
+      <a
+        href="#main-content"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: 0,
+          zIndex: 9999,
+          padding: '8px 16px',
+          background: 'var(--azimuth-color-surface)',
+          color: 'var(--azimuth-color-text)',
+        }}
+        onFocus={(e) => (e.currentTarget.style.left = '0')}
+        onBlur={(e) => (e.currentTarget.style.left = '-9999px')}
+      >
+        Skip to main content
+      </a>
       <main id="main-content">{children}</main>
     </PageLayout>
   )

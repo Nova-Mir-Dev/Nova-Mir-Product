@@ -16,10 +16,10 @@ export function UserMenu({ name, email }: UserMenuProps) {
   return (
     <Menu
       trigger={
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
-          <Avatar fallback={displayName} size="xs" />
+        <button type="button" style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', border: 'none', background: 'none', padding: 0, font: 'inherit', color: 'inherit' }}>
+          <Avatar fallback={displayName} size="xs" alt={displayName} />
           <span style={{ fontSize: '0.875rem' }}>Hello, {displayName}</span>
-        </span>
+        </button>
       }
       side="right"
       items={[
