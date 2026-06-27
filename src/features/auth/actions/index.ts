@@ -35,5 +35,13 @@ export async function loginAction(email: string, password: string, redirectTo?: 
     return { error: error.message }
   }
 
+  // Check for verified MFA factors
+  const { data: mfaData } = await supabase.auth.mfa.listFactors()
+  const hasVerifiedFactors = mfaData?.all?.some((f) => f.status === 'verified') ?? false
+
+  if (hasVerifiedFactors) {
+    redirect('/admin/auth/mfa')
+  }
+
   redirect(redirectTo || '/admin')
 }
