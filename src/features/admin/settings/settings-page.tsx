@@ -12,7 +12,7 @@ import {
   EmptyState,
 } from 'azimuth-ui'
 import { useActionState } from 'react'
-import { updateProfile, updatePassword, createApiKey, revokeApiKey } from './actions'
+import { updateProfile, updatePassword, updateNotificationPrefs, createApiKey, revokeApiKey } from './actions'
 import type { CreateApiKeyResult } from './actions'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import styles from './settings-page.module.css'
@@ -34,11 +34,12 @@ export interface SettingsPageProps {
   user: { email: string; name: string | null }
   apiKeys?: ApiKeyItem[]
   factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[]
+  notificationPrefs?: Record<string, boolean>
 }
 
-export const SettingsPage = ({ user, apiKeys = [], factors }: SettingsPageProps) => {
+export const SettingsPage = ({ user, apiKeys = [], factors, notificationPrefs = {} }: SettingsPageProps) => {
   const tabs: TabItem[] = [
-    { id: 'profile', label: 'Profile', content: <ProfileTab user={user} /> },
+    { id: 'profile', label: 'Profile', content: <ProfileTab user={user} notificationPrefs={notificationPrefs} /> },
     {
       id: 'security',
       label: 'Security',
@@ -63,8 +64,10 @@ export const SettingsPage = ({ user, apiKeys = [], factors }: SettingsPageProps)
 
 const ProfileTab = ({
   user,
+  notificationPrefs,
 }: {
   user: { email: string; name: string | null }
+  notificationPrefs: Record<string, boolean>
 }) => {
   const [pwStatus, setPwStatus] = useState<{ success?: boolean; error?: string } | null>(null)
   const [pwValue, setPwValue] = useState('')
@@ -147,6 +150,37 @@ const ProfileTab = ({
               Export My Data
             </Button>
           </a>
+        </Stack>
+      </Card>
+      <Card>
+        <Stack spacing="md">
+          <Text element={{ size: 'lg' }} weight="semibold">
+            Notifications
+          </Text>
+          <Divider />
+          <form action={updateNotificationPrefs}>
+            <Stack spacing="sm">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_new_leads" defaultChecked={notificationPrefs.notify_new_leads} />
+                <Text element={{ size: 'sm' }}>Email me when a new lead comes in</Text>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_new_tickets" defaultChecked={notificationPrefs.notify_new_tickets} />
+                <Text element={{ size: 'sm' }}>Email me when a support ticket is created</Text>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_ticket_updates" defaultChecked={notificationPrefs.notify_ticket_updates} />
+                <Text element={{ size: 'sm' }}>Email me when a ticket status changes</Text>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_slack" defaultChecked={notificationPrefs.notify_slack} />
+                <Text element={{ size: 'sm' }}>Slack notifications</Text>
+              </label>
+              <Button variant="primary" type="submit">
+                Save Notification Preferences
+              </Button>
+            </Stack>
+          </form>
         </Stack>
       </Card>
     </Stack>

@@ -37,6 +37,28 @@ export async function updatePassword(password: string) {
   return { success: true }
 }
 
+export async function updateNotificationPrefs(formData: FormData) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const prefs = {
+    notify_new_leads: formData.get('notify_new_leads') === 'on',
+    notify_new_tickets: formData.get('notify_new_tickets') === 'on',
+    notify_ticket_updates: formData.get('notify_ticket_updates') === 'on',
+    notify_slack: formData.get('notify_slack') === 'on',
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { notification_prefs: prefs },
+  })
+  if (error) throw new Error('Failed to update preferences')
+
+  revalidatePath('/admin/settings')
+}
+
 export interface CreateApiKeyResult {
   success: boolean
   key?: string

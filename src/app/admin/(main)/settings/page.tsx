@@ -36,11 +36,14 @@ export default async function SettingsRoute() {
     friendly_name: (f as { friendly_name?: string | null }).friendly_name,
   }))
 
+  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<string, boolean>
+
   return (
     <SettingsPage
       user={{ email: user.email!, name: profile?.name ?? null }}
       apiKeys={apiKeys ?? []}
       factors={factors}
+      notificationPrefs={prefs}
     />
   )
 }

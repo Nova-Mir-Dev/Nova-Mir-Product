@@ -22,6 +22,27 @@ export async function updateClientProfile(formData: FormData) {
   revalidatePath('/dashboard/settings')
 }
 
+export async function updateClientNotificationPrefs(formData: FormData) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const prefs = {
+    notify_project_updates: formData.get('notify_project_updates') === 'on',
+    notify_invoice_reminders: formData.get('notify_invoice_reminders') === 'on',
+    notify_marketing: formData.get('notify_marketing') === 'on',
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { notification_prefs: prefs },
+  })
+  if (error) throw new Error('Failed to update preferences')
+
+  revalidatePath('/dashboard/settings')
+}
+
 export async function updateClientPassword(formData: FormData) {
   const supabase = await createClient()
   const {

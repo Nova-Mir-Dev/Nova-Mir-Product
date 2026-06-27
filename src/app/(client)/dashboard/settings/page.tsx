@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import { listMfaFactors } from '@/features/auth/mfa'
-import { updateClientProfile, updateClientPassword } from './actions'
+import { updateClientProfile, updateClientNotificationPrefs, updateClientPassword } from './actions'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -30,6 +30,8 @@ export default async function SettingsPage() {
             friendly_name: f.friendly_name,
           }))
       : []
+
+  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<string, boolean>
 
   return (
     <Stack spacing="lg">
@@ -95,10 +97,35 @@ export default async function SettingsPage() {
       <Card>
         <Stack spacing="md">
           <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Two-Factor Authentication
+            Notifications
           </Text>
-          <MfaPanel factors={factors} />
+          <form action={updateClientNotificationPrefs}>
+            <Stack spacing="sm">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_project_updates" defaultChecked={prefs.notify_project_updates} />
+                <Text element={{ size: 'sm' }}>Project updates</Text>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_invoice_reminders" defaultChecked={prefs.notify_invoice_reminders} />
+                <Text element={{ size: 'sm' }}>Invoice reminders</Text>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input type="checkbox" name="notify_marketing" defaultChecked={prefs.notify_marketing} />
+                <Text element={{ size: 'sm' }}>Marketing emails</Text>
+              </label>
+              <Button variant="primary" type="submit">
+                Save Preferences
+              </Button>
+            </Stack>
+          </form>
         </Stack>
+      </Card>
+
+      <Card>
+        <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
+          Two-Factor Authentication
+        </Text>
+        <MfaPanel factors={factors} />
       </Card>
 
       <Card>
