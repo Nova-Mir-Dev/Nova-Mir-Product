@@ -61,6 +61,5 @@ export async function logAudit(entry: AuditEntry): Promise<void> {
     })
   } catch (err) {
     Sentry.captureException(err)
-    Sentry.captureException(err)
   }
 }

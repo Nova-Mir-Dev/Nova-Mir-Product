@@ -33,7 +33,7 @@ export async function GET() {
     if (!client) return notFound('Client profile not found')
 
     return NextResponse.json(clientResponseSchema.parse(client))
-  } catch {
-    return internalError()
+  } catch (err) {
+    return internalError('Internal server error', err)
   }
 }

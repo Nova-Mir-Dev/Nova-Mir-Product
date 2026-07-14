@@ -94,7 +94,7 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     )
-  } catch {
-    return internalError()
+  } catch (err) {
+    return internalError('Internal server error', err)
   }
 }

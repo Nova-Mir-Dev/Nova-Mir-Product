@@ -8,6 +8,7 @@ import {
 } from '@/lib/__tests__/api-test-helpers'
 
 vi.mock('@/lib/supabase-server', () => ({ createClient: vi.fn() }))
+vi.mock('@/lib/supabase-admin', () => ({ createServiceClient: vi.fn() }))
 vi.mock('@/lib/rate-limit', () => ({
   rateLimit: vi
     .fn()
@@ -28,6 +29,11 @@ beforeEach(() => {
 async function setClient(client: MockClient) {
   const { createClient } = await import('@/lib/supabase-server')
   vi.mocked(createClient).mockResolvedValue(client)
+}
+
+async function setServiceClient(client: MockClient) {
+  const { createServiceClient } = await import('@/lib/supabase-admin')
+  vi.mocked(createServiceClient).mockReturnValue(client)
 }
 
 describe('GET /api/compliance/data-access', () => {
@@ -87,6 +93,11 @@ describe('GET /api/compliance/data-access', () => {
       },
     })
     await setClient(client)
+    await setServiceClient(
+      createMockClient({
+        tables: { ccpa_opt_outs: { select: { data: [] } } },
+      }),
+    )
     const { GET } = await import('../route')
     const res = await GET(
       buildRequest('http://localhost/api/compliance/data-access', {

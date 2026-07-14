@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
 import * as Sentry from '@sentry/nextjs'
 import { logAudit } from '@/lib/audit-log'
@@ -82,6 +83,14 @@ export async function GET(request: Request) {
       .from('activity_logs')
       .select('id, action, resource, resource_id, ip_address, created_at')
       .eq('user_id', user.id)
+    // ccpa_opt_outs has no per-user SELECT policy (admin-only), so read the
+    // caller's own opt-out records with the service client for completeness.
+    const { data: ccpaOptOuts } = user.email
+      ? await createServiceClient()
+          .from('ccpa_opt_outs')
+          .select('id, email, opted_out_at')
+          .eq('email', user.email)
+      : { data: [] }
 
     const requestId = crypto.randomUUID()
     void logAudit({
@@ -107,6 +116,7 @@ export async function GET(request: Request) {
         portfolioClients,
         signatures,
         activityLogs,
+        ccpaOptOuts,
       },
       processingPurposes: [
         'Account management and authentication',

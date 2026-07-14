@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
+import { logAudit } from '@/lib/audit-log'
 import * as Sentry from '@sentry/nextjs'
 import { z } from 'zod'
 
@@ -83,6 +84,13 @@ export async function GET(request: Request) {
     }
 
     const data = raw as unknown as Array<Record<string, unknown>>
+
+    void logAudit({
+      action: 'admin.export',
+      entity,
+      metadata: { format, rowCount: data.length },
+      userId: user.id,
+    })
 
     function csvEscape(value: unknown): string {
       let str: string

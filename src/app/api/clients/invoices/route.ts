@@ -33,7 +33,7 @@ export async function GET() {
 
     const parsed = z.array(invoiceSchema).parse(invoices ?? [])
     return NextResponse.json(parsed)
-  } catch {
-    return internalError()
+  } catch (err) {
+    return internalError('Internal server error', err)
   }
 }

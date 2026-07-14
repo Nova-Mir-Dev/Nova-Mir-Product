@@ -20,7 +20,7 @@ export async function GET() {
     if (!profile) return unauthorized()
 
     return NextResponse.json(profile)
-  } catch {
-    return internalError()
+  } catch (err) {
+    return internalError('Internal server error', err)
   }
 }

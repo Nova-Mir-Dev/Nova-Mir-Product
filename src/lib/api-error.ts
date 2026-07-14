@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import * as Sentry from '@sentry/nextjs'
 
 export type ApiErrorCode =
   | 'UNAUTHORIZED'
@@ -39,6 +40,10 @@ export function rateLimited(message = 'Too many requests') {
   return apiError(message, 'RATE_LIMITED', 429)
 }
 
-export function internalError(message = 'Internal server error') {
+export function internalError(
+  message = 'Internal server error',
+  error?: unknown,
+) {
+  if (error !== undefined) Sentry.captureException(error)
   return apiError(message, 'INTERNAL_ERROR', 500)
 }
