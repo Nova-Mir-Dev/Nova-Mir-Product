@@ -11,6 +11,8 @@
 # Use no-db mode: JSONL-only, no Dolt database
 # When true, bd will use .beads/issues.jsonl as the source of truth
 no-db: true
+sync:
+    remote: "git+ssh://git@github.com/Nova-Mir-Dev/Nova-Mir-Product.git"
 
 # Enable JSON output by default
 # json: false
