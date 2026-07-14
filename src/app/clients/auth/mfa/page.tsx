@@ -11,14 +11,20 @@ export default async function ClientMfaRoute() {
   if (!user) redirect('/clients/auth/login')
 
   const mfaResult = await listMfaFactors()
-  const allFactors = 'error' in mfaResult ? [] : mfaResult.all ?? []
+  const allFactors = 'error' in mfaResult ? [] : (mfaResult.all ?? [])
   const verifiedFactors = allFactors
     .filter((f: { status: string }) => f.status === 'verified')
-    .map((f: { id: string; factor_type: string; friendly_name?: string | null }) => ({
-      id: f.id,
-      type: f.factor_type,
-      friendly_name: f.friendly_name,
-    }))
+    .map(
+      (f: {
+        id: string
+        factor_type: string
+        friendly_name?: string | null
+      }) => ({
+        id: f.id,
+        type: f.factor_type,
+        friendly_name: f.friendly_name,
+      }),
+    )
 
   if (verifiedFactors.length === 0) redirect('/dashboard')
 

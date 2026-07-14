@@ -4,6 +4,9 @@ import { SettingsPage } from '../settings-page'
 
 vi.mock('../actions', () => ({
   updateProfile: vi.fn(),
+  updatePassword: vi.fn(),
+  updateNotificationPrefs: vi.fn(),
+  updateClientProfile: vi.fn(),
   createApiKey: vi.fn(),
   revokeApiKey: vi.fn(),
 }))

@@ -8,11 +8,9 @@ describe('MfaPanel', () => {
     { id: '1', type: 'totp', created_at: '2025-01-15T00:00:00Z' },
   ]
 
-  it('renders heading', () => {
+  it('renders remove buttons for existing factors', () => {
     render(<MfaPanel factors={factors} />)
-    expect(
-      screen.getByRole('heading', { name: 'Two-Factor Authentication' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Remove' })).toBeInTheDocument()
   })
 
   it('shows existing factors when provided', () => {
@@ -25,10 +23,13 @@ describe('MfaPanel', () => {
     expect(screen.getByText('No 2FA methods configured.')).toBeInTheDocument()
   })
 
-  it('renders Enable 2FA button when not enrolling', () => {
+  it('renders enrollment options when not enrolling', () => {
     render(<MfaPanel factors={[]} />)
     expect(
-      screen.getByRole('button', { name: 'Enable 2FA' }),
+      screen.getByRole('button', { name: 'Set up Authenticator App' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Add Passkey/ }),
     ).toBeInTheDocument()
   })
 

@@ -58,11 +58,7 @@ function Navbar() {
 
           <div className="nav-links">
             {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
-              <a
-                key={page.path}
-                href={page.path}
-                className="nav-link"
-              >
+              <a key={page.path} href={page.path} className="nav-link">
                 {page.label}
               </a>
             ))}

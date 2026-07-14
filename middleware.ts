@@ -9,6 +9,7 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/content/hero-headlines', new Set(['GET'])],
   ['/api/content/pricing', new Set(['GET'])],
   ['/api/cron/keep-alive', new Set(['GET'])],
+  ['/api/compliance/opt-out', new Set(['POST'])],
 ])
 
 const AUTH_TIMEOUT_MS = 3000

@@ -3,7 +3,11 @@ import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import { listMfaFactors } from '@/features/auth/mfa'
-import { updateClientProfile, updateClientNotificationPrefs, updateClientPassword } from './actions'
+import {
+  updateClientProfile,
+  updateClientNotificationPrefs,
+  updateClientPassword,
+} from './actions'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -19,19 +23,34 @@ export default async function SettingsPage() {
     .single()
 
   const factorsResult = await listMfaFactors()
-  const factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[] =
+  const factors: {
+    id: string
+    type: string
+    created_at: string
+    friendly_name?: string | null
+  }[] =
     factorsResult && 'all' in factorsResult
       ? factorsResult.all
           .filter((f: { status: string }) => f.status === 'verified')
-          .map((f: { factor_type: string; id: string; created_at: string; friendly_name?: string | null }) => ({
-            id: f.id,
-            type: f.factor_type,
-            created_at: f.created_at,
-            friendly_name: f.friendly_name,
-          }))
+          .map(
+            (f: {
+              factor_type: string
+              id: string
+              created_at: string
+              friendly_name?: string | null
+            }) => ({
+              id: f.id,
+              type: f.factor_type,
+              created_at: f.created_at,
+              friendly_name: f.friendly_name,
+            }),
+          )
       : []
 
-  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<string, boolean>
+  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<
+    string,
+    boolean
+  >
 
   return (
     <Stack spacing="lg">
@@ -55,9 +74,7 @@ export default async function SettingsPage() {
               <Input
                 label={{ text: 'Full Name' }}
                 name="name"
-                defaultValue={
-                  (profile as { name?: string } | null)?.name ?? ''
-                }
+                defaultValue={(profile as { name?: string } | null)?.name ?? ''}
                 placeholder="Enter your name"
               />
               <Button variant="primary" type="submit">
@@ -101,16 +118,49 @@ export default async function SettingsPage() {
           </Text>
           <form action={updateClientNotificationPrefs}>
             <Stack spacing="sm">
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_project_updates" defaultChecked={prefs.notify_project_updates} />
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_project_updates"
+                  defaultChecked={prefs.notify_project_updates}
+                />
                 <Text element={{ size: 'sm' }}>Project updates</Text>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_invoice_reminders" defaultChecked={prefs.notify_invoice_reminders} />
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_invoice_reminders"
+                  defaultChecked={prefs.notify_invoice_reminders}
+                />
                 <Text element={{ size: 'sm' }}>Invoice reminders</Text>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_marketing" defaultChecked={prefs.notify_marketing} />
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_marketing"
+                  defaultChecked={prefs.notify_marketing}
+                />
                 <Text element={{ size: 'sm' }}>Marketing emails</Text>
               </label>
               <Button variant="primary" type="submit">

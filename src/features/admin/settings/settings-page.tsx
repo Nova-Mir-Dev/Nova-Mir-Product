@@ -12,7 +12,13 @@ import {
   EmptyState,
 } from 'azimuth-ui'
 import { useActionState } from 'react'
-import { updateProfile, updatePassword, updateNotificationPrefs, createApiKey, revokeApiKey } from './actions'
+import {
+  updateProfile,
+  updatePassword,
+  updateNotificationPrefs,
+  createApiKey,
+  revokeApiKey,
+} from './actions'
 import type { CreateApiKeyResult } from './actions'
 import { MfaPanel } from '@/features/auth/mfa-panel'
 import styles from './settings-page.module.css'
@@ -33,13 +39,27 @@ export interface ApiKeyItem {
 export interface SettingsPageProps {
   user: { email: string; name: string | null }
   apiKeys?: ApiKeyItem[]
-  factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[]
+  factors: {
+    id: string
+    type: string
+    created_at: string
+    friendly_name?: string | null
+  }[]
   notificationPrefs?: Record<string, boolean>
 }
 
-export const SettingsPage = ({ user, apiKeys = [], factors, notificationPrefs = {} }: SettingsPageProps) => {
+export const SettingsPage = ({
+  user,
+  apiKeys = [],
+  factors,
+  notificationPrefs = {},
+}: SettingsPageProps) => {
   const tabs: TabItem[] = [
-    { id: 'profile', label: 'Profile', content: <ProfileTab user={user} notificationPrefs={notificationPrefs} /> },
+    {
+      id: 'profile',
+      label: 'Profile',
+      content: <ProfileTab user={user} notificationPrefs={notificationPrefs} />,
+    },
     {
       id: 'security',
       label: 'Security',
@@ -69,7 +89,10 @@ const ProfileTab = ({
   user: { email: string; name: string | null }
   notificationPrefs: Record<string, boolean>
 }) => {
-  const [pwStatus, setPwStatus] = useState<{ success?: boolean; error?: string } | null>(null)
+  const [pwStatus, setPwStatus] = useState<{
+    success?: boolean
+    error?: string
+  } | null>(null)
   const [pwValue, setPwValue] = useState('')
 
   return (
@@ -111,7 +134,10 @@ const ProfileTab = ({
               label={{ text: 'New Password' }}
               name="newPassword"
               type="password"
-              value={{ value: pwValue, onChange: (e) => setPwValue(e.target.value) }}
+              value={{
+                value: pwValue,
+                onChange: (e) => setPwValue(e.target.value),
+              }}
               placeholder="Enter new password"
             />
             <div role="status" aria-live="polite">
@@ -128,7 +154,10 @@ const ProfileTab = ({
                 if (!pwValue) return
                 const result = await updatePassword(pwValue)
                 if ('error' in result) setPwStatus({ error: result.error })
-                else { setPwStatus({ success: true }); setPwValue('') }
+                else {
+                  setPwStatus({ success: true })
+                  setPwValue('')
+                }
               }}
             >
               Update Password
@@ -160,20 +189,70 @@ const ProfileTab = ({
           <Divider />
           <form action={updateNotificationPrefs}>
             <Stack spacing="sm">
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_new_leads" defaultChecked={notificationPrefs.notify_new_leads} />
-                <Text element={{ size: 'sm' }}>Email me when a new lead comes in</Text>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_new_leads"
+                  defaultChecked={notificationPrefs.notify_new_leads}
+                />
+                <Text element={{ size: 'sm' }}>
+                  Email me when a new lead comes in
+                </Text>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_new_tickets" defaultChecked={notificationPrefs.notify_new_tickets} />
-                <Text element={{ size: 'sm' }}>Email me when a support ticket is created</Text>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_new_tickets"
+                  defaultChecked={notificationPrefs.notify_new_tickets}
+                />
+                <Text element={{ size: 'sm' }}>
+                  Email me when a support ticket is created
+                </Text>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_ticket_updates" defaultChecked={notificationPrefs.notify_ticket_updates} />
-                <Text element={{ size: 'sm' }}>Email me when a ticket status changes</Text>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_ticket_updates"
+                  defaultChecked={notificationPrefs.notify_ticket_updates}
+                />
+                <Text element={{ size: 'sm' }}>
+                  Email me when a ticket status changes
+                </Text>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                <input type="checkbox" name="notify_slack" defaultChecked={notificationPrefs.notify_slack} />
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  name="notify_slack"
+                  defaultChecked={notificationPrefs.notify_slack}
+                />
                 <Text element={{ size: 'sm' }}>Slack notifications</Text>
               </label>
               <Button variant="primary" type="submit">
@@ -190,7 +269,12 @@ const ProfileTab = ({
 const SecurityTab = ({
   factors,
 }: {
-  factors: { id: string; type: string; created_at: string; friendly_name?: string | null }[]
+  factors: {
+    id: string
+    type: string
+    created_at: string
+    friendly_name?: string | null
+  }[]
 }) => (
   <Stack spacing="md">
     <MfaPanel factors={factors} />

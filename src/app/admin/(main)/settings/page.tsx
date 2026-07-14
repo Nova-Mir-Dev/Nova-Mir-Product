@@ -29,14 +29,20 @@ export default async function SettingsRoute() {
     .order('created_at', { ascending: false })
 
   const mfaResult = await listMfaFactors()
-  const factors = 'error' in mfaResult ? [] : (mfaResult.all ?? []).map((f) => ({
-    id: f.id,
-    type: f.factor_type,
-    created_at: f.created_at,
-    friendly_name: (f as { friendly_name?: string | null }).friendly_name,
-  }))
+  const factors =
+    'error' in mfaResult
+      ? []
+      : (mfaResult.all ?? []).map((f) => ({
+          id: f.id,
+          type: f.factor_type,
+          created_at: f.created_at,
+          friendly_name: (f as { friendly_name?: string | null }).friendly_name,
+        }))
 
-  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<string, boolean>
+  const prefs = (user.user_metadata?.notification_prefs ?? {}) as Record<
+    string,
+    boolean
+  >
 
   return (
     <SettingsPage

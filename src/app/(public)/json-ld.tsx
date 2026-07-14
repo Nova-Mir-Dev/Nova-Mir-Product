@@ -8,9 +8,7 @@ function safeJson(obj: unknown): string {
 }
 
 function getPrice(tier: PricingTierRow | PricingTier): number {
-  return 'starting_price' in tier
-    ? tier.starting_price
-    : tier.startingPrice
+  return 'starting_price' in tier ? tier.starting_price : tier.startingPrice
 }
 
 export async function JsonLd() {

@@ -7,7 +7,7 @@ import MonitoringPage from '../../admin/monitoring/monitoring-page'
 import { ProjectsPage } from '../../admin/projects/projects-page'
 import { SettingsPage } from '../../admin/settings/settings-page'
 import { AuditPage } from '../../admin/audit/audit-page'
-import AdminNav from '../../admin/components/admin-nav'
+import { AdminSidebar } from '../../admin/components/admin-nav'
 import type {
   PortfolioClient,
   BillingSummary,
@@ -89,15 +89,17 @@ const mockEntry: ActivityEntry[] = [
 ]
 
 describe('admin page accessibility', () => {
-  it('AdminNav has navigation landmark', () => {
-    render(<AdminNav />)
+  it('AdminSidebar has navigation landmark', () => {
+    render(<AdminSidebar />)
     const navs = screen.getAllByRole('navigation')
     expect(navs.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('AdminNav has heading', () => {
-    render(<AdminNav />)
-    const headings = screen.getAllByRole('heading', { name: 'Admin' })
+  it('AdminSidebar has heading', () => {
+    render(<AdminSidebar />)
+    const headings = screen.getAllByRole('heading', {
+      name: 'Nova Mir | Admin',
+    })
     expect(headings.length).toBeGreaterThanOrEqual(1)
   })
 
@@ -221,8 +223,8 @@ describe('empty states provide description text', () => {
 })
 
 describe('admin page automated a11y scan', () => {
-  it('AdminNav has no auto-detected violations', async () => {
-    const { container } = render(<AdminNav />)
+  it('AdminSidebar has no auto-detected violations', async () => {
+    const { container } = render(<AdminSidebar />)
     const results = await axe(container)
     expect(results.violations).toHaveLength(0)
   })

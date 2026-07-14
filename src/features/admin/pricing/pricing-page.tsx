@@ -54,10 +54,7 @@ export function PricingPage({ tiers: initial }: PricingPageProps) {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
 
-  const { page, setPage, totalPages, pageData } = useClientPagination(
-    tiers,
-    20,
-  )
+  const { page, setPage, totalPages, pageData } = useClientPagination(tiers, 20)
 
   const resetForm = () => {
     setForm(emptyForm())

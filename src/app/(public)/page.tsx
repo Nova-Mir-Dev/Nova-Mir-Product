@@ -9,7 +9,14 @@ function formatPrice(price: number): string {
   return '$' + price.toLocaleString()
 }
 
-function pricingData(tiers: { name: string; startingPrice: number; isFeatured: boolean; features: string[] }[]) {
+function pricingData(
+  tiers: {
+    name: string
+    startingPrice: number
+    isFeatured: boolean
+    features: string[]
+  }[],
+) {
   return tiers.map((tier, i) => {
     const featured = tier.isFeatured ?? i === 1
     const suffix = featured ? '' : '+'
@@ -59,21 +66,23 @@ const PROJECTS = [
 
 export default async function Home() {
   const dbPricing = await getPublishedPricing()
-  const tiers = dbPricing && dbPricing.length > 0
-    ? dbPricing.map((t) => ({
-        name: t.name,
-        startingPrice: t.starting_price,
-        features: t.features ?? [],
-        isFeatured: t.is_featured,
-        description: t.description ?? '',
-      }))
-    : PRICING_TIERS.map((t) => ({
-        name: t.name,
-        startingPrice: t.startingPrice,
-        features: t.features,
-        isFeatured: t.description === 'Businesses ready to capture and track leads.',
-        description: t.description,
-      }))
+  const tiers =
+    dbPricing && dbPricing.length > 0
+      ? dbPricing.map((t) => ({
+          name: t.name,
+          startingPrice: t.starting_price,
+          features: t.features ?? [],
+          isFeatured: t.is_featured,
+          description: t.description ?? '',
+        }))
+      : PRICING_TIERS.map((t) => ({
+          name: t.name,
+          startingPrice: t.startingPrice,
+          features: t.features,
+          isFeatured:
+            t.description === 'Businesses ready to capture and track leads.',
+          description: t.description,
+        }))
 
   const displayTiers = pricingData(tiers)
 

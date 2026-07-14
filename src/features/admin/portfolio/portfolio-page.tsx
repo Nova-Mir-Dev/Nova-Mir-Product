@@ -345,7 +345,9 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
                     variant="tertiary"
                     size="sm"
                     type="button"
-                    onClick={() => setForm((f) => ({ ...f, thumbnail_url: '' }))}
+                    onClick={() =>
+                      setForm((f) => ({ ...f, thumbnail_url: '' }))
+                    }
                     style={{ position: 'absolute', top: 4, right: 4 }}
                   >
                     Remove
@@ -359,9 +361,7 @@ export function PortfolioPage({ projects: initial }: PortfolioPageProps) {
                 maxSize={5}
                 disabled={uploading}
               />
-              {uploading && (
-                <Text element={{ size: 'sm' }}>Uploading...</Text>
-              )}
+              {uploading && <Text element={{ size: 'sm' }}>Uploading...</Text>}
             </Stack>
             <Stack direction="horizontal" spacing="md">
               <Select

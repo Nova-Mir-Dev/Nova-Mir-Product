@@ -1,64 +1,53 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import AdminNav from '../../admin/components/admin-nav'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { AdminSidebar } from '../components/admin-nav'
 
-const navItems = [
+const push = vi.fn()
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/admin',
+  useRouter: () => ({ push }),
+}))
+
+beforeEach(() => {
+  push.mockClear()
+})
+
+const routes = [
+  { label: 'Dashboard', href: '/admin' },
   { label: 'Clients', href: '/admin/clients' },
+  { label: 'Leads', href: '/admin/leads' },
   { label: 'Projects', href: '/admin/projects' },
   { label: 'Billing', href: '/admin/billing' },
+  { label: 'Revenue', href: '/admin/revenue' },
   { label: 'Monitoring', href: '/admin/monitoring' },
   { label: 'Bootstrap', href: '/admin/bootstrap' },
+  { label: 'Admins', href: '/admin/admins' },
   { label: 'Audit Log', href: '/admin/audit' },
-  { label: 'Settings', href: '/admin/settings' },
+  { label: 'DSAR', href: '/admin/compliance/dsar' },
 ]
 
-describe('AdminNav renders all routes', () => {
-  it('renders Admin heading', () => {
-    render(<AdminNav />)
-    const headings = screen.getAllByText('Admin')
-    expect(headings.length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('renders all nav items', () => {
-    render(<AdminNav />)
-    for (const item of navItems) {
-      const matches = screen.getAllByText(item.label)
-      expect(matches.length).toBeGreaterThanOrEqual(1)
+describe('AdminSidebar routing', () => {
+  it('navigates to the matching admin route when an item is selected', () => {
+    render(<AdminSidebar />)
+    for (const route of routes) {
+      push.mockClear()
+      fireEvent.click(screen.getByRole('button', { name: route.label }))
+      expect(push).toHaveBeenCalledWith(route.href)
     }
   })
 
-  it('links point to correct admin routes', () => {
-    render(<AdminNav />)
-    const links = screen.getAllByRole('link')
-    for (const item of navItems) {
-      const matchingLink = links.find(
-        (l) => l.getAttribute('href') === item.href,
-      )
-      expect(matchingLink).toBeDefined()
+  it('exposes content sub-routes under the Content group', () => {
+    render(<AdminSidebar />)
+    fireEvent.click(screen.getByRole('button', { name: 'Content' }))
+    for (const child of [
+      { label: 'Portfolio', href: '/admin/content/portfolio' },
+      { label: 'Hero Headlines', href: '/admin/content/hero-headlines' },
+      { label: 'Pricing', href: '/admin/content/pricing' },
+    ]) {
+      push.mockClear()
+      fireEvent.click(screen.getByRole('button', { name: child.label }))
+      expect(push).toHaveBeenCalledWith(child.href)
     }
-  })
-
-  it('renders nav as a navigation landmark', () => {
-    render(<AdminNav />)
-    const navs = screen.getAllByRole('navigation')
-    expect(navs.length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('renders each nav item as a listitem', () => {
-    render(<AdminNav />)
-    const items = screen.getAllByRole('listitem')
-    expect(items.length).toBeGreaterThanOrEqual(navItems.length)
-  })
-
-  it('renders correct number of navigation links', () => {
-    render(<AdminNav />)
-    const links = screen.getAllByRole('link')
-    expect(links.length).toBeGreaterThanOrEqual(navItems.length)
-  })
-
-  it('renders nav heading with accessible role', () => {
-    render(<AdminNav />)
-    const headings = screen.getAllByRole('heading', { name: 'Admin' })
-    expect(headings.length).toBeGreaterThanOrEqual(1)
   })
 })

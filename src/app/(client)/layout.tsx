@@ -76,8 +76,7 @@ export default function ClientLayout({
           </Link>
           {NAV_ITEMS.map((item) => {
             const isActive =
-              pathname === item.path ||
-              pathname.startsWith(item.path + '/')
+              pathname === item.path || pathname.startsWith(item.path + '/')
             return (
               <Link
                 key={item.path}
@@ -101,10 +100,9 @@ export default function ClientLayout({
       </main>
 
       <nav className={styles.bottomBar}>
-          {NAV_ITEMS.map((item) => {
+        {NAV_ITEMS.map((item) => {
           const isActive =
-            pathname === item.path ||
-            pathname.startsWith(item.path + '/')
+            pathname === item.path || pathname.startsWith(item.path + '/')
           return (
             <Link
               key={item.path}

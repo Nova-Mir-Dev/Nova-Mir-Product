@@ -107,9 +107,7 @@ export default async function SupportPage({
                   }}
                 />
               </div>
-              <div
-                style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}
-              >
+              <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}>
                 <Button variant="primary" type="submit">
                   Submit
                 </Button>
@@ -155,8 +153,7 @@ export default async function SupportPage({
                 element={{ size: 'sm' }}
                 color="secondary"
                 style={{
-                  padding:
-                    '0 var(--azimuth-space-md) var(--azimuth-space-sm)',
+                  padding: '0 var(--azimuth-space-md) var(--azimuth-space-sm)',
                 }}
               >
                 {item.answer}

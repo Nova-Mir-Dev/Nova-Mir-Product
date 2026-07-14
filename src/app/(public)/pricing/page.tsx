@@ -68,89 +68,89 @@ export default function PricingPage() {
           }}
         >
           {tiers.map((tier) => {
-              const featured = tier.isFeatured
-              return (
-                <Card
-                  key={tier.name}
-                  style={{
-                    flex: '1 1 260px',
-                    border: featured
-                      ? '2px solid var(--azimuth-color-primary)'
-                      : '1px solid var(--azimuth-color-border)',
-                    position: 'relative',
-                  }}
-                  footer={
-                    <Button
-                      variant={featured ? 'primary' : 'secondary'}
-                      onClick={() => (window.location.href = '/contact')}
-                    >
-                      Get a Quote
-                    </Button>
-                  }
-                >
-                  <Stack spacing="md" style={{ flex: 1 }}>
-                    {featured && (
-                      <Text
-                        element={{ size: 'xs' }}
-                        weight="semibold"
-                        style={{
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.08em',
-                          color: 'var(--azimuth-color-primary)',
-                        }}
-                      >
-                        Most Popular
-                      </Text>
-                    )}
-
-                    <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
-                      {tier.name}
-                    </Text>
-
+            const featured = tier.isFeatured
+            return (
+              <Card
+                key={tier.name}
+                style={{
+                  flex: '1 1 260px',
+                  border: featured
+                    ? '2px solid var(--azimuth-color-primary)'
+                    : '1px solid var(--azimuth-color-border)',
+                  position: 'relative',
+                }}
+                footer={
+                  <Button
+                    variant={featured ? 'primary' : 'secondary'}
+                    onClick={() => (window.location.href = '/contact')}
+                  >
+                    Get a Quote
+                  </Button>
+                }
+              >
+                <Stack spacing="md" style={{ flex: 1 }}>
+                  {featured && (
                     <Text
-                      element={{ size: 'h4' }}
-                      weight="bold"
-                      style={{ color: 'var(--azimuth-color-primary)' }}
-                    >
-                      ${tier.startingPrice.toLocaleString()}
-                      {featured ? '' : '+'}
-                    </Text>
-                    {featured && (
-                      <Text
-                        element={{ size: 'xs' }}
-                        color="secondary"
-                        style={{ marginTop: '-0.25rem' }}
-                      >
-                        Founding rate — limited to 3 slots
-                      </Text>
-                    )}
-
-                    <Divider margin="sm" />
-
-                    <div
+                      element={{ size: 'xs' }}
+                      weight="semibold"
                       style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        marginTop: 'auto',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        color: 'var(--azimuth-color-primary)',
                       }}
                     >
-                      {tier.features.map((feature) => (
-                        <Text
-                          key={feature}
-                          element={{ size: 'sm' }}
-                          style={{
-                            color: 'var(--azimuth-color-text-secondary)',
-                          }}
-                        >
-                          {feature}
-                        </Text>
-                      ))}
-                    </div>
-                  </Stack>
-                </Card>
-              )
-            })}
+                      Most Popular
+                    </Text>
+                  )}
+
+                  <Text element={{ as: 'h2', size: 'h3' }} weight="bold">
+                    {tier.name}
+                  </Text>
+
+                  <Text
+                    element={{ size: 'h4' }}
+                    weight="bold"
+                    style={{ color: 'var(--azimuth-color-primary)' }}
+                  >
+                    ${tier.startingPrice.toLocaleString()}
+                    {featured ? '' : '+'}
+                  </Text>
+                  {featured && (
+                    <Text
+                      element={{ size: 'xs' }}
+                      color="secondary"
+                      style={{ marginTop: '-0.25rem' }}
+                    >
+                      Founding rate — limited to 3 slots
+                    </Text>
+                  )}
+
+                  <Divider margin="sm" />
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      marginTop: 'auto',
+                    }}
+                  >
+                    {tier.features.map((feature) => (
+                      <Text
+                        key={feature}
+                        element={{ size: 'sm' }}
+                        style={{
+                          color: 'var(--azimuth-color-text-secondary)',
+                        }}
+                      >
+                        {feature}
+                      </Text>
+                    ))}
+                  </div>
+                </Stack>
+              </Card>
+            )
+          })}
         </div>
 
         <Card

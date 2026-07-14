@@ -8,7 +8,7 @@ import { SettingsPage } from '../../admin/settings/settings-page'
 import { AuditPage } from '../../admin/audit/audit-page'
 import { ProjectsPageSkeleton } from '../../admin/projects/projects-page'
 import { AuditPageSkeleton } from '../../admin/audit/audit-page'
-import AdminNav from '../../admin/components/admin-nav'
+import { AdminSidebar } from '../../admin/components/admin-nav'
 import type {
   PortfolioClient,
   BillingSummary,
@@ -271,22 +271,28 @@ describe('skeleton components', () => {
   })
 })
 
-describe('AdminNav structure', () => {
+describe('AdminSidebar structure', () => {
   it('renders as a semantic nav element', () => {
-    const { container } = render(<AdminNav />)
+    const { container } = render(<AdminSidebar />)
     const nav = container.querySelector('nav')
-    expect(nav).toBeDefined()
+    expect(nav).not.toBeNull()
   })
 
-  it('renders links as a list', () => {
-    render(<AdminNav />)
-    const list = screen.getAllByRole('listitem')
-    expect(list.length).toBeGreaterThanOrEqual(7)
+  it('renders nav items as buttons with accessible names', () => {
+    render(<AdminSidebar />)
+    const buttons = screen.getAllByRole('button')
+    expect(buttons.length).toBeGreaterThanOrEqual(11)
+    for (const button of buttons) {
+      const name =
+        button.textContent?.trim() || button.getAttribute('aria-label')
+      expect(name).toBeTruthy()
+    }
   })
 
-  it('all nav links have accessible names', () => {
-    render(<AdminNav />)
+  it('header and footer links have accessible names', () => {
+    render(<AdminSidebar />)
     const links = screen.getAllByRole('link')
+    expect(links.length).toBeGreaterThanOrEqual(2)
     for (const link of links) {
       expect(link.textContent).toBeTruthy()
     }

@@ -81,7 +81,7 @@ export async function challengeMfa(userId: string) {
    └── User enters code
 
 3. [verify] POST /admin/auth/mfa (via form action)
-   ├── challenge() + verify() 
+   ├── challenge() + verify()
    ├── on success → redirect to /admin
    └── on failure → show error, stay on challenge page
 
@@ -95,6 +95,7 @@ export async function challengeMfa(userId: string) {
 Wait — this is actually the critical question. Does Supabase `mfa.verify()` upgrade the session AAL within the existing SSR session? Or does it just return success without changing anything?
 
 Looking at Supabase docs:
+
 - `mfa.challenge()` creates a challenge for a factor
 - `mfa.verify()` verifies the challenge with a code
 - After successful verification, the current session's AAL is upgraded from aal1 to aal2
@@ -102,6 +103,7 @@ Looking at Supabase docs:
 But in SSR mode, the session is stored in cookies. The `mfa.verify()` call on the server should upgrade the session's AAL, which will be reflected in subsequent `getUser()` calls.
 
 So the flow would be:
+
 1. Login → signInWithPassword → session created (AAL1)
 2. Check factors → if present, redirect to challenge
 3. Challenge page → enters code → server calls challenge + verify
@@ -112,17 +114,20 @@ So the flow would be:
 ## Boundaries
 
 **Always do:**
+
 - Check for verified MFA factors after every password login
 - Show clear error messages on failed challenge
 - Allow retry on wrong code
 - Redirect to original destination after MFA
 
 **Ask first before:**
+
 - Adding "remember this device" (skip MFA for N days)
 - Supporting phone/SMS MFA (not currently in scope)
 - WebAuthn challenge flow (TOTP first, passkey as follow-up)
 
 **Never do:**
+
 - Store MFA codes or secrets in cookies/localStorage
 - Skip MFA for any authenticated session with verified factors
 - Reveal whether a user has MFA enrolled (enumeration attack)

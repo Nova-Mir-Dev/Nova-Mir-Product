@@ -1,45 +1,58 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import AdminNav from '../admin-nav'
+import { AdminSidebar } from '../admin-nav'
 
-describe('AdminNav', () => {
-  const expectedItems = [
-    { label: 'Clients', href: '/admin/clients' },
-    { label: 'Projects', href: '/admin/projects' },
-    { label: 'Billing', href: '/admin/billing' },
-    { label: 'Monitoring', href: '/admin/monitoring' },
-    { label: 'Bootstrap', href: '/admin/bootstrap' },
-    { label: 'Audit Log', href: '/admin/audit' },
-    { label: 'Settings', href: '/admin/settings' },
+const push = vi.fn()
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/admin',
+  useRouter: () => ({ push }),
+}))
+
+beforeEach(() => {
+  push.mockClear()
+})
+
+describe('AdminSidebar', () => {
+  const topLevelItems = [
+    'Dashboard',
+    'Clients',
+    'Leads',
+    'Projects',
+    'Billing',
+    'Revenue',
+    'Monitoring',
+    'Bootstrap',
+    'Admins',
+    'Audit Log',
+    'DSAR',
+    'Content',
   ]
 
-  it('renders the heading', () => {
-    render(<AdminNav />)
-    expect(screen.getAllByText('Admin').length).toBeGreaterThanOrEqual(1)
+  it('renders the brand heading', () => {
+    render(<AdminSidebar />)
+    expect(
+      screen.getByRole('heading', { name: 'Nova Mir | Admin' }),
+    ).toBeInTheDocument()
   })
 
-  it('renders all nav items', () => {
-    render(<AdminNav />)
-    for (const item of expectedItems) {
-      expect(screen.getAllByText(item.label).length).toBeGreaterThanOrEqual(1)
+  it('renders all top-level nav items', () => {
+    render(<AdminSidebar />)
+    for (const label of topLevelItems) {
+      expect(screen.getAllByText(label).length).toBeGreaterThanOrEqual(1)
     }
   })
 
-  it('renders links with correct hrefs', () => {
-    render(<AdminNav />)
-    for (const item of expectedItems) {
-      const links = screen.getAllByRole('link')
-      const itemLink = links.find((l) => l.getAttribute('href') === item.href)
-      expect(itemLink).toBeDefined()
-    }
+  it('renders a navigation landmark', () => {
+    render(<AdminSidebar />)
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders the correct number of nav items', () => {
-    render(<AdminNav />)
+  it('renders the back-to-site footer link', () => {
+    render(<AdminSidebar />)
     const links = screen.getAllByRole('link')
-    const navLinks = links.filter((l) =>
-      expectedItems.some((item) => item.href === l.getAttribute('href')),
-    )
-    expect(navLinks.length).toBeGreaterThanOrEqual(expectedItems.length)
+    const backLink = links.find((l) => l.textContent?.includes('Back to Site'))
+    expect(backLink).toBeDefined()
+    expect(backLink!.getAttribute('href')).toBe('/')
   })
 })

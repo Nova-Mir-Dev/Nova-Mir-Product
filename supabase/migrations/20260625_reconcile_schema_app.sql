@@ -1,3 +1,8 @@
+-- ⚠️ SUPERSEDED — DO NOT APPLY. This file never ran in production:
+-- CREATE POLICY IF NOT EXISTS is not valid Postgres, and users_select_admin
+-- self-references users (infinite recursion). The corrected version that WAS
+-- applied is 20260713_reconcile_prod_schema.sql. Kept for history only.
+--
 -- Migration: Reconcile schema.sql with app code
 -- Adds missing columns and tables that the app code references
 -- Adds RLS policies for admin SSR pages using createClient()

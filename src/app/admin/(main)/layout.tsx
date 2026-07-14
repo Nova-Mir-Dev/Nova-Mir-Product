@@ -30,7 +30,14 @@ export default async function AdminMainLayout({
     <PageLayout
       sidebar={<AdminSidebar />}
       topNav={
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--azimuth-space-sm)', marginLeft: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--azimuth-space-sm)',
+            marginLeft: 'auto',
+          }}
+        >
           <ThemeToggle />
           <UserMenu
             name={(profile as { name?: string })?.name ?? null}

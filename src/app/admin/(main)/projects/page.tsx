@@ -3,7 +3,10 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { createProject } from '@/features/admin/projects/actions'
-import { ProjectsPage, ProjectsPageSkeleton } from '@/features/admin/projects/projects-page'
+import {
+  ProjectsPage,
+  ProjectsPageSkeleton,
+} from '@/features/admin/projects/projects-page'
 import { Suspense } from 'react'
 import type { Project } from '@/features/admin/types'
 

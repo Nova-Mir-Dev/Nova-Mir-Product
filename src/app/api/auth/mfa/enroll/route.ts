@@ -51,7 +51,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       id: result.id,
       type: factorType,
-      ...('qr' in result ? { qr: result.qr, secret: result.secret, uri: result.uri } : {}),
+      ...('qr' in result
+        ? { qr: result.qr, secret: result.secret, uri: result.uri }
+        : {}),
       ...('webauthn' in result ? { webauthn: result.webauthn } : {}),
     })
   } catch (err) {

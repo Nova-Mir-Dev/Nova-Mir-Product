@@ -1,0 +1,4 @@
+.beads/
+.next/
+next-env.d.ts
+coverage/
