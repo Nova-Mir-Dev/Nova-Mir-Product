@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { ilikeContainsClause } from '@/lib/sanitize'
 import { ClientsPage } from '@/features/admin/clients/clients-page'
 import {
   getPaginationParams,
@@ -29,7 +30,11 @@ export default async function ClientsRoute({
 
   const q = params.q?.toLowerCase()
   if (q) {
-    query = query.or(`name.ilike.%${q}%,email.ilike.%${q}%`)
+    query = query.or(
+      [ilikeContainsClause('name', q), ilikeContainsClause('email', q)].join(
+        ',',
+      ),
+    )
   }
 
   const { data: clients, count } = await query.range(from, from + pageSize - 1)

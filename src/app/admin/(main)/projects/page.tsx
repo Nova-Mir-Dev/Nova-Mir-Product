@@ -32,7 +32,8 @@ export default async function ProjectsPageRoute() {
 
   const { data: clients } = await supabase
     .from('portfolio_clients')
-    .select('id, name')
+    .select('id, name, user_id')
+    .not('user_id', 'is', null)
     .order('name')
 
   const items = (projects ?? []) as unknown as Project[]
@@ -61,8 +62,10 @@ export default async function ProjectsPageRoute() {
                 }}
               >
                 <option value="">Select a client</option>
-                {(clients ?? []).map((c: { id: string; name: string }) => (
-                  <option key={c.id} value={c.id}>
+                {(
+                  clients as { id: string; name: string; user_id: string }[]
+                )?.map((c) => (
+                  <option key={c.id} value={c.user_id}>
                     {c.name}
                   </option>
                 ))}

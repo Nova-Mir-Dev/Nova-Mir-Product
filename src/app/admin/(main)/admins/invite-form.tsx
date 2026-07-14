@@ -7,7 +7,6 @@ import { createAdminUser } from './actions'
 export function InviteForm() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
-  const [role, setRole] = useState<'admin' | 'read_only'>('read_only')
   const [result, setResult] = useState<{
     type: 'success' | 'error'
     message: string
@@ -22,7 +21,7 @@ export function InviteForm() {
     const form = new FormData()
     form.set('email', email)
     form.set('name', name)
-    form.set('role', role)
+    form.set('role', 'admin')
 
     try {
       await createAdminUser(form)
@@ -63,42 +62,9 @@ export function InviteForm() {
             value={{ value: email, onChange: (e) => setEmail(e.target.value) }}
             placeholder="liz@novamir.dev"
           />
-          <div>
-            <Text
-              element={{ size: 'sm' }}
-              weight="semibold"
-              style={{ marginBottom: '0.25rem', display: 'block' }}
-            >
-              Role
-            </Text>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <Button
-                type="button"
-                variant={role === 'admin' ? 'primary' : 'secondary'}
-                size="sm"
-                onClick={() => setRole('admin')}
-              >
-                Admin
-              </Button>
-              <Button
-                type="button"
-                variant={role === 'read_only' ? 'primary' : 'secondary'}
-                size="sm"
-                onClick={() => setRole('read_only')}
-              >
-                Read Only
-              </Button>
-            </div>
-            <Text
-              element={{ size: 'xs' }}
-              color="secondary"
-              style={{ marginTop: '0.25rem' }}
-            >
-              {role === 'admin'
-                ? 'Full access to all admin features.'
-                : 'Can view dashboards only — no edits.'}
-            </Text>
-          </div>
+          <Text element={{ size: 'xs' }} color="secondary">
+            Invited users get full admin access.
+          </Text>
 
           <Button
             variant="primary"

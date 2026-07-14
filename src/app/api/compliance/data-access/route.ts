@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 import * as Sentry from '@sentry/nextjs'
 import { logAudit } from '@/lib/audit-log'
+import { eqClause } from '@/lib/sanitize'
 
 export async function GET(request: Request) {
   try {
@@ -68,7 +69,10 @@ export async function GET(request: Request) {
       .from('portfolio_clients')
       .select('id, name, email, phone, company, status, created_at')
       .or(
-        `email.eq.${user.email},name.eq.${user.user_metadata?.full_name ?? ''}`,
+        [
+          eqClause('email', user.email ?? ''),
+          eqClause('name', user.user_metadata?.full_name ?? ''),
+        ].join(','),
       )
     const { data: signatures } = await supabase
       .from('signatures')

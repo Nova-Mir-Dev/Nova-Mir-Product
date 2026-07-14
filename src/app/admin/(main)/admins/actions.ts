@@ -21,15 +21,13 @@ export async function createAdminUser(formData: FormData) {
 
   const email = formData.get('email') as string
   const name = formData.get('name') as string
-  const role = (formData.get('role') as string) || 'admin'
 
   if (!email?.trim() || !name?.trim())
     throw new Error('Name and email are required')
-  if (!['admin', 'read_only'].includes(role)) throw new Error('Invalid role')
 
   const { data: authUser, error: authError } =
     await admin.auth.admin.inviteUserByEmail(email.trim(), {
-      data: { name: name.trim(), role },
+      data: { name: name.trim(), role: 'admin' },
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin`,
     })
   if (authError) throw new Error('Failed to invite user: ' + authError.message)
@@ -38,7 +36,7 @@ export async function createAdminUser(formData: FormData) {
     id: authUser.user.id,
     email: email.trim(),
     name: name.trim(),
-    role,
+    role: 'admin',
   })
   if (profileError)
     throw new Error('Failed to create profile: ' + profileError.message)
@@ -58,7 +56,7 @@ export async function listAdminUsers() {
   const { data: users, error } = await admin
     .from('users')
     .select('id, email, name, role, created_at, updated_at')
-    .in('role', ['admin', 'read_only'])
+    .eq('role', 'admin')
     .order('created_at', { ascending: true })
 
   if (error) throw new Error('Failed to fetch admin users')

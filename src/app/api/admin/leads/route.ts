@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { rateLimit } from '@/lib/rate-limit'
+import { ilikeContainsClause } from '@/lib/sanitize'
 import { z } from 'zod'
 
 const createLeadBodySchema = z.object({
@@ -68,7 +69,11 @@ export async function GET(request: Request) {
 
     if (q) {
       query = query.or(
-        `name.ilike.%${q}%,email.ilike.%${q}%,business_name.ilike.%${q}%`,
+        [
+          ilikeContainsClause('name', q),
+          ilikeContainsClause('email', q),
+          ilikeContainsClause('business_name', q),
+        ].join(','),
       )
     }
 

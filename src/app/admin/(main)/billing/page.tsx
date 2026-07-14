@@ -77,27 +77,29 @@ function RevenueTable({
   return (
     <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
       <h2>Revenue by Month</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Revenue</th>
-          </tr>
-        </thead>
-        <tbody>
-          {revenueByMonth.map(([month, total]) => (
-            <tr key={month}>
-              <td>
-                {new Date(month + '-01').toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                })}
-              </td>
-              <td>${total.toFixed(2)}</td>
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Revenue</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {revenueByMonth.map(([month, total]) => (
+              <tr key={month}>
+                <td>
+                  {new Date(month + '-01').toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                  })}
+                </td>
+                <td>${total.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

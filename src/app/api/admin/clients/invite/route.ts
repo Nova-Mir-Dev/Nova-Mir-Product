@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
     const { error: updateError } = await admin
       .from('portfolio_clients')
-      .update({ name, email })
+      .update({ name, email, user_id: authUser.user.id })
       .eq('email', email)
 
     if (updateError) {
