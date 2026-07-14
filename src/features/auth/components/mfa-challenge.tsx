@@ -47,7 +47,10 @@ export function MfaChallenge({ factors, onComplete }: MfaChallengeProps) {
         body: JSON.stringify({ factorId: webauthnFactor.id }),
       })
       if (!res.ok) throw new Error('Challenge failed')
-      const data = await res.json()
+      const data = (await res.json()) as {
+        challenge: string
+        allow_credentials?: { id: string }[]
+      }
 
       const credential = await navigator.credentials.get({
         publicKey: {
@@ -56,13 +59,14 @@ export function MfaChallenge({ factors, onComplete }: MfaChallengeProps) {
             (c) => c.charCodeAt(0),
           ),
           rpId: window.location.hostname,
-          allowCredentials: data.allow_credentials?.map((c: { id: string }) => ({
-            id: Uint8Array.from(
-              atob(c.id.replace(/-/g, '+').replace(/_/g, '/')),
-              (c2) => c2.charCodeAt(0),
-            ),
-            type: 'public-key' as const,
-          })) ?? [],
+          allowCredentials:
+            data.allow_credentials?.map((c) => ({
+              id: Uint8Array.from(
+                atob(c.id.replace(/-/g, '+').replace(/_/g, '/')),
+                (c2) => c2.charCodeAt(0),
+              ),
+              type: 'public-key' as const,
+            })) ?? [],
           timeout: 60000,
           userVerification: 'required' as const,
         },
@@ -104,7 +108,11 @@ export function MfaChallenge({ factors, onComplete }: MfaChallengeProps) {
               value={{ value: code, onChange: (e) => setCode(e.target.value) }}
               placeholder="000000"
             />
-            <Button variant="primary" onClick={handleTotp} disabled={loading || !code}>
+            <Button
+              variant="primary"
+              onClick={handleTotp}
+              disabled={loading || !code}
+            >
               {loading ? 'Verifying...' : 'Verify'}
             </Button>
           </Stack>
@@ -117,7 +125,11 @@ export function MfaChallenge({ factors, onComplete }: MfaChallengeProps) {
         )}
 
         {webauthnFactor && (
-          <Button variant="tertiary" onClick={handleWebauthn} disabled={loading}>
+          <Button
+            variant="tertiary"
+            onClick={handleWebauthn}
+            disabled={loading}
+          >
             {loading ? 'Verifying...' : 'Use Passkey'}
           </Button>
         )}

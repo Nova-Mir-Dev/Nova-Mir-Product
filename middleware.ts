@@ -8,7 +8,10 @@ const PUBLIC_API_ROUTES = new Map<string, Set<string>>([
   ['/api/leads', new Set(['POST'])],
   ['/api/content/hero-headlines', new Set(['GET'])],
   ['/api/content/pricing', new Set(['GET'])],
+  ['/api/cron/keep-alive', new Set(['GET'])],
 ])
+
+const AUTH_TIMEOUT_MS = 3000
 
 function addCorsHeaders(
   response: NextResponse,
@@ -51,52 +54,71 @@ async function getAuth(request: NextRequest) {
       user: null,
       role: null,
       supabaseResponse: NextResponse.next({ request }),
+      degraded: false,
     }
 
   let supabaseResponse = NextResponse.next({ request })
 
-  const supabase = createServerClient(supabaseUrl()!, supabaseAnonKey()!, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll()
-      },
-      setAll(cookiesToSet) {
-        for (const { name, value } of cookiesToSet) {
-          request.cookies.set(name, value)
-        }
-        supabaseResponse = NextResponse.next({ request })
-        for (const { name, value, options } of cookiesToSet) {
-          supabaseResponse.cookies.set(name, value, options)
-        }
-      },
-    },
-  })
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  let role: string | null = null
-  if (user) {
-    const svcUrl = supabaseUrl()!
-    const svcKey = supabaseServiceKey()!
-    try {
-      const res = await fetch(`${svcUrl}/rest/v1/users?id=eq.${user.id}&select=role`, {
-        headers: {
-          apikey: svcKey,
-          Authorization: `Bearer ${svcKey}`,
+  try {
+    const supabase = createServerClient(supabaseUrl()!, supabaseAnonKey()!, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
         },
-      })
-      if (res.ok) {
-        const rows = await res.json()
-        role = (rows?.[0]?.role as string) ?? null
+        setAll(cookiesToSet) {
+          for (const { name, value } of cookiesToSet) {
+            request.cookies.set(name, value)
+          }
+          supabaseResponse = NextResponse.next({ request })
+          for (const { name, value, options } of cookiesToSet) {
+            supabaseResponse.cookies.set(name, value, options)
+          }
+        },
+      },
+    })
+
+    const timeout = new Promise<never>((_, reject) => {
+      setTimeout(
+        () => reject(new Error('Supabase auth timed out')),
+        AUTH_TIMEOUT_MS,
+      )
+    })
+    const {
+      data: { user },
+    } = await Promise.race([supabase.auth.getUser(), timeout])
+
+    let role: string | null = null
+    const svcKey = supabaseServiceKey()
+    if (user && svcKey) {
+      try {
+        const res = await fetch(
+          `${supabaseUrl()!}/rest/v1/users?id=eq.${user.id}&select=role`,
+          {
+            headers: {
+              apikey: svcKey,
+              Authorization: `Bearer ${svcKey}`,
+            },
+            signal: AbortSignal.timeout(AUTH_TIMEOUT_MS),
+          },
+        )
+        if (res.ok) {
+          const rows = (await res.json()) as { role?: string | null }[]
+          role = rows[0]?.role ?? null
+        }
+      } catch {
+        role = null
       }
-    } catch {
-      role = null
+    }
+
+    return { user, role, supabaseResponse, degraded: false }
+  } catch {
+    return {
+      user: null,
+      role: null,
+      supabaseResponse: NextResponse.next({ request }),
+      degraded: true,
     }
   }
-
-  return { user, role, supabaseResponse }
 }
 
 export async function middleware(request: NextRequest) {
@@ -174,7 +196,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/setup') ||
     (pathname === '/' && hasSupabaseEnv())
   ) {
-    const { user, role, supabaseResponse } = await getAuth(request)
+    const { user, role, supabaseResponse, degraded } = await getAuth(request)
 
     if (pathname === '/' && user) {
       return addCorsHeaders(supabaseResponse, origin)
@@ -183,7 +205,8 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/auth')) {
       if (!user) {
         const url = new URL('/admin/auth/login', request.url)
-        url.searchParams.set('redirect', pathname)
+        if (degraded) url.searchParams.set('reason', 'service_unavailable')
+        else url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role === 'client') {
@@ -202,7 +225,8 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith('/dashboard')) {
       if (!user) {
         const url = new URL('/clients/auth/login', request.url)
-        url.searchParams.set('redirect', pathname)
+        if (degraded) url.searchParams.set('reason', 'service_unavailable')
+        else url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role === 'admin') {
@@ -224,7 +248,8 @@ export async function middleware(request: NextRequest) {
     ) {
       if (!user) {
         const url = new URL('/clients/auth/login', request.url)
-        url.searchParams.set('redirect', pathname)
+        if (degraded) url.searchParams.set('reason', 'service_unavailable')
+        else url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role === 'admin') {
@@ -243,7 +268,8 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith('/setup')) {
       if (!user) {
         const url = new URL('/admin/auth/login', request.url)
-        url.searchParams.set('redirect', pathname)
+        if (degraded) url.searchParams.set('reason', 'service_unavailable')
+        else url.searchParams.set('redirect', pathname)
         return addCorsHeaders(NextResponse.redirect(url), origin)
       }
       if (role !== 'admin') {

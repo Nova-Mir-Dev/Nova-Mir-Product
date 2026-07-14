@@ -20,7 +20,7 @@ export function HeroContent({ fallback }: { fallback: Headline }) {
 
   useEffect(() => {
     fetch('/api/content/hero-headlines')
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : []))
       .then((data: Headline[]) => {
         if (data.length > 0) {
           const pick = data[Math.floor(Math.random() * data.length)]!

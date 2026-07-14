@@ -119,23 +119,23 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { auth: { persistSession: false } },
     )
-    const { data, error } = await supabase
-      .from('leads')
-      .insert({
-        name,
-        email,
-        business_name: businessName,
-        phone: phone || null,
-        service_interest: serviceInterest || null,
-        budget_range: budgetRange || null,
-        timeline: timeline || null,
-        referral_source: referralSource || null,
-        current_website: currentWebsite || null,
-        message,
-        consent,
-      })
-      .select()
-      .single()
+    // Generated app-side: anon has an INSERT policy but no SELECT policy on
+    // leads, so INSERT ... RETURNING (i.e. .select() after insert) is denied.
+    const id = crypto.randomUUID()
+    const { error } = await supabase.from('leads').insert({
+      id,
+      name,
+      email,
+      business_name: businessName,
+      phone: phone || null,
+      service_interest: serviceInterest || null,
+      budget_range: budgetRange || null,
+      timeline: timeline || null,
+      referral_source: referralSource || null,
+      current_website: currentWebsite || null,
+      message,
+      consent,
+    })
 
     if (error) {
       Sentry.captureException(error)
@@ -158,7 +158,7 @@ export async function POST(request: Request) {
       message,
     }).catch((err) => console.error('Slack notification failed:', err))
 
-    return NextResponse.json({ id: data.id }, { status: 201 })
+    return NextResponse.json({ id }, { status: 201 })
   } catch (err) {
     Sentry.captureException(err)
     return NextResponse.json(

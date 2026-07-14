@@ -18,8 +18,8 @@ export async function GET() {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to fetch pricing' },
-        { status: 500 },
+        { error: 'Pricing temporarily unavailable' },
+        { status: 503, headers: { 'Retry-After': '120' } },
       )
     }
 

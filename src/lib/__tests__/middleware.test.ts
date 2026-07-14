@@ -1,10 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: vi.fn(),
+}))
+
 beforeEach(() => {
   vi.resetModules()
+  vi.clearAllMocks()
   delete process.env.NEXT_PUBLIC_SUPABASE_URL
   delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY
   delete process.env.NEXT_PUBLIC_SITE_URL
   delete process.env.CORS_ORIGINS
   delete process.env.VERCEL_URL
@@ -227,5 +233,78 @@ describe('Rate limiting', () => {
 
     const blocked = await middleware(createReq())
     expect(blocked.status).toBe(429)
+  })
+})
+
+describe('Graceful degradation when Supabase is unreachable', () => {
+  function setSupabaseEnv() {
+    process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+  }
+
+  async function setAuthClient(getUser: () => Promise<unknown>) {
+    const { createServerClient } = await import('@supabase/ssr')
+    vi.mocked(createServerClient).mockReturnValue({
+      auth: { getUser },
+    } as never)
+  }
+
+  it('redirects /dashboard to client login with reason=service_unavailable when auth throws', async () => {
+    setSupabaseEnv()
+    await setAuthClient(() => Promise.reject(new Error('fetch failed')))
+    const { middleware } = await import('../../../middleware')
+
+    const res = await middleware(
+      createRequest({ url: 'http://localhost:3000/dashboard' }),
+    )
+    expect(res.status).toBe(307)
+    const location = new URL(res.headers.get('location')!)
+    expect(location.pathname).toBe('/clients/auth/login')
+    expect(location.searchParams.get('reason')).toBe('service_unavailable')
+  })
+
+  it('redirects /admin to admin login with reason=service_unavailable when auth throws', async () => {
+    setSupabaseEnv()
+    await setAuthClient(() => Promise.reject(new Error('fetch failed')))
+    const { middleware } = await import('../../../middleware')
+
+    const res = await middleware(
+      createRequest({ url: 'http://localhost:3000/admin' }),
+    )
+    expect(res.status).toBe(307)
+    const location = new URL(res.headers.get('location')!)
+    expect(location.pathname).toBe('/admin/auth/login')
+    expect(location.searchParams.get('reason')).toBe('service_unavailable')
+  })
+
+  it('serves / anonymously when auth throws', async () => {
+    setSupabaseEnv()
+    await setAuthClient(() => Promise.reject(new Error('fetch failed')))
+    const { middleware } = await import('../../../middleware')
+
+    const res = await middleware(
+      createRequest({ url: 'http://localhost:3000/' }),
+    )
+    expect(res.status).toBe(200)
+  })
+
+  it('skips the role lookup instead of sending Bearer undefined when the service key is unset', async () => {
+    setSupabaseEnv()
+    await setAuthClient(() =>
+      Promise.resolve({ data: { user: { id: 'user-1' } } }),
+    )
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(new Response('[]'))
+    const { middleware } = await import('../../../middleware')
+
+    const res = await middleware(
+      createRequest({ url: 'http://localhost:3000/admin' }),
+    )
+    expect(fetchSpy).not.toHaveBeenCalled()
+    expect(res.status).toBe(307)
+    const location = new URL(res.headers.get('location')!)
+    expect(location.searchParams.get('reason')).toBe('no_role')
+    fetchSpy.mockRestore()
   })
 })

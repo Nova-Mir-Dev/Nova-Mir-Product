@@ -99,14 +99,7 @@ describe('POST /api/leads', () => {
   })
 
   it('returns 201 with lead id when valid data is provided', async () => {
-    mockInsert.mockReturnValue({
-      select: vi.fn(() => ({
-        single: vi.fn().mockResolvedValue({
-          data: { id: 'lead-abc-123' },
-          error: null,
-        }),
-      })),
-    })
+    mockInsert.mockResolvedValue({ error: null })
 
     const { POST } = await import('../route')
 
@@ -119,18 +112,13 @@ describe('POST /api/leads', () => {
     const response = await POST(request)
     expect(response.status).toBe(201)
     const body = await response.json()
-    expect(body.id).toBe('lead-abc-123')
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: body.id, email: 'jane@example.com' }),
+    )
   })
 
   it('returns 500 when database insert fails', async () => {
-    mockInsert.mockReturnValue({
-      select: vi.fn(() => ({
-        single: vi.fn().mockResolvedValue({
-          data: null,
-          error: new Error('DB error'),
-        }),
-      })),
-    })
+    mockInsert.mockResolvedValue({ error: new Error('DB error') })
 
     const { POST } = await import('../route')
 

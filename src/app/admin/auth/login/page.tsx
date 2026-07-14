@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Card, Text } from 'azimuth-ui'
+import { Alert, Card, Text } from 'azimuth-ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { AdminLoginForm } from '@/features/auth/components/admin-login-form'
 import styles from './admin-login.module.css'
@@ -10,6 +10,7 @@ import styles from './admin-login.module.css'
 function AdminLoginContent() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || ''
+  const reason = searchParams.get('reason')
 
   return (
     <div className={styles.container}>
@@ -21,6 +22,12 @@ function AdminLoginContent() {
           <h1 className={styles.brandName}>Nova Mir</h1>
           <div className={styles.brandSubtitle}>Admin Portal</div>
         </div>
+        {reason === 'service_unavailable' && (
+          <Alert variant="info">
+            We&apos;re having trouble connecting right now. Sign-in is
+            temporarily unavailable — please try again in a few minutes.
+          </Alert>
+        )}
         <AdminLoginForm redirectTo={redirect || undefined} />
       </Card>
     </div>

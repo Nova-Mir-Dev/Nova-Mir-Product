@@ -20,20 +20,20 @@ async function setAnonClient(client: MockClient) {
   vi.mocked(createClient).mockReturnValue(client)
 }
 
-describe('GET /api/content/hero-headlines', () => {
-  it('200 returns published headlines on success', async () => {
+describe('GET /api/content/pricing', () => {
+  it('200 returns normalized published tiers on success', async () => {
     await setAnonClient(
       createMockClient({
         tables: {
-          hero_headlines: {
+          pricing_tiers: {
             select: {
               data: [
                 {
-                  id: 'h1',
-                  headline: 'Hi',
-                  subtitle: 'Sub',
-                  cta_label: 'CTA',
-                  cta_href: '/x',
+                  name: 'Starter',
+                  starting_price: 1500,
+                  description: 'Basics',
+                  features: ['One page'],
+                  is_featured: false,
                 },
               ],
             },
@@ -45,13 +45,19 @@ describe('GET /api/content/hero-headlines', () => {
     const res = await GET()
     expect(res.status).toBe(200)
     const body = await res.json()
-    expect(body[0].id).toBe('h1')
+    expect(body[0]).toEqual({
+      name: 'Starter',
+      startingPrice: 1500,
+      description: 'Basics',
+      features: ['One page'],
+      isFeatured: false,
+    })
   })
 
   it('200 returns empty array when no rows', async () => {
     await setAnonClient(
       createMockClient({
-        tables: { hero_headlines: { select: { data: [] } } },
+        tables: { pricing_tiers: { select: { data: [] } } },
       }),
     )
     const { GET } = await import('../route')
@@ -64,7 +70,7 @@ describe('GET /api/content/hero-headlines', () => {
     await setAnonClient(
       createMockClient({
         tables: {
-          hero_headlines: { select: { data: null, error: { message: 'db' } } },
+          pricing_tiers: { select: { data: null, error: { message: 'db' } } },
         },
       }),
     )

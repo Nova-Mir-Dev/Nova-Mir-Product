@@ -84,19 +84,14 @@ const KNOWN_VARS = new Set([
   '--azimuth-transition-fast',
 ])
 
-const IGNORE_PATTERNS = [
-  'node_modules',
-  '.next',
-  '.turbo',
-  'coverage',
-]
+const IGNORE_PATTERNS = ['node_modules', '.next', '.turbo', 'coverage']
 
 function findFiles(): string[] {
   const result = execSync(
     "find src -type f \\( -name '*.css' -o -name '*.tsx' -o -name '*.ts' \\)",
     { encoding: 'utf-8' },
   )
-  return result.trim().split('\n').filter(Boolean) as string[]
+  return result.trim().split('\n').filter(Boolean)
 }
 
 function extractVarRefs(content: string): string[] {
