@@ -11,7 +11,11 @@ export default async function ClientMfaRoute() {
   if (!user) redirect('/clients/auth/login')
 
   const mfaResult = await listMfaFactors()
-  const allFactors = 'error' in mfaResult ? [] : (mfaResult.all ?? [])
+  // Fail closed: if factors can't be listed, we cannot verify the user has
+  // cleared MFA, so do not fall through into the app.
+  if ('error' in mfaResult)
+    redirect('/clients/auth/login?reason=service_unavailable')
+  const allFactors = mfaResult.all ?? []
   const verifiedFactors = allFactors
     .filter((f: { status: string }) => f.status === 'verified')
     .map(
