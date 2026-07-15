@@ -4,6 +4,11 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { revalidatePath } from 'next/cache'
 import { generateInvoiceNumber, computeLineItems } from './billing-utils'
+import { z } from 'zod'
+
+const createInvoiceSchema = z.object({
+  clientName: z.string().trim().min(1, 'Client name is required').max(200),
+})
 
 export async function createInvoice(formData: FormData) {
   const supabase = await createClient()
@@ -19,18 +24,20 @@ export async function createInvoice(formData: FormData) {
     .single()
   if (profile?.role !== 'admin') throw new Error('Forbidden')
 
-  const clientName = formData.get('clientName') as string
-
-  if (!clientName?.trim()) {
-    throw new Error('Client name is required')
+  const parsed = createInvoiceSchema.safeParse({
+    clientName: formData.get('clientName'),
+  })
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0]?.message ?? 'Invalid input')
   }
+  const { clientName } = parsed.data
 
   const admin = createServiceClient()
 
   const { data: userRecord } = await admin
     .from('users')
     .select('id')
-    .eq('name', clientName.trim())
+    .eq('name', clientName)
     .maybeSingle()
 
   const year = new Date().getFullYear()
@@ -49,7 +56,7 @@ export async function createInvoice(formData: FormData) {
   const { data: invoice, error: createError } = await admin
     .from('portfolio_invoices')
     .insert({
-      client_name: clientName.trim(),
+      client_name: clientName,
       user_id: userRecord?.id ?? null,
       amount: totalAmount,
       status: 'pending',

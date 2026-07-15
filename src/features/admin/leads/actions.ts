@@ -5,6 +5,13 @@ import { createServiceClient } from '@/lib/supabase-admin'
 import { logAudit } from '@/lib/audit-log'
 import { leadStatusSchema } from '@/features/leads/schemas'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const updateLeadSchema = z.object({
+  id: z.string().trim().min(1, 'Lead ID is required'),
+  status: leadStatusSchema.optional(),
+  notes: z.string().max(5000).optional(),
+})
 
 export async function updateLeadAction(formData: FormData) {
   const supabase = await createClient()
@@ -20,22 +27,22 @@ export async function updateLeadAction(formData: FormData) {
     .single()
   if (profile?.role !== 'admin') throw new Error('Forbidden')
 
-  const id = formData.get('id') as string
-  const status = formData.get('status') as string
-  const notes = formData.get('notes') as string
-
-  if (!id) throw new Error('Lead ID is required')
+  const parsed = updateLeadSchema.safeParse({
+    id: formData.get('id'),
+    status: (formData.get('status') as string) || undefined,
+    notes: formData.get('notes') === null ? undefined : formData.get('notes'),
+  })
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0]?.message ?? 'Invalid input')
+  }
+  const { id, status, notes } = parsed.data
 
   const admin = createServiceClient()
   const updates: Record<string, string> = {
     updated_at: new Date().toISOString(),
   }
-  if (status) {
-    const parsed = leadStatusSchema.safeParse(status)
-    if (!parsed.success) throw new Error('Invalid lead status')
-    updates.status = parsed.data
-  }
-  if (notes !== null) updates.notes = notes
+  if (status) updates.status = status
+  if (notes !== undefined) updates.notes = notes
 
   const { error } = await admin.from('leads').update(updates).eq('id', id)
   if (error) throw new Error('Failed to update lead')

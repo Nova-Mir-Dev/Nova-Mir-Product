@@ -4,6 +4,14 @@ import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { logAudit } from '@/lib/audit-log'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const createClientSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(200),
+  email: z.string().trim().email('A valid email is required').max(254),
+  phone: z.string().trim().max(50).optional(),
+  company: z.string().trim().max(200).optional(),
+})
 
 export async function createClientAction(formData: FormData) {
   const supabase = await createClient()
@@ -19,32 +27,34 @@ export async function createClientAction(formData: FormData) {
     .single()
   if (profile?.role !== 'admin') throw new Error('Forbidden')
 
-  const name = formData.get('name') as string
-  const email = formData.get('email') as string
-  const phone = (formData.get('phone') as string) || null
-  const company = (formData.get('company') as string) || null
-
-  if (!name?.trim() || !email?.trim()) {
-    throw new Error('Name and email are required')
+  const parsed = createClientSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    phone: (formData.get('phone') as string) || undefined,
+    company: (formData.get('company') as string) || undefined,
+  })
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0]?.message ?? 'Invalid input')
   }
+  const { name, email, phone, company } = parsed.data
 
   const admin = createServiceClient()
 
   const { data: authUser, error: authError } =
     await admin.auth.admin.createUser({
-      email: email.trim(),
+      email,
       email_confirm: true,
-      user_metadata: { name: name.trim(), role: 'client' },
+      user_metadata: { name, role: 'client' },
     })
   if (authError)
     throw new Error('Failed to create user account: ' + authError.message)
 
   const { error: clientError } = await admin.from('portfolio_clients').insert({
     user_id: authUser.user.id,
-    name: name.trim(),
-    email: email.trim(),
-    phone,
-    company,
+    name,
+    email,
+    phone: phone ?? null,
+    company: company ?? null,
   })
   if (clientError) {
     await admin.auth.admin.deleteUser(authUser.user.id)
@@ -55,7 +65,7 @@ export async function createClientAction(formData: FormData) {
     action: 'admin.client.create',
     entity: 'client',
     entityId: authUser.user.id,
-    metadata: { email_domain: email.trim().split('@')[1] ?? '' },
+    metadata: { email_domain: email.split('@')[1] ?? '' },
     userId: user.id,
   })
 
