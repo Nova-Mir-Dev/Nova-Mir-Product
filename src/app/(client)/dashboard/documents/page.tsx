@@ -6,11 +6,10 @@ import { uploadDocument } from './actions'
 interface Document {
   id: string
   name: string
-  file_url: string
-  uploaded_at: string
+  file_path: string
+  created_at: string
   file_type: string
   file_size: number
-  status: string
   category?: string
 }
 
@@ -42,14 +41,28 @@ export default async function DocumentsPage({
 
   const { data: documents } = await supabase
     .from('documents')
-    .select('*')
+    .select('id, name, file_path, file_type, file_size, category, created_at')
     .eq('user_id', user.id)
-    .order('uploaded_at', { ascending: false })
+    .order('created_at', { ascending: false })
 
   const raw = (documents ?? []) as Document[]
   const error = params.error ? decodeURIComponent(params.error) : null
 
-  const pendingSignatures = raw.filter((d) => d.status === 'pending')
+  // The documents bucket is private; sign each object path for a time-limited
+  // download link.
+  const signedUrls: Record<string, string> = {}
+  if (raw.length > 0) {
+    const { data: signed } = await supabase.storage
+      .from('documents')
+      .createSignedUrls(
+        raw.map((d) => d.file_path),
+        3600,
+      )
+    for (let i = 0; i < raw.length; i++) {
+      const url = signed?.[i]?.signedUrl
+      if (url) signedUrls[raw[i]!.id] = url
+    }
+  }
 
   const categorized = CATEGORIES.reduce(
     (acc, cat) => {
@@ -96,41 +109,6 @@ export default async function DocumentsPage({
         </Card>
       )}
 
-      {pendingSignatures.length > 0 && (
-        <Stack spacing="sm">
-          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Pending Signature ({pendingSignatures.length})
-          </Text>
-          {pendingSignatures.map((doc) => (
-            <Card key={doc.id}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Stack spacing="xs">
-                  <Text weight="semibold">{doc.name}</Text>
-                  <Text element={{ size: 'sm' }} color="secondary">
-                    Awaiting your signature
-                  </Text>
-                </Stack>
-                <a
-                  href={doc.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="primary" type="button">
-                    Review & Sign
-                  </Button>
-                </a>
-              </div>
-            </Card>
-          ))}
-        </Stack>
-      )}
-
       {CATEGORIES.map((cat) => {
         const docs = categorized[cat] ?? []
         if (docs.length === 0) return null
@@ -152,18 +130,20 @@ export default async function DocumentsPage({
                     <Text weight="semibold">{doc.name}</Text>
                     <Text element={{ size: 'sm' }} color="secondary">
                       {formatFileSize(doc.file_size)} —{' '}
-                      {new Date(doc.uploaded_at).toLocaleDateString()}
+                      {new Date(doc.created_at).toLocaleDateString('en-US')}
                     </Text>
                   </Stack>
-                  <a
-                    href={doc.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="tertiary" type="button">
-                      Download
-                    </Button>
-                  </a>
+                  {signedUrls[doc.id] && (
+                    <a
+                      href={signedUrls[doc.id]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button variant="tertiary" type="button">
+                        Download
+                      </Button>
+                    </a>
+                  )}
                 </div>
               </Card>
             ))}
@@ -189,18 +169,20 @@ export default async function DocumentsPage({
                   <Text weight="semibold">{doc.name}</Text>
                   <Text element={{ size: 'sm' }} color="secondary">
                     {formatFileSize(doc.file_size)} —{' '}
-                    {new Date(doc.uploaded_at).toLocaleDateString()}
+                    {new Date(doc.created_at).toLocaleDateString('en-US')}
                   </Text>
                 </Stack>
-                <a
-                  href={doc.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="tertiary" type="button">
-                    Download
-                  </Button>
-                </a>
+                {signedUrls[doc.id] && (
+                  <a
+                    href={signedUrls[doc.id]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="tertiary" type="button">
+                      Download
+                    </Button>
+                  </a>
+                )}
               </div>
             </Card>
           ))}

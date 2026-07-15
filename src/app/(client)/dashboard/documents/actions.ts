@@ -39,28 +39,25 @@ export async function uploadDocument(formData: FormData) {
   }
 
   const safeName = sanitizeFilename(file.name)
-  const fileName = user.id + '/' + Date.now() + '_' + safeName
+  const filePath = user.id + '/' + Date.now() + '_' + safeName
 
   const { error: uploadError } = await supabase.storage
     .from('documents')
-    .upload(fileName, file)
+    .upload(filePath, file)
 
   if (uploadError)
     redirect(
       '/dashboard/documents?error=' + encodeURIComponent(uploadError.message),
     )
 
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('documents').getPublicUrl(fileName)
-
+  // The documents bucket is private; store the storage path and derive a signed
+  // URL at read time rather than a public URL.
   const { error: dbError } = await supabase.from('documents').insert({
     user_id: user.id,
     name: safeName,
-    file_url: publicUrl,
+    file_path: filePath,
     file_type: file.type,
     file_size: file.size,
-    status: 'active',
   })
 
   if (dbError)
