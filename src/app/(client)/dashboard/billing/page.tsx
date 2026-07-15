@@ -2,13 +2,7 @@ import { Card, Stack, Text, Button } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { openCustomerPortal } from './actions'
-
-interface Invoice {
-  id: string
-  amount: number
-  status: string
-  date: string
-}
+import type { Invoice } from '@/types/entities'
 
 export default async function BillingPage() {
   const supabase = await createClient()

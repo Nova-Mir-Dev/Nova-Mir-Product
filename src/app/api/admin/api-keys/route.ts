@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
-import { hasPermission } from '@/lib/roles'
 import * as Sentry from '@sentry/nextjs'
 import { rateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
@@ -23,7 +22,7 @@ export async function GET() {
       .select('role')
       .eq('id', user.id)
       .single()
-    if (!hasPermission(profile?.role || 'viewer', 'canManageUsers')) {
+    if (profile?.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -67,7 +66,7 @@ export async function POST(request: Request) {
       .select('role')
       .eq('id', user.id)
       .single()
-    if (!hasPermission(profile?.role || 'viewer', 'canManageUsers')) {
+    if (profile?.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

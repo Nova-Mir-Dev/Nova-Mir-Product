@@ -4,26 +4,13 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { openCustomerPortal } from './billing/actions'
 
-interface Project {
-  id: string
-  name: string
-  status: string
-  deadline: string | null
-  progress: number
-}
+import type { Project, Invoice } from '@/types/entities'
 
 interface Activity {
   id: string
   action: string
   project_name: string | null
   created_at: string
-}
-
-interface Invoice {
-  id: string
-  amount: number
-  status: string
-  date: string
 }
 
 export default async function DashboardPage() {
@@ -233,7 +220,7 @@ export default async function DashboardPage() {
                 <div
                   role="progressbar"
                   aria-label={`Progress for ${project.name}`}
-                  aria-valuenow={project.progress}
+                  aria-valuenow={project.progress ?? 0}
                   aria-valuemin={0}
                   aria-valuemax={100}
                   style={{
@@ -245,7 +232,7 @@ export default async function DashboardPage() {
                 >
                   <div
                     style={{
-                      width: project.progress + '%',
+                      width: (project.progress ?? 0) + '%',
                       height: '100%',
                       backgroundColor: 'var(--azimuth-color-primary)',
                       borderRadius: 4,
@@ -254,7 +241,7 @@ export default async function DashboardPage() {
                   />
                 </div>
                 <Text element={{ size: 'sm' }} color="secondary">
-                  {project.progress}% complete — Deadline:{' '}
+                  {project.progress ?? 0}% complete — Deadline:{' '}
                   {project.deadline
                     ? new Date(project.deadline).toLocaleDateString()
                     : 'No deadline'}

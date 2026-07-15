@@ -2,14 +2,7 @@ import Link from 'next/link'
 import { Card, Stack, Text } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-
-interface Project {
-  id: string
-  name: string
-  status: string
-  deadline: string | null
-  description: string
-}
+import type { Project } from '@/types/entities'
 
 export default async function ProjectsPage() {
   const supabase = await createClient()
