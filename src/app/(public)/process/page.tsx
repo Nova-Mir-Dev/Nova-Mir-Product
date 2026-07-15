@@ -1,8 +1,14 @@
-'use client'
-
+import Link from 'next/link'
 import { Container, Text, Stack, Button } from 'azimuth-ui'
+import { getPublishedProcessSteps } from '@/lib/content'
 
-const steps = [
+interface Step {
+  number: number
+  title: string
+  description: string
+}
+
+const FALLBACK_STEPS: Step[] = [
   {
     number: 1,
     title: 'Discovery',
@@ -23,7 +29,17 @@ const steps = [
   },
 ]
 
-export default function ProcessPage() {
+export default async function ProcessPage() {
+  const dbSteps = await getPublishedProcessSteps()
+  const steps: Step[] =
+    dbSteps && dbSteps.length > 0
+      ? dbSteps.map((s) => ({
+          number: s.step_number,
+          title: s.title,
+          description: s.description,
+        }))
+      : FALLBACK_STEPS
+
   return (
     <Container
       maxWidth={640}
@@ -103,11 +119,8 @@ export default function ProcessPage() {
           >
             Think this could be a fit?
           </Text>
-          <Button
-            variant="primary"
-            onClick={() => (window.location.href = '/contact')}
-          >
-            Get in Touch
+          <Button variant="primary" asChild>
+            <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
       </Stack>

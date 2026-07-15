@@ -97,6 +97,39 @@ VALUES
   ('Terms of Service','/terms',   'footer', 3, true);
 
 -- =============================================================================
+-- Process Steps (mirrors the FALLBACK_STEPS in src/app/(public)/process/page.tsx)
+-- =============================================================================
+
+DELETE FROM process_steps;
+
+INSERT INTO process_steps (step_number, title, description, page, sort_order, is_published)
+VALUES
+  (
+    1,
+    'Discovery',
+    'We learn about your business, audience, and goals. You share your vision, and we identify what you need.',
+    'process',
+    1,
+    true
+  ),
+  (
+    2,
+    'Design & Develop',
+    'We build your site with mobile-first design, performance best practices, and regular check-ins so you can see progress.',
+    'process',
+    2,
+    true
+  ),
+  (
+    3,
+    'Launch & Grow',
+    'We deploy, set up analytics and lead capture, and hand off everything with clear documentation so you can focus on running your business.',
+    'process',
+    3,
+    true
+  );
+
+-- =============================================================================
 -- Hero Headlines
 -- =============================================================================
 
