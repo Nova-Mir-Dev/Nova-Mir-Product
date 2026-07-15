@@ -23,6 +23,14 @@ describe('PRICING_TIERS', () => {
     }
   })
 
+  it('prices are denominated in whole dollars, not cents (Nova-Mir-Product-e4j)', () => {
+    // Consumers render startingPrice raw as dollars. A value >= 100000 means
+    // someone reintroduced cents-magnitude pricing (150000 rendered "$150,000").
+    for (const tier of PRICING_TIERS) {
+      expect(tier.startingPrice).toBeLessThan(100000)
+    }
+  })
+
   it('each tier has features specific to its offering', () => {
     for (const tier of PRICING_TIERS) {
       expect(tier.features.length).toBeGreaterThanOrEqual(3)
