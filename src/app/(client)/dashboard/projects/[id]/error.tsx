@@ -15,7 +15,7 @@ export default function ProjectDetailError({
         <Text element={{ as: 'h2', size: 'h4' }} weight="semibold">
           Project unavailable
         </Text>
-        <Text color="secondary">
+        <Text color="secondary" role="alert">
           We could not load this project. Please try again.
         </Text>
         <Button variant="primary" onClick={reset}>

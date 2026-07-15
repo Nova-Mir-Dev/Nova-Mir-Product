@@ -19,6 +19,7 @@ export default function AuthError({
       <div style={{ textAlign: 'center' }}>
         <h2 style={{ marginBottom: 8 }}>Something went wrong</h2>
         <p
+          role="alert"
           style={{
             color: 'var(--azimuth-color-muted)',
             marginBottom: 16,

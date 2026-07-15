@@ -9,7 +9,7 @@ export default function AdminAuthLoginError({
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h2>Something went wrong</h2>
-      <p>An unexpected error occurred.</p>
+      <p role="alert">An unexpected error occurred.</p>
       <button
         onClick={() => reset()}
         style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}

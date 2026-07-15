@@ -15,7 +15,7 @@ export default function ContactError({
         <Text element={{ as: 'h2', size: 'h4' }} weight="semibold">
           Contact information unavailable
         </Text>
-        <Text color="secondary">
+        <Text color="secondary" role="alert">
           We could not load your contact details. Please try again.
         </Text>
         <Button variant="primary" onClick={reset}>

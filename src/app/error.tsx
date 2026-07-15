@@ -18,7 +18,12 @@ export default function Error({
         <Text element={{ as: 'h1', size: 'h2' }} weight="bold" align="center">
           Something went wrong
         </Text>
-        <Text element={{ size: 'base' }} color="secondary" align="center">
+        <Text
+          element={{ size: 'base' }}
+          color="secondary"
+          align="center"
+          role="alert"
+        >
           An unexpected error occurred. Please try again.
         </Text>
         <div style={{ textAlign: 'center' }}>

@@ -1,7 +1,10 @@
 import { Ratelimit, type Duration } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
+import * as Sentry from '@sentry/nextjs'
 
 const inMemory = new Map<string, { count: number; reset: number }>()
+
+let warnedNoUpstash = false
 
 function msToDuration(ms: number): string {
   if (ms >= 3_600_000) return `${String(Math.floor(ms / 3_600_000))}h`
@@ -30,6 +33,18 @@ export async function rateLimit(
       remaining: result.remaining,
       reset: result.reset,
     }
+  }
+
+  // The in-memory fallback is per-instance and not durable across serverless
+  // invocations, so it does not enforce a shared limit. That is fine for local
+  // dev but a security gap in production — alert loudly (once) if Upstash is
+  // missing there rather than silently degrading.
+  if (process.env.NODE_ENV === 'production' && !warnedNoUpstash) {
+    warnedNoUpstash = true
+    Sentry.captureMessage(
+      'Rate limiter degraded: UPSTASH_REDIS_REST_URL is not set in production; using the non-durable in-memory limiter.',
+      'error',
+    )
   }
 
   if (inMemory.size > 10_000) {

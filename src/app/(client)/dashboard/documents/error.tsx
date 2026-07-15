@@ -15,7 +15,7 @@ export default function DocumentsError({
         <Text element={{ as: 'h2', size: 'h4' }} weight="semibold">
           Documents unavailable
         </Text>
-        <Text color="secondary">
+        <Text color="secondary" role="alert">
           We could not load your documents. Please try again.
         </Text>
         <Button variant="primary" onClick={reset}>

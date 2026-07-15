@@ -15,7 +15,7 @@ export default function StatusError({
         <Text element={{ as: 'h2', size: 'h4' }} weight="semibold">
           Status unavailable
         </Text>
-        <Text color="secondary">
+        <Text color="secondary" role="alert">
           We could not load the site status. Please try again.
         </Text>
         <Button variant="primary" onClick={reset}>

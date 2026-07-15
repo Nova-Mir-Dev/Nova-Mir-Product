@@ -92,7 +92,7 @@
     left: 0;
     right: 0;
     height: 64px;
-    background-color: var(--azimuth-color-white, #fff);
+    background-color: var(--azimuth-color-surface, #fff);
     border-top: 1px solid var(--azimuth-color-border);
     z-index: 100;
     justify-content: space-around;
