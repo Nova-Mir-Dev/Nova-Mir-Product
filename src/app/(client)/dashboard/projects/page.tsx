@@ -11,11 +11,13 @@ export default async function ProjectsPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/clients/auth/login')
 
-  const { data: projects } = await supabase
+  const { data: projects, error } = await supabase
     .from('projects')
     .select('*')
     .eq('client_id', user.id)
     .order('deadline', { ascending: true })
+
+  if (error) throw new Error('Failed to load your projects')
 
   const raw = (projects ?? []) as Project[]
 

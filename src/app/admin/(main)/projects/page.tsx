@@ -11,16 +11,20 @@ import type { Project } from '@/features/admin/types'
 export default async function ProjectsPageRoute() {
   const { supabase } = await requireAdmin()
 
-  const { data: projects } = await supabase
+  const { data: projects, error: projectsError } = await supabase
     .from('projects')
     .select('*')
     .order('created_at', { ascending: false })
 
-  const { data: clients } = await supabase
+  const { data: clients, error: clientsError } = await supabase
     .from('portfolio_clients')
     .select('id, name, user_id')
     .not('user_id', 'is', null)
     .order('name')
+
+  if (projectsError || clientsError) {
+    throw new Error('Failed to load projects')
+  }
 
   const items = (projects ?? []) as unknown as Project[]
 

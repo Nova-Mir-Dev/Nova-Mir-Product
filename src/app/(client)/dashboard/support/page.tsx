@@ -41,11 +41,13 @@ export default async function SupportPage({
   } = await supabase.auth.getUser()
   if (!user) redirect('/clients/auth/login')
 
-  const { data: tickets } = await supabase
+  const { data: tickets, error: ticketsError } = await supabase
     .from('support_tickets')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
+
+  if (ticketsError) throw new Error('Failed to load your support tickets')
 
   const raw = (tickets ?? []) as Ticket[]
   const error = params.error ? decodeURIComponent(params.error) : null

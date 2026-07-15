@@ -60,6 +60,15 @@ export default async function AnalyticsPage() {
         .eq('user_id', user.id),
     ])
 
+  if (
+    projectsRes.error ||
+    invoicesRes.error ||
+    documentsRes.error ||
+    activityRes.error
+  ) {
+    throw new Error('Failed to load your analytics')
+  }
+
   const projects = (projectsRes.data ?? []) as Project[]
   const invoices = (invoicesRes.data ?? []) as Invoice[]
   const documents = (documentsRes.data ?? []) as Document[]

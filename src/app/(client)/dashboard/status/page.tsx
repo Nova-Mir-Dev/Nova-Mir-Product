@@ -27,12 +27,14 @@ export default async function StatusPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/clients/auth/login')
 
-  const { data: incidents } = await supabase
+  const { data: incidents, error } = await supabase
     .from('audit_logs')
     .select('*')
     .eq('entity', 'incident')
     .order('timestamp', { ascending: false })
     .limit(20)
+
+  if (error) throw new Error('Failed to load status')
 
   const rawIncidents = (incidents ?? []) as unknown as Incident[]
 

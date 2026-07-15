@@ -37,7 +37,12 @@ export default async function ClientsRoute({
     )
   }
 
-  const { data: clients, count } = await query.range(from, from + pageSize - 1)
+  const {
+    data: clients,
+    count,
+    error,
+  } = await query.range(from, from + pageSize - 1)
+  if (error) throw new Error('Failed to load clients')
   const { totalPages } = getPaginationRange(count ?? 0, page, pageSize)
 
   return (

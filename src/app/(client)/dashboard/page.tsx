@@ -41,6 +41,10 @@ export default async function DashboardPage() {
       .eq('user_id', user.id)
       .order('date', { ascending: false }),
   ])
+  if (projectsRes.error || activityRes.error || invoicesRes.error) {
+    throw new Error('Failed to load your dashboard')
+  }
+
   const projects = (projectsRes.data ?? []) as Project[]
   const recentActivity = (activityRes.data ?? []) as Activity[]
   const allInvoices = (invoicesRes.data ?? []) as Invoice[]

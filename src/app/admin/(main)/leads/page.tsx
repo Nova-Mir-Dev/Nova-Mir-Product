@@ -5,10 +5,12 @@ import type { Lead } from '@/features/admin/types'
 export default async function LeadsRoute() {
   const { supabase } = await requireAdmin()
 
-  const { data: leads } = await supabase
+  const { data: leads, error } = await supabase
     .from('leads')
     .select('*')
     .order('created_at', { ascending: false })
+
+  if (error) throw new Error('Failed to load leads')
 
   return <LeadsPage leads={(leads ?? []) as Lead[]} />
 }

@@ -24,7 +24,8 @@ export default async function AuditLogPage({
   if (params.from) query = query.gte('created_at', params.from)
   if (params.to) query = query.lte('created_at', params.to)
 
-  const { data: entries } = await query
+  const { data: entries, error } = await query
+  if (error) throw new Error('Failed to load audit log')
 
   let filtered = (entries ?? []) as unknown as ActivityEntry[]
 

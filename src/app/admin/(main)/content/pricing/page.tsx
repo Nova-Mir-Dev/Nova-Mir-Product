@@ -21,10 +21,12 @@ export default async function AdminContentPricingRoute() {
   await requireAdmin()
 
   const admin = createServiceClient()
-  const { data: tiers } = await admin
+  const { data: tiers, error } = await admin
     .from('pricing_tiers')
     .select('*')
     .order('sort_order')
+
+  if (error) throw new Error('Failed to load pricing tiers')
 
   return <PricingPage tiers={(tiers ?? []) as PricingTier[]} />
 }

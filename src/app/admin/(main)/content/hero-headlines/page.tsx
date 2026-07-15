@@ -19,10 +19,12 @@ export default async function AdminContentHeroHeadlinesRoute() {
   await requireAdmin()
 
   const admin = createServiceClient()
-  const { data: headlines } = await admin
+  const { data: headlines, error } = await admin
     .from('hero_headlines')
     .select('*')
     .order('sort_order')
+
+  if (error) throw new Error('Failed to load hero headlines')
 
   return <HeroHeadlinesPage headlines={(headlines ?? []) as HeroHeadline[]} />
 }

@@ -11,11 +11,13 @@ export default async function BillingPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/clients/auth/login')
 
-  const { data: invoices } = await supabase
+  const { data: invoices, error } = await supabase
     .from('portfolio_invoices')
     .select('*')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
+
+  if (error) throw new Error('Failed to load your invoices')
 
   const raw = (invoices ?? []) as Invoice[]
   const nextInvoice = raw.find(
