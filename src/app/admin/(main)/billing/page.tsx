@@ -1,4 +1,6 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
+import { createServiceClient } from '@/lib/supabase-admin'
 import BillingPage from '@/features/admin/billing/billing-page'
 import type { BillingSummary, Invoice } from '@/features/admin/types'
 
@@ -46,10 +48,23 @@ export default async function AdminBillingPage({
   const params = await searchParams
   const supabase = await createClient()
 
-  const { data: invoices } = await supabase
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/admin/auth/login')
+  const { data: profile } = await createServiceClient()
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+
+  const { data: invoices, error } = await supabase
     .from('portfolio_invoices')
     .select('*')
     .order('created_at', { ascending: false })
+
+  if (error) throw new Error('Failed to load billing data')
 
   const raw = (invoices ?? []) as Invoice[]
   const billingSummary = computeSummary(raw)

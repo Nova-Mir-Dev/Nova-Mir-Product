@@ -71,7 +71,7 @@ export default async function SupportPage({
 
       {error && (
         <Card>
-          <Text element={{ size: 'sm' }} color="accent">
+          <Text element={{ size: 'sm' }} color="accent" role="alert">
             {error}
           </Text>
         </Card>

@@ -232,6 +232,7 @@ export default async function DashboardPage() {
                 </div>
                 <div
                   role="progressbar"
+                  aria-label={`Progress for ${project.name}`}
                   aria-valuenow={project.progress}
                   aria-valuemin={0}
                   aria-valuemax={100}

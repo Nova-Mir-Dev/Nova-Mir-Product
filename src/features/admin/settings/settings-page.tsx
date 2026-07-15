@@ -99,7 +99,7 @@ const ProfileTab = ({
     <Stack spacing="md">
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'lg' }} weight="semibold">
+          <Text element={{ as: 'h2', size: 'lg' }} weight="semibold">
             Profile
           </Text>
           <Divider />
@@ -125,7 +125,7 @@ const ProfileTab = ({
       </Card>
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'lg' }} weight="semibold">
+          <Text element={{ as: 'h2', size: 'lg' }} weight="semibold">
             Password
           </Text>
           <Divider />
@@ -167,7 +167,7 @@ const ProfileTab = ({
       </Card>
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'lg' }} weight="semibold">
+          <Text element={{ as: 'h2', size: 'lg' }} weight="semibold">
             Data
           </Text>
           <Divider />
@@ -183,7 +183,7 @@ const ProfileTab = ({
       </Card>
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'lg' }} weight="semibold">
+          <Text element={{ as: 'h2', size: 'lg' }} weight="semibold">
             Notifications
           </Text>
           <Divider />
@@ -291,7 +291,7 @@ const ApiKeysTab = ({ apiKeys }: { apiKeys: ApiKeyItem[] }) => {
     <Card>
       <Stack spacing="md">
         <Stack spacing="xs">
-          <Text element={{ size: 'lg' }} weight="semibold">
+          <Text element={{ as: 'h2', size: 'lg' }} weight="semibold">
             API Keys
           </Text>
           <Text element={{ size: 'sm' }}>

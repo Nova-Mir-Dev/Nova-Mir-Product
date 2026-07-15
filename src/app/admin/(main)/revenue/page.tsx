@@ -58,7 +58,7 @@ export default async function AdminRevenuePage({
   const params = await searchParams
   const supabase = await createClient()
 
-  const [{ data: revenues }, { data: expenses }] = await Promise.all([
+  const [revenueResult, expenseResult] = await Promise.all([
     supabase
       .from('revenue_entries')
       .select('*')
@@ -69,8 +69,13 @@ export default async function AdminRevenuePage({
       .order('recorded_at', { ascending: false }),
   ])
 
-  const rawRevenues = (revenues ?? []) as RevenueEntry[]
-  const rawExpenses = (expenses ?? []) as ExpenseEntry[]
+  // Surface a data-layer failure instead of rendering $0 totals.
+  if (revenueResult.error || expenseResult.error) {
+    throw new Error('Failed to load revenue data')
+  }
+
+  const rawRevenues = (revenueResult.data ?? []) as RevenueEntry[]
+  const rawExpenses = (expenseResult.data ?? []) as ExpenseEntry[]
   const summary = computeSummary(rawRevenues, rawExpenses)
 
   return (

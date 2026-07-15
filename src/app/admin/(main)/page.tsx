@@ -62,15 +62,7 @@ interface DashboardData {
 async function getDashboardData(): Promise<DashboardData> {
   const supabase = await createClient()
 
-  const [
-    { count: totalClients },
-    { count: activeProjects },
-    { data: invoices },
-    { count: openTickets },
-    { data: activity },
-    { data: clients },
-    { count: pendingInvoices },
-  ] = await Promise.all([
+  const results = await Promise.all([
     supabase
       .from('portfolio_clients')
       .select('*', { count: 'exact', head: true }),
@@ -94,6 +86,21 @@ async function getDashboardData(): Promise<DashboardData> {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'pending'),
   ])
+
+  // Surface a data-layer failure instead of rendering it as legitimate zeroes.
+  if (results.some((r) => r.error)) {
+    throw new Error('Failed to load dashboard data')
+  }
+
+  const [
+    { count: totalClients },
+    { count: activeProjects },
+    { data: invoices },
+    { count: openTickets },
+    { data: activity },
+    { data: clients },
+    { count: pendingInvoices },
+  ] = results
 
   const rawInvoices = (invoices ?? []) as Array<{
     status: string
