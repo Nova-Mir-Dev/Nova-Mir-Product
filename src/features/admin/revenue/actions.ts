@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { revalidatePath } from 'next/cache'
 import { validateRevenueEntry, validateExpenseEntry } from './revenue-utils'
 
@@ -41,6 +42,13 @@ export async function createRevenueEntry(
   })
 
   if (insertError) return { error: 'Failed to create revenue entry' }
+
+  void logAudit({
+    action: 'admin.revenue.create',
+    entity: 'revenue_entry',
+    metadata: { amount_cents: amountCents, category: data.category as string },
+    userId: user.id,
+  })
 
   revalidatePath('/admin/revenue')
   revalidatePath('/admin')
@@ -85,6 +93,13 @@ export async function createExpenseEntry(
 
   if (insertError) return { error: 'Failed to create expense entry' }
 
+  void logAudit({
+    action: 'admin.expense.create',
+    entity: 'expense_entry',
+    metadata: { amount_cents: amountCents, category: data.category as string },
+    userId: user.id,
+  })
+
   revalidatePath('/admin/revenue')
   revalidatePath('/admin')
   return null
@@ -111,6 +126,13 @@ export async function deleteRevenueEntry(formData: FormData) {
   const { error } = await admin.from('revenue_entries').delete().eq('id', id)
   if (error) throw new Error('Failed to delete revenue entry')
 
+  void logAudit({
+    action: 'admin.revenue.delete',
+    entity: 'revenue_entry',
+    entityId: id,
+    userId: user.id,
+  })
+
   revalidatePath('/admin/revenue')
   revalidatePath('/admin')
 }
@@ -135,6 +157,13 @@ export async function deleteExpenseEntry(formData: FormData) {
   const admin = createServiceClient()
   const { error } = await admin.from('expense_entries').delete().eq('id', id)
   if (error) throw new Error('Failed to delete expense entry')
+
+  void logAudit({
+    action: 'admin.expense.delete',
+    entity: 'expense_entry',
+    entityId: id,
+    userId: user.id,
+  })
 
   revalidatePath('/admin/revenue')
   revalidatePath('/admin')

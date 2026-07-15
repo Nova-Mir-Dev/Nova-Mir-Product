@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { revalidatePath } from 'next/cache'
 
 export async function createClientAction(formData: FormData) {
@@ -49,6 +50,14 @@ export async function createClientAction(formData: FormData) {
     await admin.auth.admin.deleteUser(authUser.user.id)
     throw new Error('Failed to create client profile: ' + clientError.message)
   }
+
+  void logAudit({
+    action: 'admin.client.create',
+    entity: 'client',
+    entityId: authUser.user.id,
+    metadata: { email_domain: email.trim().split('@')[1] ?? '' },
+    userId: user.id,
+  })
 
   revalidatePath('/admin/clients')
 }

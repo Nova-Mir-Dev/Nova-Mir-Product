@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { leadStatusSchema } from '@/features/leads/schemas'
 import { revalidatePath } from 'next/cache'
 
@@ -38,6 +39,14 @@ export async function updateLeadAction(formData: FormData) {
 
   const { error } = await admin.from('leads').update(updates).eq('id', id)
   if (error) throw new Error('Failed to update lead')
+
+  void logAudit({
+    action: 'admin.lead.update',
+    entity: 'lead',
+    entityId: id,
+    metadata: { status: updates.status },
+    userId: user.id,
+  })
 
   revalidatePath('/admin/leads')
 }
@@ -79,6 +88,13 @@ export async function convertToClientAction(formData: FormData) {
     .update({ status: 'won', updated_at: new Date().toISOString() })
     .eq('id', id)
   if (updateError) throw new Error('Failed to update lead status')
+
+  void logAudit({
+    action: 'admin.lead.convert',
+    entity: 'lead',
+    entityId: id,
+    userId: user.id,
+  })
 
   revalidatePath('/admin/leads')
   revalidatePath('/admin/clients')

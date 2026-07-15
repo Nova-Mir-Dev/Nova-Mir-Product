@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase-server'
 import { createServiceClient } from '@/lib/supabase-admin'
+import { logAudit } from '@/lib/audit-log'
 import { revalidatePath } from 'next/cache'
 
 export async function createProject(formData: FormData) {
@@ -28,16 +29,28 @@ export async function createProject(formData: FormData) {
   }
 
   const admin = createServiceClient()
-  const { error } = await admin.from('projects').insert({
-    name: name.trim(),
-    client_id: clientId.trim(),
-    description,
-    deadline: deadline ? new Date(deadline).toISOString() : null,
-    status: 'active',
-    progress: 0,
-  })
+  const { data: created, error } = await admin
+    .from('projects')
+    .insert({
+      name: name.trim(),
+      client_id: clientId.trim(),
+      description,
+      deadline: deadline ? new Date(deadline).toISOString() : null,
+      status: 'active',
+      progress: 0,
+    })
+    .select('id')
+    .single()
 
   if (error) throw new Error('Failed to create project')
+
+  void logAudit({
+    action: 'admin.project.create',
+    entity: 'project',
+    entityId: created?.id as string | undefined,
+    metadata: { client_id: clientId.trim() },
+    userId: user.id,
+  })
 
   revalidatePath('/admin/projects')
 }
