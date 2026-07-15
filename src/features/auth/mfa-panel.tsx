@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button, Input, Text, Stack } from 'azimuth-ui'
 import styles from './mfa-panel.module.css'
-import { removeMfa } from './mfa'
+import { removeMfa, sendReauthCode, type StepUp } from './mfa'
 
 interface MfaFactor {
   id: string
@@ -12,6 +12,8 @@ interface MfaFactor {
   created_at: string
   friendly_name?: string | null
 }
+
+type Pending = { kind: 'totp' | 'webauthn' | 'remove'; factorId?: string }
 
 function PasskeyIcon() {
   return (
@@ -32,74 +34,184 @@ function PasskeyIcon() {
   )
 }
 
-export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
+export function MfaPanel({
+  factors,
+  stepUpMode,
+}: {
+  factors: MfaFactor[]
+  // 'unavailable' gates enroll/remove when no secure step-up channel exists
+  // (e.g. magic-link clients on a Supabase plan that can't email a re-auth code).
+  stepUpMode: 'password' | 'email' | 'unavailable'
+}) {
+  if (stepUpMode === 'unavailable') {
+    return (
+      <Stack spacing="md">
+        {factors.length > 0 ? (
+          <Stack spacing="xs">
+            {factors.map((f) => (
+              <div key={f.id} className={styles.factorRow}>
+                <div style={{ flex: 1 }}>
+                  <Text element={{ size: 'sm' }} weight="semibold">
+                    {f.friendly_name ||
+                      (f.type === 'webauthn'
+                        ? 'Passkey'
+                        : f.type.toUpperCase())}
+                  </Text>
+                  <Text element={{ size: 'xs' }} color="secondary">
+                    Added {new Date(f.created_at).toLocaleDateString('en-US')}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </Stack>
+        ) : (
+          <Text element={{ size: 'sm' }} color="secondary">
+            No 2FA methods configured.
+          </Text>
+        )}
+        <Text element={{ size: 'sm' }} color="secondary">
+          Two-factor setup for client accounts is coming soon.
+        </Text>
+      </Stack>
+    )
+  }
+
+  return <MfaManager factors={factors} stepUpMode={stepUpMode} />
+}
+
+function MfaManager({
+  factors,
+  stepUpMode,
+}: {
+  factors: MfaFactor[]
+  stepUpMode: 'password' | 'email'
+}) {
   const [enrolling, setEnrolling] = useState<'totp' | 'webauthn' | null>(null)
   const [qrCode, setQrCode] = useState('')
   const [secret, setSecret] = useState('')
   const [factorId, setFactorId] = useState('')
   const [verifyCode, setVerifyCode] = useState('')
   const [friendlyName, setFriendlyName] = useState('')
-  const [removing, setRemoving] = useState<string | null>(null)
 
-  async function startTotpEnroll() {
-    setEnrolling('totp')
-    const res = await fetch('/api/auth/mfa/enroll', {
-      method: 'POST',
-      body: JSON.stringify({
-        factorType: 'totp',
-        friendlyName: friendlyName || undefined,
-      }),
-    })
-    const data = await res.json()
-    if (data.qr) {
-      setQrCode(data.qr)
-      setSecret(data.secret ?? '')
-      setFactorId(data.id)
+  const [pending, setPending] = useState<Pending | null>(null)
+  const [password, setPassword] = useState('')
+  const [emailToken, setEmailToken] = useState('')
+  const [codeSent, setCodeSent] = useState(false)
+  const [stepUpError, setStepUpError] = useState('')
+  const [stepUpBusy, setStepUpBusy] = useState(false)
+
+  function beginStepUp(kind: Pending['kind'], id?: string) {
+    setPending({ kind, factorId: id })
+    setPassword('')
+    setEmailToken('')
+    setCodeSent(false)
+    setStepUpError('')
+    if (stepUpMode === 'email') {
+      void sendReauthCode().then((r) => {
+        if ('error' in r) setStepUpError(r.error ?? 'Failed to send code.')
+        else setCodeSent(true)
+      })
     }
   }
 
-  async function startWebauthnEnroll() {
-    setEnrolling('webauthn')
+  function cancelStepUp() {
+    setPending(null)
+    setStepUpError('')
+    setStepUpBusy(false)
+  }
+
+  function currentCredential(): StepUp | null {
+    if (stepUpMode === 'password')
+      return password ? { method: 'password', password } : null
+    return emailToken ? { method: 'email', token: emailToken } : null
+  }
+
+  async function confirmStepUp() {
+    const cred = currentCredential()
+    if (!cred) {
+      setStepUpError(
+        stepUpMode === 'password'
+          ? 'Enter your password.'
+          : 'Enter the code we emailed you.',
+      )
+      return
+    }
+    setStepUpBusy(true)
+    setStepUpError('')
+    const p = pending!
+
+    if (p.kind === 'remove') {
+      const r = await removeMfa(p.factorId!, cred)
+      if (r && 'error' in r && r.error) {
+        setStepUpError(r.error)
+        setStepUpBusy(false)
+        return
+      }
+      window.location.reload()
+      return
+    }
+
     const res = await fetch('/api/auth/mfa/enroll', {
       method: 'POST',
       body: JSON.stringify({
-        factorType: 'webauthn',
+        factorType: p.kind,
         friendlyName: friendlyName || undefined,
+        stepUp: cred,
       }),
     })
     const data = await res.json()
-    if (data.webauthn) {
-      setFactorId(data.id)
-      try {
-        const credential = await navigator.credentials.create({
-          publicKey: {
-            challenge: Uint8Array.from(atob(data.webauthn.challenge), (c) =>
+    if (!res.ok) {
+      setStepUpError(data.error ?? 'Verification failed.')
+      setStepUpBusy(false)
+      return
+    }
+
+    setPending(null)
+    setStepUpBusy(false)
+
+    if (p.kind === 'totp') {
+      setEnrolling('totp')
+      if (data.qr) {
+        setQrCode(data.qr)
+        setSecret(data.secret ?? '')
+        setFactorId(data.id)
+      }
+      return
+    }
+
+    // webauthn
+    setEnrolling('webauthn')
+    setFactorId(data.id)
+    if (!data.webauthn) return
+    try {
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge: Uint8Array.from(atob(data.webauthn.challenge), (c) =>
+            c.charCodeAt(0),
+          ),
+          rp: data.webauthn.rp,
+          user: {
+            id: Uint8Array.from(atob(data.webauthn.user.id), (c) =>
               c.charCodeAt(0),
             ),
-            rp: data.webauthn.rp,
-            user: {
-              id: Uint8Array.from(atob(data.webauthn.user.id), (c) =>
-                c.charCodeAt(0),
-              ),
-              name: data.webauthn.user.name,
-              displayName: data.webauthn.user.display_name,
-            },
-            pubKeyCredParams: data.webauthn.pub_key_cred_params,
-            timeout: 60000,
-            attestation: 'none',
+            name: data.webauthn.user.name,
+            displayName: data.webauthn.user.display_name,
           },
+          pubKeyCredParams: data.webauthn.pub_key_cred_params,
+          timeout: 60000,
+          attestation: 'none',
+        },
+      })
+      if (credential) {
+        const code = (credential as { id: string }).id
+        await fetch('/api/auth/mfa/verify', {
+          method: 'POST',
+          body: JSON.stringify({ factorId: data.id, code }),
         })
-        if (credential) {
-          const code = (credential as { id: string }).id
-          await fetch('/api/auth/mfa/verify', {
-            method: 'POST',
-            body: JSON.stringify({ factorId: data.id, code }),
-          })
-          window.location.reload()
-        }
-      } catch {
-        setEnrolling(null)
+        window.location.reload()
       }
+    } catch {
+      setEnrolling(null)
     }
   }
 
@@ -109,12 +221,6 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
       body: JSON.stringify({ factorId, code: verifyCode }),
     })
     setEnrolling(null)
-    window.location.reload()
-  }
-
-  async function handleRemove(id: string) {
-    setRemoving(id)
-    await removeMfa(id)
     window.location.reload()
   }
 
@@ -139,16 +245,16 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
                     (f.type === 'webauthn' ? 'Passkey' : f.type.toUpperCase())}
                 </Text>
                 <Text element={{ size: 'xs' }} color="secondary">
-                  Added {new Date(f.created_at).toLocaleDateString()}
+                  Added {new Date(f.created_at).toLocaleDateString('en-US')}
                 </Text>
               </div>
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => handleRemove(f.id)}
-                disabled={removing === f.id}
+                onClick={() => beginStepUp('remove', f.id)}
+                disabled={pending !== null}
               >
-                {removing === f.id ? 'Removing...' : 'Remove'}
+                Remove
               </Button>
             </div>
           ))}
@@ -158,7 +264,62 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
           No 2FA methods configured.
         </Text>
       )}
-      {enrolling === 'totp' ? (
+
+      {pending ? (
+        <Stack spacing="sm">
+          <Text element={{ size: 'sm' }} weight="semibold">
+            Confirm it&apos;s you
+          </Text>
+          {stepUpMode === 'password' ? (
+            <>
+              <Text element={{ size: 'xs' }} color="secondary">
+                Re-enter your password to change your two-factor settings.
+              </Text>
+              <Input
+                label={{ text: 'Password' }}
+                type="password"
+                value={{
+                  value: password,
+                  onChange: (e) => setPassword(e.target.value),
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Text element={{ size: 'xs' }} color="secondary">
+                {codeSent
+                  ? 'Enter the code we emailed you to change your two-factor settings.'
+                  : 'Sending a verification code to your email...'}
+              </Text>
+              <Input
+                label={{ text: 'Email code' }}
+                value={{
+                  value: emailToken,
+                  onChange: (e) => setEmailToken(e.target.value),
+                }}
+                placeholder="Code from your email"
+              />
+            </>
+          )}
+          {stepUpError && (
+            <Text element={{ size: 'sm' }} color="accent" role="alert">
+              {stepUpError}
+            </Text>
+          )}
+          <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)' }}>
+            <Button
+              variant="primary"
+              onClick={confirmStepUp}
+              disabled={stepUpBusy || (stepUpMode === 'email' && !codeSent)}
+            >
+              {stepUpBusy ? 'Verifying...' : 'Continue'}
+            </Button>
+            <Button variant="tertiary" onClick={cancelStepUp}>
+              Cancel
+            </Button>
+          </div>
+        </Stack>
+      ) : enrolling === 'totp' ? (
         <Stack spacing="sm">
           <Text element={{ size: 'sm' }} weight="semibold">
             Option 1: Scan QR Code
@@ -219,10 +380,10 @@ export function MfaPanel({ factors }: { factors: MfaFactor[] }) {
             }}
             placeholder="e.g. My iPhone, Work Laptop"
           />
-          <Button variant="primary" onClick={startTotpEnroll}>
+          <Button variant="primary" onClick={() => beginStepUp('totp')}>
             Set up Authenticator App
           </Button>
-          <Button variant="tertiary" onClick={startWebauthnEnroll}>
+          <Button variant="tertiary" onClick={() => beginStepUp('webauthn')}>
             <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <PasskeyIcon /> Add Passkey
             </span>

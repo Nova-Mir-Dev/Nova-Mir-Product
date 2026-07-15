@@ -277,7 +277,7 @@ const SecurityTab = ({
   }[]
 }) => (
   <Stack spacing="md">
-    <MfaPanel factors={factors} />
+    <MfaPanel factors={factors} stepUpMode="password" />
   </Stack>
 )
 

@@ -6,9 +6,15 @@ import { enrollMfa } from '@/features/auth/mfa'
 import { logAudit } from '@/lib/audit-log'
 import { z } from 'zod'
 
+const stepUpSchema = z.union([
+  z.object({ method: z.literal('password'), password: z.string().min(1) }),
+  z.object({ method: z.literal('email'), token: z.string().min(1) }),
+])
+
 const enrollBodySchema = z.object({
   factorType: z.enum(['totp', 'phone', 'webauthn']).optional(),
   friendlyName: z.string().max(100).optional(),
+  stepUp: stepUpSchema.optional(),
 })
 
 export async function POST(request: Request) {
@@ -36,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     const factorType = parsed.data.factorType ?? 'totp'
-    const result = await enrollMfa(factorType)
+    const result = await enrollMfa(factorType, parsed.data.stepUp)
     if ('error' in result)
       return NextResponse.json({ error: result.error }, { status: 400 })
 

@@ -175,7 +175,7 @@ export default async function SettingsPage() {
         <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
           Two-Factor Authentication
         </Text>
-        <MfaPanel factors={factors} />
+        <MfaPanel factors={factors} stepUpMode="unavailable" />
       </Card>
 
       <Card>
