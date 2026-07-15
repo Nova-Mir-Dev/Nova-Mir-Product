@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/auth-guard'
 import MonitoringPage from '@/features/admin/monitoring/monitoring-page'
 import type { MonitoringClient } from '@/features/admin/types'
 
@@ -11,18 +9,7 @@ function mapStatus(dbStatus: string): MonitoringClient['status'] {
 }
 
 export default async function AdminMonitoringPage() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+  const { supabase } = await requireAdmin()
 
   const { data: clients, error } = await supabase
     .from('portfolio_clients')

@@ -1,8 +1,7 @@
 import { Card, Grid, KPICard, Stack, Text } from 'azimuth-ui'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
-import { redirect } from 'next/navigation'
+import { requireAdmin } from '@/lib/auth-guard'
 import type { ActivityEntry } from '@/features/admin/types'
 
 const QUICK_LINKS = [
@@ -135,19 +134,7 @@ async function getDashboardData(): Promise<DashboardData> {
 }
 
 export default async function AdminDashboard() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+  await requireAdmin()
 
   const data = await getDashboardData()
 

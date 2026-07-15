@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/auth-guard'
 import BillingPage from '@/features/admin/billing/billing-page'
 import type { BillingSummary, Invoice } from '@/features/admin/types'
 
@@ -46,18 +44,7 @@ export default async function AdminBillingPage({
   searchParams: Promise<{ create?: string; page?: string; pageSize?: string }>
 }) {
   const params = await searchParams
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+  const { supabase } = await requireAdmin()
 
   const { data: invoices, error } = await supabase
     .from('portfolio_invoices')

@@ -1,7 +1,5 @@
 import { Stack, Text, Button, Card, Input, TextArea } from 'azimuth-ui'
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
-import { redirect } from 'next/navigation'
+import { requireAdmin } from '@/lib/auth-guard'
 import { createProject } from '@/features/admin/projects/actions'
 import {
   ProjectsPage,
@@ -11,19 +9,7 @@ import { Suspense } from 'react'
 import type { Project } from '@/features/admin/types'
 
 export default async function ProjectsPageRoute() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+  const { supabase } = await requireAdmin()
 
   const { data: projects } = await supabase
     .from('projects')

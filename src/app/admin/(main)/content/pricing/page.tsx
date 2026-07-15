@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server'
+import { requireAdmin } from '@/lib/auth-guard'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { PricingPage } from '@/features/admin/pricing/pricing-page'
 
@@ -18,20 +18,9 @@ interface PricingTier {
 }
 
 export default async function AdminContentPricingRoute() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return <div>Unauthorized</div>
+  await requireAdmin()
 
   const admin = createServiceClient()
-  const { data: profile } = await admin
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin') return <div>Forbidden</div>
-
   const { data: tiers } = await admin
     .from('pricing_tiers')
     .select('*')

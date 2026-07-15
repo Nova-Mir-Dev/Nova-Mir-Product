@@ -1,6 +1,5 @@
-import { notFound, redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
+import { notFound } from 'next/navigation'
+import { requireAdmin } from '@/lib/auth-guard'
 import { ClientDetailPage } from '@/features/admin/clients/client-detail-page'
 import type {
   PortfolioClient,
@@ -16,20 +15,7 @@ export default async function ClientDetailRoute({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || profile.role !== 'admin') redirect('/admin/auth/login')
+  const { supabase } = await requireAdmin()
 
   const { data: rawClient } = (await supabase
     .from('portfolio_clients')

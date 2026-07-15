@@ -1,25 +1,9 @@
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
-import { redirect } from 'next/navigation'
+import { requireAdmin } from '@/lib/auth-guard'
 import { SettingsPage } from '@/features/admin/settings/settings-page'
 import { listMfaFactors } from '@/features/auth/mfa'
 
 export default async function SettingsRoute() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/auth/login')
-
-  const admin = createServiceClient()
-  const { data: profile } = await admin
-    .from('users')
-    .select('name, role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') redirect('/admin/auth/login')
+  const { supabase, user, profile } = await requireAdmin()
 
   const { data: apiKeys } = await supabase
     .from('api_keys')

@@ -1,26 +1,10 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import { createServiceClient } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/auth-guard'
 import { listAdminUsers } from './actions'
 import { AdminList } from './admin-list'
 import { InviteForm } from './invite-form'
 
 export default async function AdminsPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) redirect('/admin/auth/login')
-
-  const { data: profile } = await createServiceClient()
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  const isAdmin = profile?.role === 'admin'
-  if (!isAdmin) return <div>Access denied. Admin role required.</div>
+  await requireAdmin()
 
   const admins = await listAdminUsers()
 

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server'
+import { requireAdmin } from '@/lib/auth-guard'
 import { createServiceClient } from '@/lib/supabase-admin'
 import { PortfolioPage } from '@/features/admin/portfolio/portfolio-page'
 
@@ -17,20 +17,9 @@ interface PortfolioProject {
 }
 
 export default async function AdminContentPortfolioRoute() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return <div>Unauthorized</div>
+  await requireAdmin()
 
   const admin = createServiceClient()
-  const { data: profile } = await admin
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-  if (profile?.role !== 'admin') return <div>Forbidden</div>
-
   const { data: projects } = await admin
     .from('portfolio_projects')
     .select('*')
