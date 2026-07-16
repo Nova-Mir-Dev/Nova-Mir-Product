@@ -1,17 +1,14 @@
 import { Card, Stack, Text, Button } from 'azimuth-ui'
 import { createClient } from '@/lib/supabase-server'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { openCustomerPortal } from './billing/actions'
+import { ProjectProgressList } from './components/project-progress-list'
+import {
+  RecentActivityList,
+  type DashboardActivity,
+} from './components/recent-activity-list'
 
 import type { Project, Invoice } from '@/types/entities'
-
-interface Activity {
-  id: string
-  action: string
-  project_name: string | null
-  created_at: string
-}
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -46,7 +43,7 @@ export default async function DashboardPage() {
   }
 
   const projects = (projectsRes.data ?? []) as Project[]
-  const recentActivity = (activityRes.data ?? []) as Activity[]
+  const recentActivity = (activityRes.data ?? []) as DashboardActivity[]
   const allInvoices = (invoicesRes.data ?? []) as Invoice[]
 
   const activeProjects = projects.filter(
@@ -201,102 +198,9 @@ export default async function DashboardPage() {
         </div>
       </Stack>
 
-      {activeProjects.length > 0 ? (
-        <Stack spacing="sm">
-          <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-            Project Progress
-          </Text>
-          {activeProjects.slice(0, 3).map((project) => (
-            <Card key={project.id}>
-              <Stack spacing="xs">
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text weight="semibold">{project.name}</Text>
-                  <Text element={{ size: 'sm' }} color="secondary">
-                    {project.status}
-                  </Text>
-                </div>
-                <div
-                  role="progressbar"
-                  aria-label={`Progress for ${project.name}`}
-                  aria-valuenow={project.progress ?? 0}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  style={{
-                    height: 8,
-                    backgroundColor: 'var(--azimuth-color-bg-secondary)',
-                    borderRadius: 4,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: (project.progress ?? 0) + '%',
-                      height: '100%',
-                      backgroundColor: 'var(--azimuth-color-primary)',
-                      borderRadius: 4,
-                      transition: 'width 0.3s ease',
-                    }}
-                  />
-                </div>
-                <Text element={{ size: 'sm' }} color="secondary">
-                  {project.progress ?? 0}% complete — Deadline:{' '}
-                  {project.deadline
-                    ? new Date(project.deadline).toLocaleDateString('en-US')
-                    : 'No deadline'}
-                </Text>
-              </Stack>
-            </Card>
-          ))}
-        </Stack>
-      ) : (
-        <Card>
-          <Stack
-            spacing="sm"
-            style={{
-              textAlign: 'center',
-              padding: 'var(--azimuth-space-lg)',
-            }}
-          >
-            <Text color="secondary">No active projects yet.</Text>
-            <Link href="/dashboard/projects">
-              <Text>View Projects</Text>
-            </Link>
-          </Stack>
-        </Card>
-      )}
+      <ProjectProgressList projects={activeProjects} />
 
-      <Stack spacing="sm">
-        <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-          Recent Activity
-        </Text>
-        {recentActivity.length > 0 ? (
-          <Stack spacing="xs">
-            {recentActivity.map((activity) => (
-              <Card key={activity.id}>
-                <Stack spacing="xs">
-                  <Text element={{ size: 'sm' }} weight="semibold">
-                    {activity.action}
-                  </Text>
-                  <Text element={{ size: 'sm' }} color="secondary">
-                    {activity.project_name} —{' '}
-                    {new Date(activity.created_at).toLocaleString('en-US')}
-                  </Text>
-                </Stack>
-              </Card>
-            ))}
-          </Stack>
-        ) : (
-          <Text color="secondary" element={{ size: 'sm' }}>
-            No recent activity.
-          </Text>
-        )}
-      </Stack>
+      <RecentActivityList activity={recentActivity} />
     </Stack>
   )
 }
