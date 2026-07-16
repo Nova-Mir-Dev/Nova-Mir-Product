@@ -22,6 +22,7 @@ vi.mock('@/lib/content', () => ({
       description: 'Businesses ready to capture and track leads.',
     },
   ]),
+  getPublishedTestimonials: vi.fn().mockResolvedValue([]),
 }))
 
 async function renderHome() {

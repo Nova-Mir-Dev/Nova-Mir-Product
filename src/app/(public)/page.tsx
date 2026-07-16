@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
-import { getPricingTiers } from '@/lib/content'
+import { getPricingTiers, getPublishedTestimonials } from '@/lib/content'
 import { HeroContent } from './_components/hero-headlines'
 import styles from './landing.module.css'
 
@@ -66,6 +66,7 @@ const PROJECTS = [
 export default async function Home() {
   const tiers = await getPricingTiers()
   const displayTiers = pricingData(tiers)
+  const testimonials = (await getPublishedTestimonials()) ?? []
 
   return (
     <>
@@ -301,6 +302,35 @@ export default async function Home() {
           </div>
         </Container>
       </section>
+
+      {testimonials.length > 0 && (
+        <section className={styles.section}>
+          <Container size="lg">
+            <Text
+              element={{ as: 'h2', size: 'h2' }}
+              weight="semibold"
+              className={styles.sectionTitle}
+            >
+              What clients say
+            </Text>
+            <div className={styles.testimonialGrid}>
+              {testimonials.map((t) => (
+                <Card key={t.id} className={styles.testimonialCard}>
+                  <div className={styles.testimonialContent}>
+                    <Text element={{ size: 'sm' }}>
+                      &ldquo;{t.quote}&rdquo;
+                    </Text>
+                    <Text weight="semibold">
+                      {t.author_name}
+                      {t.author_business ? `, ${t.author_business}` : ''}
+                    </Text>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <section className={styles.ctaSection}>
         <Container size="lg">

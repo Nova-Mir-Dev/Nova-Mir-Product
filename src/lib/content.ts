@@ -7,6 +7,7 @@ import type {
   PortfolioProjectRow,
   PricingTierRow,
   ProcessStepRow,
+  TestimonialRow,
 } from '@/types/content'
 import { PRICING_TIERS } from '@/lib/pricing'
 
@@ -115,6 +116,20 @@ export const getPublishedProcessSteps = createContentFetcher<ProcessStepRow[]>(
     const { data } = await supabase
       .from('process_steps')
       .select('step_number, title, description, page, sort_order')
+      .eq('is_published', true)
+      .order('sort_order')
+    return data
+  },
+)
+
+export const getPublishedTestimonials = createContentFetcher<TestimonialRow[]>(
+  'testimonials',
+  async (supabase) => {
+    const { data } = await supabase
+      .from('testimonials')
+      .select(
+        'id, quote, author_name, author_business, author_avatar_url, rating, sort_order',
+      )
       .eq('is_published', true)
       .order('sort_order')
     return data

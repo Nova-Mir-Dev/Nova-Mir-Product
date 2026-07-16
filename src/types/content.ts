@@ -63,3 +63,16 @@ export interface ProcessStepRow {
   created_at: string
   updated_at: string
 }
+
+export interface TestimonialRow {
+  id: string
+  quote: string
+  author_name: string
+  author_business: string | null
+  author_avatar_url: string | null
+  rating: number | null
+  sort_order: number
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
