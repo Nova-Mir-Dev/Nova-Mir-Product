@@ -1,18 +1,5 @@
-'use client'
-
 import Link from 'next/link'
-import {
-  Badge,
-  Button,
-  Card,
-  DataTable,
-  EmptyState,
-  Pagination,
-  Stack,
-  Tabs,
-  Text,
-} from 'azimuth-ui'
-import { useClientPagination } from '@/features/admin/hooks/use-client-pagination'
+import { Badge, Button, Card, Stack, Tabs, Text } from 'azimuth-ui'
 import type {
   PortfolioClient,
   Project,
@@ -20,6 +7,14 @@ import type {
   SupportTicket,
   ActivityEntry,
 } from '@/features/admin/types'
+import { PaginatedTab } from './components/paginated-tab'
+import { statusBadgeVariant } from './components/status-variants'
+import {
+  projectColumns,
+  invoiceColumns,
+  ticketColumns,
+  activityColumns,
+} from './components/columns'
 
 interface ClientDetailPageProps {
   client: PortfolioClient
@@ -28,311 +23,6 @@ interface ClientDetailPageProps {
   tickets: SupportTicket[]
   activity: ActivityEntry[]
   matchedUserCount: number
-}
-
-const statusBadgeVariant = (
-  status: string,
-): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'accent' => {
-  switch (status.toLowerCase()) {
-    case 'active':
-      return 'success'
-    case 'inactive':
-      return 'neutral'
-    case 'pending':
-      return 'warning'
-    case 'suspended':
-      return 'danger'
-    default:
-      return 'info'
-  }
-}
-
-const projectStatusVariant = (
-  status: string,
-): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'accent' => {
-  switch (status.toLowerCase()) {
-    case 'completed':
-      return 'success'
-    case 'in_progress':
-      return 'info'
-    case 'on_hold':
-      return 'warning'
-    case 'cancelled':
-      return 'danger'
-    default:
-      return 'neutral'
-  }
-}
-
-const invoiceStatusVariant = (
-  status: string,
-): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'accent' => {
-  switch (status.toLowerCase()) {
-    case 'paid':
-      return 'success'
-    case 'pending':
-      return 'warning'
-    case 'overdue':
-      return 'danger'
-    default:
-      return 'neutral'
-  }
-}
-
-const ticketStatusVariant = (
-  status: string,
-): 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'accent' => {
-  switch (status.toLowerCase()) {
-    case 'open':
-      return 'info'
-    case 'in_progress':
-      return 'warning'
-    case 'resolved':
-      return 'success'
-    case 'closed':
-      return 'neutral'
-    default:
-      return 'neutral'
-  }
-}
-
-const projectColumns = [
-  { key: 'name', title: 'Name', sortable: true },
-  {
-    key: 'status',
-    title: 'Status',
-    sortable: true,
-    render: (_: unknown, row: Project) => (
-      <Badge variant={projectStatusVariant(row.status)}>
-        {row.status.replace(/_/g, ' ')}
-      </Badge>
-    ),
-  },
-  {
-    key: 'progress',
-    title: 'Progress',
-    sortable: true,
-    render: (value: unknown) =>
-      value !== null && typeof value === 'number' ? `${value}%` : '—',
-  },
-  {
-    key: 'deadline',
-    title: 'Deadline',
-    sortable: true,
-    render: (value: unknown) =>
-      value ? new Date(value as string).toLocaleDateString('en-US') : '—',
-  },
-]
-
-const invoiceColumns = [
-  { key: 'client_name', title: 'Client', sortable: true },
-  {
-    key: 'amount',
-    title: 'Amount',
-    sortable: true,
-    render: (value: unknown) => `$${(value as number).toFixed(2)}`,
-  },
-  {
-    key: 'date',
-    title: 'Date',
-    sortable: true,
-    render: (value: unknown) =>
-      new Date(String(value)).toLocaleDateString('en-US'),
-  },
-  {
-    key: 'status',
-    title: 'Status',
-    sortable: true,
-    render: (_: unknown, row: Invoice) => (
-      <Badge variant={invoiceStatusVariant(row.status)}>{row.status}</Badge>
-    ),
-  },
-]
-
-const ticketColumns = [
-  { key: 'subject', title: 'Subject', sortable: true },
-  {
-    key: 'status',
-    title: 'Status',
-    sortable: true,
-    render: (_: unknown, row: SupportTicket) => (
-      <Badge variant={ticketStatusVariant(row.status)}>
-        {row.status.replace(/_/g, ' ')}
-      </Badge>
-    ),
-  },
-]
-
-const activityColumns = [
-  { key: 'action', title: 'Action', sortable: true },
-  { key: 'performed_by', title: 'Performed By', sortable: true },
-  {
-    key: 'timestamp',
-    title: 'Timestamp',
-    sortable: true,
-    render: (value: unknown) => new Date(String(value)).toLocaleString('en-US'),
-  },
-  {
-    key: 'details',
-    title: 'Details',
-    render: (value: unknown) => (value ? (value as string) : '—'),
-  },
-]
-
-function ProjectsTab({ projects }: { projects: Project[] }) {
-  const { page, setPage, totalPages, pageData } = useClientPagination(
-    projects,
-    10,
-  )
-
-  if (projects.length === 0) {
-    return (
-      <EmptyState
-        title="No projects"
-        description="No projects found for this client."
-      />
-    )
-  }
-
-  return (
-    <Stack spacing="sm">
-      <DataTable
-        data={{
-          columns: projectColumns,
-          data: pageData,
-          emptyMessage: 'No projects found.',
-        }}
-        pagination={{
-          virtual: { enabled: true, threshold: 30, maxHeight: 500 },
-        }}
-      />
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          showFirstLast
-        />
-      )}
-    </Stack>
-  )
-}
-
-function BillingTab({ invoices }: { invoices: Invoice[] }) {
-  const { page, setPage, totalPages, pageData } = useClientPagination(
-    invoices,
-    10,
-  )
-
-  if (invoices.length === 0) {
-    return (
-      <EmptyState
-        title="No invoices"
-        description="No invoices found for this client."
-      />
-    )
-  }
-
-  return (
-    <Stack spacing="sm">
-      <DataTable
-        data={{
-          columns: invoiceColumns,
-          data: pageData,
-          emptyMessage: 'No invoices found.',
-        }}
-        pagination={{
-          virtual: { enabled: true, threshold: 30, maxHeight: 500 },
-        }}
-      />
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          showFirstLast
-        />
-      )}
-    </Stack>
-  )
-}
-
-function SupportTab({ tickets }: { tickets: SupportTicket[] }) {
-  const { page, setPage, totalPages, pageData } = useClientPagination(
-    tickets,
-    10,
-  )
-
-  if (tickets.length === 0) {
-    return (
-      <EmptyState
-        title="No tickets"
-        description="No support tickets from this client."
-      />
-    )
-  }
-
-  return (
-    <Stack spacing="sm">
-      <DataTable
-        data={{
-          columns: ticketColumns,
-          data: pageData,
-          emptyMessage: 'No support tickets found.',
-        }}
-        pagination={{
-          virtual: { enabled: true, threshold: 30, maxHeight: 500 },
-        }}
-      />
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          showFirstLast
-        />
-      )}
-    </Stack>
-  )
-}
-
-function ActivityTab({ entries }: { entries: ActivityEntry[] }) {
-  const { page, setPage, totalPages, pageData } = useClientPagination(
-    entries,
-    10,
-  )
-
-  if (entries.length === 0) {
-    return (
-      <EmptyState
-        title="No activity"
-        description="No activity logged for this client."
-      />
-    )
-  }
-
-  return (
-    <Stack spacing="sm">
-      <DataTable
-        data={{
-          columns: activityColumns,
-          data: pageData,
-          emptyMessage: 'No activity logged.',
-        }}
-        pagination={{
-          virtual: { enabled: true, threshold: 30, maxHeight: 500 },
-        }}
-      />
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          showFirstLast
-        />
-      )}
-    </Stack>
-  )
 }
 
 export function ClientDetailPage({
@@ -347,22 +37,54 @@ export function ClientDetailPage({
     {
       id: 'projects',
       label: `Projects (${String(projects.length)})`,
-      content: <ProjectsTab projects={projects} />,
+      content: (
+        <PaginatedTab
+          rows={projects}
+          columns={projectColumns}
+          emptyTitle="No projects"
+          emptyDescription="No projects found for this client."
+          emptyMessage="No projects found."
+        />
+      ),
     },
     {
       id: 'invoices',
       label: `Billing (${String(invoices.length)})`,
-      content: <BillingTab invoices={invoices} />,
+      content: (
+        <PaginatedTab
+          rows={invoices}
+          columns={invoiceColumns}
+          emptyTitle="No invoices"
+          emptyDescription="No invoices found for this client."
+          emptyMessage="No invoices found."
+        />
+      ),
     },
     {
       id: 'tickets',
       label: `Support (${String(tickets.length)})`,
-      content: <SupportTab tickets={tickets} />,
+      content: (
+        <PaginatedTab
+          rows={tickets}
+          columns={ticketColumns}
+          emptyTitle="No tickets"
+          emptyDescription="No support tickets from this client."
+          emptyMessage="No support tickets found."
+        />
+      ),
     },
     {
       id: 'activity',
       label: `Activity (${String(activity.length)})`,
-      content: <ActivityTab entries={activity} />,
+      content: (
+        <PaginatedTab
+          rows={activity}
+          columns={activityColumns}
+          emptyTitle="No activity"
+          emptyDescription="No activity logged for this client."
+          emptyMessage="No activity logged."
+        />
+      ),
     },
   ]
 
