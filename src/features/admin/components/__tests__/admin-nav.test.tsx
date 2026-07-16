@@ -19,6 +19,7 @@ describe('AdminSidebar', () => {
     'Clients',
     'Leads',
     'Projects',
+    'Documents',
     'Billing',
     'Revenue',
     'Monitoring',

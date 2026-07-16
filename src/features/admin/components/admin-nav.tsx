@@ -12,6 +12,7 @@ const navItems: SidebarItem[] = [
   { key: '/admin/clients', label: 'Clients' },
   { key: '/admin/leads', label: 'Leads' },
   { key: '/admin/projects', label: 'Projects' },
+  { key: '/admin/documents', label: 'Documents' },
   { key: '/admin/billing', label: 'Billing' },
   { key: '/admin/revenue', label: 'Revenue' },
   { key: '/admin/monitoring', label: 'Monitoring' },

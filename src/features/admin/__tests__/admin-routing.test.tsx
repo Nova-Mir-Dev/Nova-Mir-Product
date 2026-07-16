@@ -18,6 +18,7 @@ const routes = [
   { label: 'Clients', href: '/admin/clients' },
   { label: 'Leads', href: '/admin/leads' },
   { label: 'Projects', href: '/admin/projects' },
+  { label: 'Documents', href: '/admin/documents' },
   { label: 'Billing', href: '/admin/billing' },
   { label: 'Revenue', href: '/admin/revenue' },
   { label: 'Monitoring', href: '/admin/monitoring' },
