@@ -150,7 +150,7 @@ export function PricingPage({ tiers: initial }: PricingPageProps) {
     {
       key: 'starting_price',
       title: 'Starting Price',
-      render: (_, row) => `$${row.starting_price.toLocaleString()}`,
+      render: (_, row) => `$${row.starting_price.toLocaleString('en-US')}`,
     },
     {
       key: 'is_featured',

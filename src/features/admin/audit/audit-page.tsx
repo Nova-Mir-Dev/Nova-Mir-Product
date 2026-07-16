@@ -18,7 +18,7 @@ export interface AuditPageProps {
   searchParams: { action?: string; client?: string; from?: string; to?: string }
 }
 
-const formatDate = (ts: string) => new Date(ts).toLocaleString()
+const formatDate = (ts: string) => new Date(ts).toLocaleString('en-US')
 
 export const AuditPage = ({ entries, searchParams }: AuditPageProps) => {
   const { page, setPage, totalPages, pageData } = useClientPagination(

@@ -47,7 +47,7 @@ export default async function ProjectDetailPage({
           <Text element={{ size: 'sm' }} color="secondary">
             Deadline:{' '}
             {project.deadline
-              ? new Date(project.deadline).toLocaleDateString()
+              ? new Date(project.deadline).toLocaleDateString('en-US')
               : 'No deadline'}
           </Text>
         </Stack>

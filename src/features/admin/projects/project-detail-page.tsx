@@ -62,7 +62,7 @@ function OverviewTab({
             </Text>
             <Text weight="semibold">
               {project.deadline
-                ? new Date(project.deadline).toLocaleDateString()
+                ? new Date(project.deadline).toLocaleDateString('en-US')
                 : '—'}
             </Text>
           </Stack>
@@ -88,7 +88,7 @@ function OverviewTab({
               Created
             </Text>
             <Text weight="semibold">
-              {new Date(project.created_at).toLocaleDateString()}
+              {new Date(project.created_at).toLocaleDateString('en-US')}
             </Text>
           </Stack>
         </Card>
@@ -117,7 +117,7 @@ function OverviewTab({
                 Created
               </Text>
               <Text weight="semibold">
-                {new Date(project.created_at).toLocaleDateString()}
+                {new Date(project.created_at).toLocaleDateString('en-US')}
               </Text>
             </Stack>
             {project.deadline && (
@@ -128,7 +128,7 @@ function OverviewTab({
                     Deadline
                   </Text>
                   <Text weight="semibold">
-                    {new Date(project.deadline).toLocaleDateString()}
+                    {new Date(project.deadline).toLocaleDateString('en-US')}
                   </Text>
                 </Stack>
               </>

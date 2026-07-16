@@ -90,7 +90,7 @@ export default function RevenuePage({
         sortable: true,
         render: (value: unknown) => {
           const d = String(value)
-          return <span>{new Date(d).toLocaleDateString()}</span>
+          return <span>{new Date(d).toLocaleDateString('en-US')}</span>
         },
       },
       isRevenue

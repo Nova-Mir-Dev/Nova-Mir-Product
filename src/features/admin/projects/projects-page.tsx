@@ -42,7 +42,7 @@ const statusVariant = (status: string): BadgeVariant => {
 }
 
 const formatDate = (d: string | null) =>
-  d ? new Date(d).toLocaleDateString() : '—'
+  d ? new Date(d).toLocaleDateString('en-US') : '—'
 
 export const ProjectsPage = ({ projects }: ProjectsPageProps) => {
   const { page, setPage, totalPages, pageData } = useClientPagination(

@@ -168,7 +168,7 @@ export default async function DashboardPage() {
                 ${(nextInvoice.amount / 100).toFixed(2)}
               </Text>
               <Text element={{ size: 'sm' }} color="secondary">
-                Due {new Date(nextInvoice.date).toLocaleDateString()}
+                Due {new Date(nextInvoice.date).toLocaleDateString('en-US')}
               </Text>
               <form action={openCustomerPortal}>
                 <Button variant="primary" type="submit" size="sm">
@@ -247,7 +247,7 @@ export default async function DashboardPage() {
                 <Text element={{ size: 'sm' }} color="secondary">
                   {project.progress ?? 0}% complete — Deadline:{' '}
                   {project.deadline
-                    ? new Date(project.deadline).toLocaleDateString()
+                    ? new Date(project.deadline).toLocaleDateString('en-US')
                     : 'No deadline'}
                 </Text>
               </Stack>
@@ -285,7 +285,7 @@ export default async function DashboardPage() {
                   </Text>
                   <Text element={{ size: 'sm' }} color="secondary">
                     {activity.project_name} —{' '}
-                    {new Date(activity.created_at).toLocaleString()}
+                    {new Date(activity.created_at).toLocaleString('en-US')}
                   </Text>
                 </Stack>
               </Card>

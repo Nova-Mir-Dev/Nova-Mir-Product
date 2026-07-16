@@ -203,7 +203,7 @@ export default async function AdminDashboard() {
                         : ''}
                     </Text>
                     <Text element={{ size: 'xs' }} color="muted">
-                      {new Date(entry.created_at).toLocaleString()}
+                      {new Date(entry.created_at).toLocaleString('en-US')}
                     </Text>
                   </Stack>
                 </Card>

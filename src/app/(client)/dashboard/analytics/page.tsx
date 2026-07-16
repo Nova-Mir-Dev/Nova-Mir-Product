@@ -199,7 +199,7 @@ export default async function AnalyticsPage() {
               Total Spent
             </Text>
             <Text element={{ as: 'p', size: 'h2' }} weight="bold">
-              ${(totalSpent / 100).toLocaleString()}
+              ${(totalSpent / 100).toLocaleString('en-US')}
             </Text>
           </Stack>
         </Card>

@@ -84,7 +84,9 @@ export function DsarPage() {
                         }}
                       >
                         <Text element={{ size: 'sm' }}>
-                          {new Date(event.created_at).toLocaleDateString()}
+                          {new Date(event.created_at).toLocaleDateString(
+                            'en-US',
+                          )}
                         </Text>
                       </td>
                       <td

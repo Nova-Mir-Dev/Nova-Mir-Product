@@ -88,7 +88,7 @@ export function Appointments() {
             {appointments.map((a) => (
               <div key={a.id}>
                 <Text element={{ size: 'sm' }}>
-                  {a.title} — {new Date(a.startTime).toLocaleString()} (
+                  {a.title} — {new Date(a.startTime).toLocaleString('en-US')} (
                   {a.status})
                 </Text>
               </div>

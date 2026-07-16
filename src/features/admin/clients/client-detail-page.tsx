@@ -120,7 +120,7 @@ const projectColumns = [
     title: 'Deadline',
     sortable: true,
     render: (value: unknown) =>
-      value ? new Date(value as string).toLocaleDateString() : '—',
+      value ? new Date(value as string).toLocaleDateString('en-US') : '—',
   },
 ]
 
@@ -136,7 +136,8 @@ const invoiceColumns = [
     key: 'date',
     title: 'Date',
     sortable: true,
-    render: (value: unknown) => new Date(String(value)).toLocaleDateString(),
+    render: (value: unknown) =>
+      new Date(String(value)).toLocaleDateString('en-US'),
   },
   {
     key: 'status',
@@ -169,7 +170,7 @@ const activityColumns = [
     key: 'timestamp',
     title: 'Timestamp',
     sortable: true,
-    render: (value: unknown) => new Date(String(value)).toLocaleString(),
+    render: (value: unknown) => new Date(String(value)).toLocaleString('en-US'),
   },
   {
     key: 'details',
@@ -405,7 +406,7 @@ export function ClientDetailPage({
             <Text element={{ size: 'sm' }} color="muted">
               Member Since
             </Text>
-            <Text>{new Date(c.created_at).toLocaleDateString()}</Text>
+            <Text>{new Date(c.created_at).toLocaleDateString('en-US')}</Text>
           </Stack>
         </Card>
         <Card>

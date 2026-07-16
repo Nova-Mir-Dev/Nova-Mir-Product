@@ -65,7 +65,7 @@ export default async function BillingPage() {
                   ${(nextInvoice.amount / 100).toFixed(2)}
                 </Text>
                 <Text element={{ size: 'sm' }} color="secondary">
-                  Due {new Date(nextInvoice.date).toLocaleDateString()}
+                  Due {new Date(nextInvoice.date).toLocaleDateString('en-US')}
                 </Text>
                 <form action={openCustomerPortal}>
                   <Button variant="primary" type="submit" size="sm">
@@ -145,7 +145,7 @@ export default async function BillingPage() {
                     }}
                   >
                     <td style={{ padding: '8px' }}>
-                      {new Date(inv.date).toLocaleDateString()}
+                      {new Date(inv.date).toLocaleDateString('en-US')}
                     </td>
                     <td style={{ padding: '8px' }}>
                       ${(inv.amount / 100).toFixed(2)}

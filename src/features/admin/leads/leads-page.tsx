@@ -94,7 +94,8 @@ export function LeadsPage({ leads }: LeadsPageProps) {
       key: 'created_at',
       title: 'Created',
       sortable: true,
-      render: (value: unknown) => new Date(String(value)).toLocaleDateString(),
+      render: (value: unknown) =>
+        new Date(String(value)).toLocaleDateString('en-US'),
     },
     {
       key: 'id',

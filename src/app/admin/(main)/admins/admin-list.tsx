@@ -110,7 +110,7 @@ export function AdminList({ admins }: { admins: AdminUser[] }) {
                       }}
                     >
                       <Text element={{ size: 'xs' }} color="secondary">
-                        {new Date(a.created_at).toLocaleDateString()}
+                        {new Date(a.created_at).toLocaleDateString('en-US')}
                       </Text>
                     </td>
                   </tr>

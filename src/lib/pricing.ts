@@ -20,7 +20,7 @@ function envStr(key: string, fallback: string): string {
 export function getFoundingOfferLabel(): string {
   const count = envStr('NEXT_PUBLIC_FOUNDING_OFFER_COUNT', '3')
   const price = envPrice('NEXT_PUBLIC_FOUNDING_OFFER_PRICE', 2000)
-  return `First ${count} clients at a flat $${price.toLocaleString()} rate`
+  return `First ${count} clients at a flat $${price.toLocaleString('en-US')} rate`
 }
 
 export function getMaintenanceRetainer(): string {

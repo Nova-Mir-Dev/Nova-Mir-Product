@@ -327,7 +327,8 @@ const ApiKeysTab = ({ apiKeys }: { apiKeys: ApiKeyItem[] }) => {
                 <Stack spacing="xs">
                   <span className={styles.apiKeyPrefix}>{key.prefix}...</span>
                   <Text element={{ size: 'xs' }}>
-                    Created {new Date(key.created_at).toLocaleDateString()}
+                    Created{' '}
+                    {new Date(key.created_at).toLocaleDateString('en-US')}
                   </Text>
                 </Stack>
                 <form action={revokeApiKey}>

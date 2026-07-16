@@ -5,7 +5,7 @@ import { HeroContent } from './_components/hero-headlines'
 import styles from './landing.module.css'
 
 function formatPrice(price: number): string {
-  return '$' + price.toLocaleString()
+  return '$' + price.toLocaleString('en-US')
 }
 
 function pricingData(

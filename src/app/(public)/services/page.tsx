@@ -105,7 +105,7 @@ export default function ServicesPage() {
                     weight="bold"
                     style={{ color: 'var(--azimuth-color-primary)' }}
                   >
-                    ${tier.startingPrice.toLocaleString()}
+                    ${tier.startingPrice.toLocaleString('en-US')}
                     {featured ? '' : '+'}
                   </Text>
                   {featured && (

@@ -191,7 +191,7 @@ export default async function SupportPage({
                     </Text>
                   </div>
                   <Text element={{ size: 'sm' }} color="secondary">
-                    {new Date(ticket.created_at).toLocaleDateString()}
+                    {new Date(ticket.created_at).toLocaleDateString('en-US')}
                   </Text>
                 </Stack>
               </Card>

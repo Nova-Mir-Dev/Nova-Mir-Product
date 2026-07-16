@@ -56,7 +56,7 @@ export default async function StatusPage() {
           />
           <Text element={{ size: 'sm' }} color="secondary">
             All systems operational — Last checked:{' '}
-            {new Date().toLocaleString()}
+            {new Date().toLocaleString('en-US')}
           </Text>
         </div>
       </Stack>
@@ -183,9 +183,9 @@ export default async function StatusPage() {
                     </span>
                   </div>
                   <Text element={{ size: 'sm' }} color="secondary">
-                    {new Date(incident.created_at).toLocaleDateString()}{' '}
+                    {new Date(incident.created_at).toLocaleDateString('en-US')}{' '}
                     {incident.resolved_at
-                      ? `— Resolved ${new Date(incident.resolved_at).toLocaleDateString()}`
+                      ? `— Resolved ${new Date(incident.resolved_at).toLocaleDateString('en-US')}`
                       : ''}
                   </Text>
                 </Stack>
