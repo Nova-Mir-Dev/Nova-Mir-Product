@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { Button, Card, Container, Text, Badge } from 'azimuth-ui'
-import { PRICING_TIERS } from '@/lib/pricing'
-import { getPublishedPricing } from '@/lib/content'
+import { getPricingTiers } from '@/lib/content'
 import { HeroContent } from './_components/hero-headlines'
 import styles from './landing.module.css'
 
@@ -17,8 +16,8 @@ function pricingData(
     features: string[]
   }[],
 ) {
-  return tiers.map((tier, i) => {
-    const featured = tier.isFeatured ?? i === 1
+  return tiers.map((tier) => {
+    const featured = tier.isFeatured
     const suffix = featured ? '' : '+'
     return {
       name: tier.name,
@@ -65,25 +64,7 @@ const PROJECTS = [
 ]
 
 export default async function Home() {
-  const dbPricing = await getPublishedPricing()
-  const tiers =
-    dbPricing && dbPricing.length > 0
-      ? dbPricing.map((t) => ({
-          name: t.name,
-          startingPrice: t.starting_price,
-          features: t.features ?? [],
-          isFeatured: t.is_featured,
-          description: t.description ?? '',
-        }))
-      : PRICING_TIERS.map((t) => ({
-          name: t.name,
-          startingPrice: t.startingPrice,
-          features: t.features,
-          isFeatured:
-            t.description === 'Businesses ready to capture and track leads.',
-          description: t.description,
-        }))
-
+  const tiers = await getPricingTiers()
   const displayTiers = pricingData(tiers)
 
   return (

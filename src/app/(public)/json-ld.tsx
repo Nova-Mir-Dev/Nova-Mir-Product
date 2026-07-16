@@ -1,20 +1,11 @@
-import { getPublishedPricing } from '@/lib/content'
-import { PRICING_TIERS } from '@/lib/pricing'
-import type { PricingTierRow } from '@/types/content'
-import type { PricingTier } from '@/lib/pricing'
+import { getPricingTiers } from '@/lib/content'
 
 function safeJson(obj: unknown): string {
   return JSON.stringify(obj).replace(/<\//g, '\\u003C/')
 }
 
-function getPrice(tier: PricingTierRow | PricingTier): number {
-  return 'starting_price' in tier ? tier.starting_price : tier.startingPrice
-}
-
 export async function JsonLd() {
-  const dbTiers = await getPublishedPricing()
-  const tiers: (PricingTierRow | PricingTier)[] =
-    dbTiers && dbTiers.length > 0 ? dbTiers : PRICING_TIERS
+  const tiers = await getPricingTiers()
 
   const organization = {
     '@context': 'https://schema.org',
@@ -52,7 +43,7 @@ export async function JsonLd() {
       itemListElement: tiers.map((tier) => ({
         '@type': 'Offer',
         itemOffered: { '@type': 'Service', name: tier.name },
-        price: String(getPrice(tier)).replace(/[$,]/g, ''),
+        price: String(tier.startingPrice).replace(/[$,]/g, ''),
         priceCurrency: 'USD',
       })),
     },

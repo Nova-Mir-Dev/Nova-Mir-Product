@@ -8,6 +8,7 @@ import type {
   PricingTierRow,
   ProcessStepRow,
 } from '@/types/content'
+import { PRICING_TIERS } from '@/lib/pricing'
 
 type SupabaseClient = ReturnType<typeof createClient>
 
@@ -49,6 +50,40 @@ export const getPublishedPricing = createContentFetcher<PricingTierRow[]>(
     return data
   },
 )
+
+export interface PricingCard {
+  name: string
+  startingPrice: number
+  features: string[]
+  isFeatured: boolean
+  description: string
+}
+
+/**
+ * Normalized pricing tiers for public rendering (homepage cards + JSON-LD),
+ * from the DB when published rows exist, otherwise the static fallback.
+ * `isFeatured` always derives from the data, never from a description-text
+ * match — see Nova-Mir-Product-94p.
+ */
+export async function getPricingTiers(): Promise<PricingCard[]> {
+  const db = await getPublishedPricing()
+  if (db && db.length > 0) {
+    return db.map((t) => ({
+      name: t.name,
+      startingPrice: t.starting_price,
+      features: t.features ?? [],
+      isFeatured: t.is_featured,
+      description: t.description ?? '',
+    }))
+  }
+  return PRICING_TIERS.map((t) => ({
+    name: t.name,
+    startingPrice: t.startingPrice,
+    features: t.features,
+    isFeatured: t.isFeatured,
+    description: t.description,
+  }))
+}
 
 export const getPublishedPortfolio = createContentFetcher<
   PortfolioProjectRow[]

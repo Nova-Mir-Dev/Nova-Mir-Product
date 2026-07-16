@@ -4,6 +4,7 @@ export interface PricingTier {
   description: string
   features: string[]
   href: string
+  isFeatured: boolean
 }
 
 function envPrice(key: string, fallback: number): number {
@@ -42,6 +43,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Hosting setup',
     ],
     href: '/services',
+    isFeatured: false,
   },
   {
     name: envStr('NEXT_PUBLIC_TIER2_NAME', 'Website + Lead System'),
@@ -56,6 +58,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Simple reporting',
     ],
     href: '/services',
+    isFeatured: true,
   },
   {
     name: envStr('NEXT_PUBLIC_TIER3_NAME', 'Website + Operations'),
@@ -70,5 +73,6 @@ export const PRICING_TIERS: PricingTier[] = [
       'System documentation',
     ],
     href: '/services',
+    isFeatured: false,
   },
 ]

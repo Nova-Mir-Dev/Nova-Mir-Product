@@ -6,6 +6,22 @@ import en from '../../../../messages/en.json'
 
 vi.mock('@/lib/content', () => ({
   getPublishedPricing: vi.fn().mockResolvedValue(null),
+  getPricingTiers: vi.fn().mockResolvedValue([
+    {
+      name: 'Managed Website',
+      startingPrice: 1800,
+      features: ['Custom-designed site'],
+      isFeatured: false,
+      description: 'Small businesses that need a credible online presence.',
+    },
+    {
+      name: 'Website + Lead System',
+      startingPrice: 3000,
+      features: ['Lead capture form'],
+      isFeatured: true,
+      description: 'Businesses ready to capture and track leads.',
+    },
+  ]),
 }))
 
 async function renderHome() {
