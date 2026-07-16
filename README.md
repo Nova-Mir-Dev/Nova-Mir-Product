@@ -41,18 +41,18 @@ npm run dev
 
 ## Scripts
 
-| Command                | Description                 |
-| ---------------------- | --------------------------- |
-| `npm run dev`          | Start development server    |
-| `npm run build`        | Production build            |
-| `npm run typecheck`    | TypeScript type checking    |
-| `npm run lint`         | Lint all source files       |
-| `npm run format`       | Format with Prettier        |
-| `npm test`             | Run tests (Vitest)          |
-| `npm run test:watch`   | Run tests in watch mode     |
-| `npm run verify`       | Run full verification suite |
-| `npm run check:assets` | Check public assets         |
-| `npm run start`        | Start production server     |
+| Command                 | Description                  |
+| ----------------------- | ---------------------------- |
+| `npm run dev`           | Start development server     |
+| `npm run build`         | Production build             |
+| `npm run typecheck`     | TypeScript type checking     |
+| `npm run lint`          | Lint all source files        |
+| `npm run format`        | Format with Prettier         |
+| `npm test`              | Run tests (Vitest)           |
+| `npm run verify`        | Run full verification suite  |
+| `npm run check:assets`  | Check public assets          |
+| `npm run audit:content` | DB-backed content copy audit |
+| `npm run start`         | Start production server      |
 
 ## Environment Variables
 
@@ -70,6 +70,7 @@ npm run dev
 | `SENTRY_PROJECT`                | Sentry project slug                                                 |
 | `SLACK_BOT_TOKEN`               | Slack bot token for messaging                                       |
 | `SLACK_SIGNING_SECRET`          | Slack signing secret for verifying requests                         |
+| `CRON_SECRET`                   | Bearer secret for Vercel cron routes (keep-alive)                   |
 
 See `.env.example` for the full list.
 
@@ -79,7 +80,7 @@ Before deploying, ensure these pass:
 
 - `npm run typecheck` — zero errors
 - `npm run build` — succeeds
-- `npm test` — 757 tests across 84 test files
+- `npm test` — full Vitest suite (844+ tests) passing
 - `npm run lint` — zero errors
 - `npx prettier --check .` — all files formatted
 
@@ -106,7 +107,7 @@ src/
   lib/                  → Shared utilities
 ```
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a full architecture overview.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a full architecture overview and [docs/RUNBOOK.md](docs/RUNBOOK.md) for operational tasks (Supabase restore, migrations, cron secret).
 
 ### Compliance Docs
 

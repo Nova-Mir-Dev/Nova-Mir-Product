@@ -82,6 +82,8 @@ Quality gates must pass before merge: typecheck (0 errors) → build (succeeds) 
 - **UI**: `azimuth-ui` component library (Text, Card, Stack, Grid, Button, Input, Alert, etc.) — prefer over custom CSS
 - **Co-located features**: each feature is self-contained under `src/features/{feature}/` with `types.ts`, `{feature}.tsx`, `{feature}.module.css`, `use-{feature}.ts`, `components/`. No barrel `index.ts` in sub-folders. Components split after ~100 lines.
 - **Content architecture**: frequently-updated content (pricing, portfolio projects, nav links, hero headlines, testimonials, process steps) lives in DB tables with admin CRUD + RLS, not hardcoded. SEO-critical/architectural content stays in code. See AGENTS.md "Content Architecture Rule".
+- **Pricing consistency**: the live DB `pricing_tiers`, `supabase/seed-content.sql`, the `PRICING_TIERS` fallback in `src/lib/pricing.ts`, and the Nova Mir Planning `Pricing-Guide.md` must stay identical in one PR. Prices are whole DOLLARS (DB CHECK rejects ≥ 100000); `pricing-consistency.test.ts` enforces seed↔fallback parity. See AGENTS.md "Pricing Consistency Rule".
+- **Ops runbook**: `docs/RUNBOOK.md` — restoring a paused Supabase project, applying migrations via the Management API, the CRON_SECRET, and re-seeding content.
 - **Integrations**: Stripe (billing), Resend + React Email (transactional email), Twilio (SMS), Upstash ratelimit + redis, Sentry (monitoring), Slack Bolt
 - **Database tables**: `users`, `audit_logs`, `api_keys`, `appointments`
 - **API routes**: `/api/appointments`, `/api/admin/api-keys`, `/api/health`, `/api/compliance/{data-access,data-deletion,data-correction}` (DSAR)

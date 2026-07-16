@@ -102,6 +102,17 @@ Content that is SEO-critical, architectural, or changes < 1x/year stays in code:
 
 When building a new content-driven feature, create typed DB tables (not a generic JSONB table) with: sort_order, is_published, content_history trigger, RLS policies. See the full-audit skill's content dimension for automated verification.
 
+### Pricing Consistency Rule
+
+Pricing has four surfaces that MUST stay identical in the same PR: the live DB
+`pricing_tiers` rows, `supabase/seed-content.sql`, the `PRICING_TIERS` fallback
+in `src/lib/pricing.ts`, and the canonical **Nova Mir Planning**
+`Pricing-Guide.md`. `starting_price` is denominated in whole DOLLARS (a DB CHECK
+constraint rejects values ≥ 100000, since a cents value like 150000 rendered
+"$150,000" on the live site once). `src/lib/__tests__/pricing-consistency.test.ts`
+fails CI if the seed and the fallback diverge. When a price or package changes,
+update all four surfaces and re-run the consistency test.
+
 ## Quality Gates (Must Pass Before Merge)
 
 1. TypeScript: npm run typecheck — zero errors
