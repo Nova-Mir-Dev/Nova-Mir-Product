@@ -8,6 +8,7 @@ import { CookieConsentBanner } from '@/components/cookie-consent-banner'
 import { JsonLd } from './(public)/json-ld'
 import './globals.css'
 import 'azimuth-ui/styles.css'
+import './theme-overrides.css'
 
 const sora = Sora({
   subsets: ['latin'],

@@ -1,0 +1,13 @@
+/* App-level design-token overrides. Imported AFTER azimuth-ui/styles.css so
+   these win over the library defaults (same :root specificity, later wins). */
+
+/* Darken the default light-theme primary so white button/label text meets
+   WCAG 2.2 AA (4.5:1). Azimuth's default #2e9e8e is only 3.28:1 against white,
+   and its hover #258a7c is 4.2:1 — both under 4.5. #1b7b6d is 5.12:1 and the
+   darker hover keeps the "darker on hover" convention. Dark mode already
+   passes (dark on-primary text on a light teal). Tracked upstream:
+   azimuth_ui-8hu. */
+:root {
+  --azimuth-color-primary: #1b7b6d;
+  --azimuth-color-primary-hover: #177567;
+}
