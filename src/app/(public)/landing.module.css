@@ -239,7 +239,9 @@
 }
 
 .testimonialContent {
-  opacity: 0.4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .testimonialQuote {

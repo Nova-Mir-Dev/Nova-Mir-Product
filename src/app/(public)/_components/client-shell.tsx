@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { Container, Text, Button } from 'azimuth-ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { APP_CONFIG, NAV_PAGES } from '@/lib/navigation'
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <header
@@ -57,11 +59,22 @@ function Navbar() {
           </Link>
 
           <div className="nav-links">
-            {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => (
-              <a key={page.path} href={page.path} className="nav-link">
-                {page.label}
-              </a>
-            ))}
+            {NAV_PAGES.filter((p) => p.path !== '/terms').map((page) => {
+              const isActive =
+                page.path === '/'
+                  ? pathname === '/'
+                  : pathname.startsWith(page.path)
+              return (
+                <a
+                  key={page.path}
+                  href={page.path}
+                  className={`nav-link${isActive ? ' nav-link-active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {page.label}
+                </a>
+              )
+            })}
           </div>
 
           <div className="nav-actions">
@@ -105,11 +118,18 @@ function Navbar() {
           text-decoration: none;
           color: var(--azimuth-color-text-secondary);
           font-size: 0.875rem;
-          transition: color 150ms ease;
+          padding-bottom: 2px;
+          border-bottom: 2px solid transparent;
+          transition: color 150ms ease, border-color 150ms ease;
         }
         .nav-link:hover,
         .nav-link:focus {
           color: var(--azimuth-color-text);
+        }
+        .nav-link-active {
+          color: var(--azimuth-color-text);
+          font-weight: 600;
+          border-bottom-color: var(--azimuth-color-primary);
         }
         .nav-actions {
           display: flex;
