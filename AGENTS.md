@@ -115,27 +115,13 @@ update all four surfaces and re-run the consistency test.
 
 ### Internationalization Rule
 
-`docs/I18N.md` is the single authority for translation work — read it before
-touching `messages/*.json`. The non-negotiables it encodes:
-
-- Locales are `en`/`es`/`ru`, listed once in `i18n/locales.ts`; resolution is
-  cookie → Accept-Language → en (`i18n/request.ts`).
-- Register is fixed per locale: Spanish = tú, Russian = lowercase вы. These
-  were decided against the brand voice and observed market convention
-  (rationale + sources in I18N.md). Never mix registers within a locale.
-- The es and ru catalogs are **machine drafts pending native-speaker review**
-  (beads e1iy.2.3 / e1iy.2.4). Machine drafts must not be promoted to
-  production marketing surfaces without that human pass, and any new
-  machine-drafted strings require a review bead filed in the same change.
-- `src/features/i18n/__tests__/catalog-parity.test.ts` enforces structure
-  only: identical key paths to en, no empty strings, identical ICU
-  placeholder sets. It cannot judge linguistic quality — a human always can
-  and always must.
-- Adding a locale: follow the checklist in I18N.md (locales.ts, catalog,
-  messageMap, endonyms in every catalog, parity test, review bead, layout
-  check for long labels).
-- Russian plurals need all four CLDR forms (one/few/many/other) when the
-  first ICU plural string lands.
+Before touching `messages/*.json` or adding a locale, read `docs/I18N.md` —
+the single authority for register per locale, vocabulary calls, the
+add-a-locale checklist, and the review workflow. Non-negotiable: register is
+fixed per locale (es = tú, ru = lowercase вы; never mix), and machine-drafted
+strings never ship to production marketing surfaces without a native-speaker
+review bead. The catalog-parity test enforces structure only, not linguistic
+quality.
 
 ## Quality Gates (Must Pass Before Merge)
 
