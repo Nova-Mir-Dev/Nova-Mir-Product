@@ -33,6 +33,10 @@ export default defineConfig({
         find: /^@\/emails\/(.*)/,
         replacement: path.resolve(__dirname, 'emails/$1'),
       },
+      {
+        find: /^@\/i18n\/(.*)/,
+        replacement: path.resolve(__dirname, 'i18n/$1'),
+      },
       { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
     ],
   },

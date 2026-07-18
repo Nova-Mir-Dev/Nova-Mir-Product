@@ -55,6 +55,9 @@
   margin-top: auto;
   padding-top: var(--azimuth-space-md);
   border-top: 1px solid var(--azimuth-color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-sm);
 }
 
 .backLink {

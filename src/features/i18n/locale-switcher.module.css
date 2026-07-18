@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--azimuth-color-text-muted, inherit);
+}
+
+.select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--azimuth-color-border, #cccccc);
+  border-radius: var(--azimuth-radius-md, 6px);
+  background: var(--azimuth-color-bg, #ffffff);
+  color: var(--azimuth-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+
+.select:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary, #00787a);
+  outline-offset: 2px;
+}

@@ -33,5 +33,22 @@
   "Footer": {
     "tagline": "Nova Mir builds websites and operational tools for small businesses.",
     "rights": "All rights reserved."
+  },
+  "Dashboard": {
+    "brand": "Nova Mir",
+    "loading": "Loading…",
+    "backToSite": "Back to Site",
+    "nav": {
+      "home": "Home",
+      "privacy": "Privacy",
+      "billing": "Billing",
+      "support": "Support",
+      "settings": "Settings"
+    },
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "es": "Español"
+    }
   }
 }

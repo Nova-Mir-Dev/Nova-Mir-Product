@@ -33,5 +33,22 @@
   "Footer": {
     "tagline": "Nova Mir crea sitios web y herramientas operativas para pequeños negocios.",
     "rights": "Todos los derechos reservados."
+  },
+  "Dashboard": {
+    "brand": "Nova Mir",
+    "loading": "Cargando…",
+    "backToSite": "Volver al Sitio",
+    "nav": {
+      "home": "Inicio",
+      "privacy": "Privacidad",
+      "billing": "Facturación",
+      "support": "Soporte",
+      "settings": "Configuración"
+    },
+    "language": {
+      "label": "Idioma",
+      "en": "English",
+      "es": "Español"
+    }
   }
 }

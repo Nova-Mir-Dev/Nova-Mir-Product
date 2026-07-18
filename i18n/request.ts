@@ -3,18 +3,13 @@ import type { AbstractIntlMessages } from 'next-intl'
 import { cookies, headers } from 'next/headers'
 import en from '../messages/en.json'
 import es from '../messages/es.json'
+import { DEFAULT_LOCALE, isLocale, type Locale } from './locales'
 
-export const locales = ['en', 'es'] as const
-export type Locale = (typeof locales)[number]
-const DEFAULT_LOCALE: Locale = 'en'
+export { locales, type Locale } from './locales'
 
 const messageMap: Record<Locale, AbstractIntlMessages> = {
   en,
   es,
-}
-
-function isLocale(value: string | undefined): value is Locale {
-  return value ? (locales as readonly string[]).includes(value) : false
 }
 
 export default getRequestConfig(async () => {

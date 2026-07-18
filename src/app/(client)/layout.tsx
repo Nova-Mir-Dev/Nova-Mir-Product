@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
   Stack,
@@ -13,6 +14,7 @@ import {
   EnvelopeIcon,
   UserLargeIcon,
 } from 'azimuth-ui'
+import { LocaleSwitcher } from '@/features/i18n/locale-switcher'
 import styles from './client-layout.module.css'
 
 interface ClientUser {
@@ -21,12 +23,12 @@ interface ClientUser {
 }
 
 const NAV_ITEMS = [
-  { label: 'Home', path: '/dashboard', icon: 'home' },
-  { label: 'Privacy', path: '/dashboard/privacy', icon: 'privacy' },
-  { label: 'Billing', path: '/dashboard/billing', icon: 'billing' },
-  { label: 'Support', path: '/dashboard/support', icon: 'support' },
-  { label: 'Settings', path: '/dashboard/settings', icon: 'settings' },
-]
+  { key: 'home', path: '/dashboard', icon: 'home' },
+  { key: 'privacy', path: '/dashboard/privacy', icon: 'privacy' },
+  { key: 'billing', path: '/dashboard/billing', icon: 'billing' },
+  { key: 'support', path: '/dashboard/support', icon: 'support' },
+  { key: 'settings', path: '/dashboard/settings', icon: 'settings' },
+] as const
 
 const NAV_ICONS: Record<string, React.ReactNode> = {
   home: <HomeIcon />,
@@ -42,6 +44,7 @@ export default function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const t = useTranslations('Dashboard')
   const [user, setUser] = useState<ClientUser | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -61,7 +64,7 @@ export default function ClientLayout({
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <Text>Loading...</Text>
+  if (loading) return <Text>{t('loading')}</Text>
   if (!user) return null
 
   return (
@@ -71,7 +74,7 @@ export default function ClientLayout({
           <Link href="/" className={styles.brand}>
             <img src="/logo-icon.svg" alt="" className={styles.logo} />
             <Text element={{ as: 'h2', size: 'h5' }} weight="semibold">
-              Nova Mir
+              {t('brand')}
             </Text>
           </Link>
           {NAV_ITEMS.map((item) => {
@@ -83,14 +86,15 @@ export default function ClientLayout({
                 href={item.path}
                 className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
               >
-                {item.label}
+                {t(`nav.${item.key}`)}
               </Link>
             )
           })}
         </Stack>
         <div className={styles.sidebarFooter}>
+          <LocaleSwitcher />
           <Button variant="secondary" size="sm" asChild>
-            <Link href="/">Back to Site</Link>
+            <Link href="/">{t('backToSite')}</Link>
           </Button>
         </div>
       </nav>
@@ -112,7 +116,9 @@ export default function ClientLayout({
               <span className={styles.bottomTabIcon}>
                 {NAV_ICONS[item.icon]}
               </span>
-              <span className={styles.bottomTabLabel}>{item.label}</span>
+              <span className={styles.bottomTabLabel}>
+                {t(`nav.${item.key}`)}
+              </span>
             </Link>
           )
         })}
