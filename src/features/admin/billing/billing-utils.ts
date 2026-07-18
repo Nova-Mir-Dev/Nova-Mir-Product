@@ -1,3 +1,15 @@
+export function formatAmount(cents: number): string {
+  return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+}
+
+export function invoiceStatusVariant(
+  status: string,
+): 'success' | 'warning' | 'danger' {
+  if (status === 'paid') return 'success'
+  if (status === 'pending') return 'warning'
+  return 'danger'
+}
+
 export function generateInvoiceNumber(count: number): string {
   const year = new Date().getFullYear()
   return `INV-${year}-${String(count).padStart(5, '0')}`
