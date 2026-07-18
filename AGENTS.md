@@ -193,8 +193,15 @@ Target Markets: ca, us, eu, uk, mx, au
 - POST /api/compliance/data-correction — DSAR correction
 - POST /api/compliance/opt-out — CCPA opt-out
 - GET /api/content/hero-headlines — Public hero headlines
-- GET/POST/PATCH/DELETE /api/crud/[entity] — Generic CRUD
+- GET /api/content/pricing — Public pricing tiers
+- GET/POST/PUT/DELETE /api/admin/content/pricing — Pricing tier CRUD
+- POST /api/admin/upload — Signed image upload URL
+- POST /api/admin/clients/invite — Invite/link a client account
 - POST /api/documents — Document upload
+- GET /api/invoices/[id]/download — Client invoice download (owner-scoped)
+- PATCH /api/leads/[id] — Update a lead
+- POST /api/auth/mfa/challenge — MFA challenge
+- GET /api/cron/keep-alive — Vercel cron DB keep-alive (CRON_SECRET)
 - GET /api/export — Data export
 - GET /api/health — Health check
 - GET /api/notifications — Notification polling
@@ -204,7 +211,9 @@ Target Markets: ca, us, eu, uk, mx, au
 
 See `.env.example` for the full list. Key variables to set:
 
-- Database: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+- Database: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+- Rate limiting: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN (in-memory fallback locally; required in prod)
+- Cron: CRON_SECRET (bearer for /api/cron/keep-alive)
 - Monitoring: NEXT_PUBLIC_SENTRY_DSN, SENTRY_AUTH_TOKEN
 - Slack: SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET
 

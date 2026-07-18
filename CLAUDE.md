@@ -85,8 +85,8 @@ Quality gates must pass before merge: typecheck (0 errors) → build (succeeds) 
 - **Pricing consistency**: the live DB `pricing_tiers`, `supabase/seed-content.sql`, the `PRICING_TIERS` fallback in `src/lib/pricing.ts`, and the Nova Mir Planning `Pricing-Guide.md` must stay identical in one PR. Prices are whole DOLLARS (DB CHECK rejects ≥ 100000); `pricing-consistency.test.ts` enforces seed↔fallback parity. See AGENTS.md "Pricing Consistency Rule".
 - **Ops runbook**: `docs/RUNBOOK.md` — restoring a paused Supabase project, applying migrations via the Management API, the CRON_SECRET, and re-seeding content.
 - **Integrations**: Stripe (billing), Resend + React Email (transactional email), Twilio (SMS), Upstash ratelimit + redis, Sentry (monitoring), Slack Bolt
-- **Database tables**: `users`, `audit_logs`, `api_keys`, `appointments`
-- **API routes**: `/api/appointments`, `/api/admin/api-keys`, `/api/health`, `/api/compliance/{data-access,data-deletion,data-correction}` (DSAR)
+- **Database tables**: ~25 tables — core (`users`, `audit_logs`, `api_keys`, `appointments`, `sessions`, `payments`, `documents`, `signatures`, `support_tickets`, `projects`, `leads`, `activity_logs`), portfolio/billing (`portfolio_clients`, `portfolio_invoices`, `line_items`, `revenue_entries`, `expense_entries`), DB-driven content (`pricing_tiers`, `hero_headlines`, `public_nav_links`, `process_steps`, `testimonials`, `portfolio_projects`, `content_history`), and `ccpa_opt_outs`. AGENTS.md "Database Tables" is the maintained list.
+- **API routes**: `/api/{health,leads,appointments,export}`, `/api/cron/keep-alive`, `/api/content/*`, `/api/admin/*`, `/api/clients/*`, `/api/invoices/[id]/download`, `/api/auth/mfa/*`, `/api/compliance/{data-access,data-deletion,data-correction,opt-out}` (DSAR). AGENTS.md "API Routes" is the maintained list.
 - **Env**: see `.env.example` — `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`
 - **Compliance**: DSAR endpoints at `/api/compliance/*` for ca, us, eu, uk, mx, au. See `docs/COMPLIANCE.md`, `docs/PRIVACY.md`.
 
