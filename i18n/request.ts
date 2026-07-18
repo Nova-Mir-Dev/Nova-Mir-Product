@@ -3,6 +3,7 @@ import type { AbstractIntlMessages } from 'next-intl'
 import { cookies, headers } from 'next/headers'
 import en from '../messages/en.json'
 import es from '../messages/es.json'
+import ru from '../messages/ru.json'
 import { DEFAULT_LOCALE, isLocale, type Locale } from './locales'
 
 export { locales, type Locale } from './locales'
@@ -10,6 +11,7 @@ export { locales, type Locale } from './locales'
 const messageMap: Record<Locale, AbstractIntlMessages> = {
   en,
   es,
+  ru,
 }
 
 export default getRequestConfig(async () => {
