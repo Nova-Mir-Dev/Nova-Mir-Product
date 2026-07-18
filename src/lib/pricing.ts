@@ -7,14 +7,46 @@ export interface PricingTier {
   isFeatured: boolean
 }
 
+const divergenceWarned = new Set<string>()
+
+/**
+ * These NEXT_PUBLIC_* values are a crash-protection fallback for when the
+ * pricing_tiers table is unreachable. An env override is meant only to keep
+ * that fallback in sync with the DB — if it sets a *different* value, the
+ * marketing copy can silently disagree with the source-of-truth table. Warn
+ * (server-side, once per key) so the divergence is visible in logs without
+ * ever crashing the page.
+ */
+function warnOverrideDivergence(
+  key: string,
+  override: string,
+  canonical: string,
+): void {
+  if (override === canonical) return
+  if (typeof window !== 'undefined') return
+  if (divergenceWarned.has(key)) return
+  divergenceWarned.add(key)
+  console.warn(
+    `[pricing] ${key}=${override} overrides the canonical value ${canonical}. ` +
+      `The pricing_tiers table is the source of truth; keep this override in ` +
+      `sync with it or unset it to avoid marketing/DB price drift.`,
+  )
+}
+
 function envPrice(key: string, fallback: number): number {
   const raw = typeof process !== 'undefined' ? process.env[key] : undefined
-  return raw ? parseInt(raw, 10) || fallback : fallback
+  if (!raw) return fallback
+  const parsed = parseInt(raw, 10)
+  if (!parsed) return fallback
+  warnOverrideDivergence(key, String(parsed), String(fallback))
+  return parsed
 }
 
 function envStr(key: string, fallback: string): string {
   const raw = typeof process !== 'undefined' ? process.env[key] : undefined
-  return raw || fallback
+  if (!raw) return fallback
+  warnOverrideDivergence(key, raw, fallback)
+  return raw
 }
 
 export function getFoundingOfferLabel(): string {
