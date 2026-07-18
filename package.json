@@ -23,7 +23,7 @@
     "@sentry/nextjs": "^10.56.0",
     "@slack/bolt": "^4.7.3",
     "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.108.0",
+    "@supabase/supabase-js": "^2.110.7",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
     "azimuth-ui": "0.9.3",
