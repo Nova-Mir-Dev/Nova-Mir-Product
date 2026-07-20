@@ -28,7 +28,7 @@
     "@upstash/redis": "^1.38.0",
     "azimuth-ui": "0.9.3",
     "next": "^16.2.7",
-    "next-intl": "4.13.0",
+    "next-intl": "4.13.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "recharts": "^3.8.1",
